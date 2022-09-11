@@ -1,0 +1,192 @@
+﻿# Radicals and Republicans extremely attracted to this ideology
+# Attracts weak leftists and liberals
+
+radical_party = {
+	name = {
+		first_valid = {
+			triggered_desc = {
+				desc = party_radicals
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+	icon = {
+		default = "/gfx/interface/icons/political_parties/radical.dds"
+	}
+	# THIS IS RUN ONLY ONCE AT GAME START
+	valid_for_country = {
+		always = yes
+	}
+	available_for_interest_group = {
+		owner = {
+			country_has_voting_franchise = yes
+			any_interest_group = {
+				is_marginal = no
+				exists = leader
+				leader = {
+					has_ideology = ideology_radical
+				}
+			}
+		}
+		NOR = {
+			is_interest_group_type = ig_landowners
+			is_interest_group_type = ig_devout
+		}
+		exists = leader
+		leader = { # fascists and conservatives hate radicals
+			NOT = {
+				has_ideology = ideology_fascist
+				has_ideology = ideology_ethno_nationalist
+				has_ideology = ideology_traditionalist
+				has_ideology = ideology_royalist
+				has_ideology = ideology_theocrat
+				has_ideology = ideology_slaver
+			}
+		}
+	}
+	join_weight = {
+		value = -5
+		if = { # radicals love radicalism
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_radical
+				}
+			}
+			add = 10
+		}
+		if = {
+			limit = {
+				is_powerful = yes
+				exists = leader
+				leader = {
+					has_ideology = ideology_radical
+				}
+			}
+			add = 20
+		}
+		if = { # radicals will fall in line behind stronger liberals
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_radical
+				}
+				is_powerful = no
+				owner = {
+					any_interest_group = {
+						is_powerful = yes
+						has_ideology = ideology_liberal
+					}
+				}
+			}
+			add = -5
+		}
+		if = { # weak liberals will fall in line behind strong radicals
+			limit = {
+				is_powerful = no
+				has_ideology = ideology_liberal
+				owner = {
+					any_interest_group = {
+						is_powerful = yes
+						exists = leader
+						leader = {
+							has_ideology = ideology_radical
+						}
+					}
+				}
+			}
+			add = 5
+		}
+		if = { # weak leftists will fall in line behind radicals pre-revolution
+			limit = {
+				is_powerful = no
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_communist
+						has_ideology = ideology_vanguardist
+						has_ideology = ideology_anarchist
+					}
+				}
+				owner = {
+					NOT = { has_law = law_type:law_council_republic }
+					any_interest_group = {
+						is_powerful = yes
+						exists = leader
+						leader = {
+							has_ideology = ideology_radical
+						}
+					}
+				}
+			}
+			add = 3 # will prefer social democrats if that's an option
+		}
+		if = { # various progressives are inclined towards radicalism
+			limit = {
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_feminist
+						has_ideology = ideology_abolitionist
+						has_ideology = ideology_pacifist
+						has_ideology = ideology_social_democrat
+						has_ideology = ideology_reformer
+						has_ideology = ideology_republican_leader
+						has_ideology = ideology_atheist
+					}
+				}
+			}
+			add = 3
+		}
+		if = {
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_republican_leader
+				}
+				owner = {
+					has_law = law_type:law_monarchy
+					any_interest_group = {
+						has_ideology = ideology_radical
+					}
+				}
+			}
+			add = 5
+		}
+		if = { # anti slavers will join in when their issues are relevant
+			limit = {
+				has_ideology = ideology_anti_slavery
+				owner = {
+					OR = {
+						NOT = { has_law =  law_type:law_slavery_banned }
+						has_law =  law_type:law_serfdom
+					}
+				}
+			}
+			add = 5
+		}
+		if = {
+			limit = { # particularists will join in when their issues are relevant
+				has_ideology = ideology_particularist
+				owner = {
+					OR = {
+						has_law = law_type:law_serfdom
+						has_law = law_type:law_debt_slavery
+					}
+				}
+			}
+			add = 5
+		}
+		if = { # moderates are scared of radical politics
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_moderate
+				}
+			}
+			add = -3
+		}
+	}
+}

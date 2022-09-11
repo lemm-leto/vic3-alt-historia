@@ -1,0 +1,27 @@
+﻿unrecognized_to_recognized_decision = {
+	is_shown = {
+		is_country_type = unrecognized
+		has_variable = incorporated_population
+	}
+
+	possible = {
+		country_rank = rank_value:unrecognized_major_power
+		gdp >= unrecognized_to_recognized_gdp
+		army_size >= unrecognized_to_recognized_army_size
+		is_at_war = no
+		is_diplomatic_play_committed_participant = no
+		NOT = {
+			any_scope_state = {
+				has_active_building = building_conscription_center
+			}
+		}
+	}
+	
+	when_taken = {
+		set_country_type = recognized
+	}
+	
+	ai_chance = {
+        base = 1000
+    }
+}

@@ -1,0 +1,140 @@
+﻿ct_is_budget_annihilated = {
+	ct_weekly_income < 0
+	has_scaled_debt >= 0.75
+}
+
+ct_is_budget_catastrophic = {
+	ct_weekly_income < 0
+	has_scaled_debt >= 0.50
+}
+
+ct_is_budget_dangerous = {
+	ct_weekly_income < 0
+	has_scaled_debt >= 0.25
+}
+
+ct_is_budget_negative = {
+	ct_weekly_income < 0
+	ct_flattened_treasury < ct_sufficient_reserve
+}
+
+ct_is_budget_acceptable = {
+	ct_weekly_income >= ct_5pct_income_value
+	has_scaled_debt < 0.20
+}
+
+ct_is_budget_healthy = {
+	ct_weekly_income >= ct_15pct_income_value
+	has_scaled_debt < 0.20
+}
+
+ct_is_budget_thriving = {
+	ct_weekly_income >= ct_25pct_income_value
+	treasury >= ct_5pct_gdp_value
+}
+
+ct_can_cut_government_wages = {
+	OR = {
+		AND = {
+			var:ct_government_wage_level = 0
+			OR = {
+				NOT = {
+					exists = ig:ig_intelligentsia
+				}
+				AND = {
+					exists = ig:ig_intelligentsia
+					ig:ig_intelligentsia = {
+						OR = {
+							AND = {
+								is_in_government = yes
+								ig_approval > -2
+							}
+							AND = {
+								is_in_government = no
+								ig_approval > -7
+							}
+							is_marginal = yes
+						}
+					}
+				}
+			}
+		}
+		AND = {
+			var:ct_government_wage_level = -1
+			OR = {
+				NOT = {
+					exists = ig:ig_intelligentsia
+				}
+				AND = {
+					exists = ig:ig_intelligentsia
+					ig:ig_intelligentsia = {
+						OR = {
+							AND = {
+								is_in_government = yes
+								ig_approval > -1
+							}
+							AND = {
+								is_in_government = no
+								ig_approval > -6
+							}
+							is_marginal = yes
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+ct_can_cut_military_wages = {
+	OR = {
+		AND = {
+			var:ct_military_wage_level = 0
+			OR = {
+				NOT = {
+					exists = ig:ig_armed_forces
+				}
+				AND = {
+					exists = ig:ig_armed_forces
+					ig:ig_armed_forces = {
+						OR = {
+							AND = {
+								is_in_government = yes
+								ig_approval > -2
+							}
+							AND = {
+								is_in_government = no
+								ig_approval > -7
+							}
+							is_marginal = yes
+						}
+					}
+				}
+			}
+		}
+		AND = {
+			var:ct_military_wage_level = -1
+			OR = {
+				NOT = {
+					exists = ig:ig_armed_forces
+				}
+				AND = {
+					exists = ig:ig_armed_forces
+					ig:ig_armed_forces = {
+						OR = {
+							AND = {
+								is_in_government = yes
+								ig_approval > -1
+							}
+							AND = {
+								is_in_government = no
+								ig_approval > -6
+							}
+							is_marginal = yes
+						}
+					}
+				}
+			}
+		}
+	}
+}

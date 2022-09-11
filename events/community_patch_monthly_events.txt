@@ -1,0 +1,401 @@
+﻿namespace = community_patch_monthly
+
+community_patch_monthly.1 = {
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {
+		NOT = {
+			is_country_type = decentralized
+		}
+	}
+	
+	immediate = {
+		
+		# Check incorporated population
+		
+		set_variable = {
+			name = incorporated_population
+			value = 0
+		}
+		
+		# Calculate army power projection
+		
+		legacy_army_power_projection = yes
+		if = {
+			limit = {
+				has_variable = army_power_projection
+				var:army_power_projection > 0
+			}
+			remove_army_power_projection = yes
+		}
+		set_variable = {
+			name = army_power_projection
+			value = 0
+		}
+		
+		every_scope_state = {
+			
+			# Check incorporated population
+			
+			if = {
+				limit = {
+					is_incorporated = yes
+				}
+				root = {
+					change_variable = {
+						name = incorporated_population
+						add = prev.state_population
+					}
+				}
+			}
+			
+			# Calculate army power projection
+			
+			if = {
+				limit = {
+					has_building = building_barracks
+					any_scope_building = {
+						is_building_type = building_barracks
+						level > 0
+						occupancy > 0
+					}
+				}
+				set_variable = {
+					name = army_power_projection
+					value = 0
+				}
+				save_scope_as = current_state
+				random_scope_building = {
+					limit = {
+						is_building_type = building_barracks
+					}
+					if = {
+						limit = {
+							has_active_production_method = pm_irregular_infantry
+						}
+						prev = {
+							change_variable = {
+								name = army_power_projection
+								add = 2
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							has_active_production_method = pm_line_infantry
+						}
+						prev = {
+							change_variable = {
+								name = army_power_projection
+								add = 3
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							has_active_production_method = pm_skirmish_infantry
+						}
+						prev = {
+							change_variable = {
+								name = army_power_projection
+								add = 4
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							has_active_production_method = pm_trench_infantry
+						}
+						prev = {
+							change_variable = {
+								name = army_power_projection
+								add = 5
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							has_active_production_method = pm_squad_infantry
+						}
+						prev = {
+							change_variable = {
+								name = army_power_projection
+								add = 6
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							has_active_production_method = pm_mechanized_infantry
+						}
+						prev = {
+							change_variable = {
+								name = army_power_projection
+								add = 7
+							}
+						}
+					}
+					if = {
+						limit = {
+							has_active_production_method = pm_cannon_artillery
+						}
+						prev = {
+							change_variable = {
+								name = army_power_projection
+								add = 1
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							has_active_production_method = pm_mobile_artillery
+						}
+						prev = {
+							change_variable = {
+								name = army_power_projection
+								add = 2
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							has_active_production_method = pm_shrapnel_artillery
+						}
+						prev = {
+							change_variable = {
+								name = army_power_projection
+								add = 3
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							has_active_production_method = pm_siege_artillery
+						}
+						prev = {
+							change_variable = {
+								name = army_power_projection
+								add = 4
+							}
+						}
+					}
+					scope:current_state = {
+						change_variable = {
+							name = army_power_projection
+							multiply = prev.level
+						}
+						change_variable = {
+							name = army_power_projection
+							multiply = prev.occupancy
+						}
+					}
+				}
+				root = {
+					change_variable = {
+						name = army_power_projection
+						add = prev.var:army_power_projection
+					}
+				}
+				remove_variable = army_power_projection
+			}
+			
+			# Fix wage bug
+			
+			if = {
+				limit = {
+					OR = {
+						has_game_rule = fix_wage_bug_enabled_player
+						AND = { 
+							has_game_rule = fix_wage_bug_enabled
+							root = {
+								is_player = no
+							}
+						}
+					}
+				}
+				every_scope_building = {
+					limit = { 
+						occupancy = 0
+						is_subsistence_building = no
+						level > 0
+					}
+					add_modifier  = {
+						name = fix_wage_bug_increase_minimum_wage 
+						days = 14
+					}
+				}
+			}
+			
+		}
+		
+		# Calculate army power projection
+		
+		round_variable = {
+			name = army_power_projection
+			nearest = 1
+		}
+		if = {
+			limit = {
+				var:army_power_projection > 0
+			}
+			add_army_power_projection = yes
+		}
+		
+		# Spawn leaders
+		
+		if = {
+			limit = {
+				NOT = {
+					exists = ruler
+				}
+			}
+			random_interest_group = {
+				limit = {
+					save_temporary_scope_as = biggest_ig
+					NOT = {
+						root = {
+							any_interest_group = {
+								NOT = {
+									this = scope:biggest_ig
+								}
+								ig_clout > scope:biggest_ig.ig_clout
+							}
+						}
+					}
+				}
+				save_scope_as = biggest_ig
+			}
+			create_character = {
+				ruler = yes
+				interest_group = scope:biggest_ig
+			}
+		}
+		every_interest_group = {
+			limit = {
+				NOT = {
+					exists = leader
+				}
+			}
+			save_scope_as = ig_without_leader
+			root = {
+				create_character = {
+					ig_leader = yes
+					interest_group = scope:ig_without_leader
+				}
+			}
+		}
+		
+		trigger_event = {
+			id = community_patch_monthly.2
+		}
+	}
+}
+
+community_patch_monthly.2 = {
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {
+		NOT = {
+			is_country_type = decentralized
+		}
+		has_variable = incorporated_population
+	}
+	
+	immediate = {
+		if = {
+			limit = {
+				OR = {
+					AND = {
+						NOT = {
+							exists = institution:institution_colonial_affairs
+						}
+						OR = {
+							is_enacting_law = law_type:law_colonial_resettlement
+							is_enacting_law = law_type:law_colonial_exploitation
+						}
+					}
+					AND = {
+						NOT = {
+							exists = institution:institution_social_security
+						}
+						OR = {
+							is_enacting_law = law_type:law_poor_laws
+							is_enacting_law = law_type:law_wage_controls
+							is_enacting_law = law_type:law_old_age_pension
+						}
+					}
+					AND = {
+						NOT = {
+							exists = institution:institution_workplace_safety
+						}
+						OR = {
+							is_enacting_law = law_type:law_regulatory_bodies
+							is_enacting_law = law_type:law_worker_protections
+						}
+					}
+					AND = {
+						NOT = {
+							exists = institution:institution_schools
+						}
+						OR = {
+							is_enacting_law = law_type:law_religious_schools
+							is_enacting_law = law_type:law_private_schools
+							is_enacting_law = law_type:law_public_schools
+						}
+					}
+					AND = {
+						NOT = {
+							exists = institution:institution_police
+						}
+						OR = {
+							is_enacting_law = law_type:law_local_police
+							is_enacting_law = law_type:law_dedicated_police
+							is_enacting_law = law_type:law_militarized_police
+						}
+					}
+					AND = {
+						NOT = {
+							exists = institution:institution_health_system
+						}
+						OR = {
+							is_enacting_law = law_type:law_charitable_health_system
+							is_enacting_law = law_type:law_private_health_insurance
+							is_enacting_law = law_type:law_public_health_insurance
+						}
+					}
+					AND = {
+						NOT = {
+							exists = institution:institution_home_affairs
+						}
+						OR = {
+							is_enacting_law = law_type:law_national_guard
+							is_enacting_law = law_type:law_secret_police
+							is_enacting_law = law_type:law_guaranteed_liberties
+						}
+					}
+				}
+				bureaucracy < institution_bureaucracy_cost
+			}
+			if = {
+				limit = {
+					has_modifier = not_enough_bureaucracy_for_institution_law
+				}
+				remove_modifier = not_enough_bureaucracy_for_institution_law
+			}
+			add_modifier = {
+				name = not_enough_bureaucracy_for_institution_law
+				months = 2
+			}
+		}
+		else_if = {
+			limit = {
+				has_modifier = not_enough_bureaucracy_for_institution_law
+			}
+			remove_modifier = not_enough_bureaucracy_for_institution_law
+		}
+	}
+}

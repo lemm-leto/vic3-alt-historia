@@ -1,0 +1,237 @@
+﻿je_communism_1 = {
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	is_shown_when_inactive = {
+		NOT = { has_variable = communism_1_done }
+		OR = {
+			has_technology_researched = socialism
+			has_technology_researched = anarchism
+		}
+	}
+
+	possible = {
+		any_interest_group = {
+			OR = {
+				is_being_promoted = yes
+				is_in_government = yes
+			}
+			leader = {
+				OR = {
+					has_ideology = ideology_communist
+					has_ideology = ideology_vanguardist
+					has_ideology = ideology_anarchist
+				}
+			}
+		}
+	}
+
+	on_monthly_pulse = {
+		random_events = {
+			100 = 0
+			5 = communism.7
+		}
+	}
+
+	complete = {
+		has_technology_researched = anarchism
+		has_technology_researched = human_rights
+		has_technology_researched = socialism
+		government_legitimacy >= 50
+		any_interest_group = {
+			is_in_government = yes
+			leader = {
+				OR = {
+					has_ideology = ideology_communist
+					has_ideology = ideology_vanguardist
+					has_ideology = ideology_anarchist
+				}
+			}
+		}
+		is_at_war = no
+		NOT = {
+			any_interest_group = {
+				is_insurrectionary = yes
+			}
+		}
+	}
+
+	on_complete = {
+		set_variable = communism_1_done
+		trigger_event = { id = communism.1 }
+	}
+}
+
+je_communism_2 = {
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	complete = {
+		has_law = law_type:law_council_republic
+		is_at_war = no
+		NOT = {
+			any_interest_group = {
+				is_insurrectionary = yes
+			}
+		}
+	}
+
+	on_complete = {
+		trigger_event = { id = communism.2 }
+	}
+
+	fail = {
+		NOT = {
+			any_interest_group = {
+				is_in_government = yes
+				leader = {
+					OR = {
+						has_ideology = ideology_communist
+						has_ideology = ideology_vanguardist
+						has_ideology = ideology_anarchist
+					}
+				}
+			}
+		}
+	}
+}
+
+je_anarchy = {
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	complete = {
+		has_law = law_type:law_anarchy
+		NOT = {
+			any_scope_pop = {
+				standard_of_living < 15
+			}
+		}
+	}
+
+	on_complete = {
+		trigger_event = {
+			id = communism.4
+		}
+	}
+
+	fail = {
+		NOT = { has_law = law_type:law_council_republic }
+	}
+}
+
+je_vanguard = {
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	complete = {
+		any_interest_group = {
+			leader = {
+				has_ideology = ideology_vanguardist
+			}
+			count = 3
+		}
+		custom_tooltip = {
+			text = vanguard_custom_tooltip
+			NOT = {
+				any_interest_group = {
+					is_marginal = no
+					leader = {
+						OR = {
+							NOT = { has_ideology = ideology_vanguardist }
+							NOT = { has_ideology = ideology_communist }
+							NOT = { has_ideology = ideology_anarchist }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	on_complete = {
+		trigger_event = { id = communism.5 }
+	}
+
+	fail = {
+		NOT = { has_law = law_type:law_council_republic }
+	}
+
+	on_weekly_pulse = {
+		events = {
+			communism.3
+		}
+	}
+
+	status_desc = {
+		first_valid = {
+			triggered_desc = {
+				desc = vanguard_instruction_status
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+}
+
+je_communist_welfare = {
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	complete = {
+		# TODO root.bureaucracy > 0
+		approaching_bureaucracy_shortage = no
+		has_law = law_type:law_public_schools
+		institution_investment_level = {
+			institution = institution_schools
+			value = 5
+		}
+		has_law = law_type:law_public_health_insurance
+		institution_investment_level = {
+			institution = institution_health_system
+			value = 5
+		}
+		has_law = law_type:law_old_age_pension
+		institution_investment_level = {
+			institution = institution_social_security
+			value = 5
+		}
+		has_law = law_type:law_worker_protections
+		institution_investment_level = {
+			institution = institution_workplace_safety
+			value = 5
+		}
+	}
+
+	on_complete = {
+		trigger_event = {
+			id = communism.6
+		}
+	}
+
+	fail = {
+		NOT = { has_law = law_type:law_council_republic }
+	}
+}
+
+je_5_year_plan = {
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+
+	complete = {
+		has_law = law_type:law_command_economy
+		scope:journal_entry = {
+			is_goal_complete = yes
+		}
+		in_default = no
+	}
+
+	current_value = {
+		value = root.gdp
+	}
+
+	goal_add_value = {
+		value = root.gdp
+		multiply = 0.25
+	}
+
+	fail = {
+		NOT = { has_law = law_type:law_council_republic }
+	}
+
+	progressbar = yes
+}

@@ -1,0 +1,232 @@
+﻿namespace = ig_placation_events
+
+ig_placation_events.1 = { #Generic IG is upset and have threatened to take more serious action if generic demand isn't met.
+	type = country_event
+	placement = root
+
+	title = ig_placation_events.1.t
+	desc = ig_placation_events.1.d
+	flavor = ig_placation_events.1.f
+
+	duration = 3
+
+	event_image = {
+		video = "gfx/event_pictures/europenorthamerica_political_extremism.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/europenorthamerica/political_extremism"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	trigger = {
+		any_interest_group = {
+			is_in_government = no
+			is_marginal = no
+			ig_approval <= -5
+		}
+	}
+
+	immediate = {
+		random_interest_group = {
+			limit = {
+				is_in_government = no
+				is_marginal = no
+				ig_approval <= -5
+			}
+			save_scope_as = placation_ig
+		}
+	}
+
+	option = { #Agree to demand (Lose authority)
+		name = ig_placation_events.1.a
+		add_modifier = {
+			name = ig_placated_authority_cost
+			months = normal_modifier_time
+		}
+
+		scope:placation_ig = {
+			add_modifier = {
+				name = ig_placated
+				months = normal_modifier_time
+			}
+		}
+
+
+
+	}
+
+	option = { #Disagree
+		name = ig_placation_events.1.b
+		default_option = yes
+
+		scope:placation_ig = {
+			add_modifier = {
+				name = ig_not_placated
+				months = normal_modifier_time
+			}
+		}
+
+	}
+}
+
+
+
+ig_placation_events.2 = { #Generic IG is upset and have threatened to take more serious action if generic demand isn't met.
+	type = country_event
+	placement = root
+
+	title = ig_placation_events.2.t
+	desc = ig_placation_events.2.d
+	flavor = ig_placation_events.2.f
+
+	duration = 3
+
+	event_image = {
+		video = "gfx/event_pictures/europenorthamerica_political_extremism.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/europenorthamerica/political_extremism"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	trigger = {
+		any_interest_group = {
+			is_in_government = no
+			is_marginal = no
+			ig_approval <= -5
+		}
+	}
+
+	immediate = {
+		random_interest_group = {
+			limit = {
+				is_in_government = no
+				is_marginal = no
+				ig_approval <= -5
+			}
+			save_scope_as = bureaucracy_placation_ig
+		}
+	}
+
+	option = { #Agree to demand (Lose )
+		name = ig_placation_events.2.a
+		add_modifier = {
+			name = ig_placated_bureaucracy_cost
+			months = normal_modifier_time
+		}
+
+		scope:bureaucracy_placation_ig = {
+			add_modifier = {
+				name = ig_placated
+				months = normal_modifier_time
+			}
+		}
+
+
+
+	}
+
+	option = { #Disagree
+		name = ig_placation_events.2.b
+		default_option = yes
+
+		scope:bureaucracy_placation_ig = {
+			add_modifier = {
+				name = ig_not_placated
+				months = normal_modifier_time
+			}
+		}
+
+	}
+}
+
+
+ig_placation_events.3 = {
+	type = country_event
+	placement = root
+
+	title = ig_placation_events.3.t
+	desc = ig_placation_events.3.d
+	flavor = ig_placation_events.3.f
+
+	duration = 3
+
+	event_image = {
+		video = "gfx/event_pictures/europenorthamerica_political_extremism.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/europenorthamerica/political_extremism"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	trigger = {
+		exists = ruler
+		ruler = {
+			is_monarch = no
+		}
+
+		any_interest_group = {
+			is_in_government = no
+			is_marginal = no
+			ig_approval <= -5
+		}
+	}
+
+	immediate = {
+		random_interest_group = {
+			limit = {
+				is_in_government = no
+				is_marginal = no
+				ig_approval <= -5
+			}
+			save_scope_as = resignation_placation_ig
+		}
+
+		this = {
+			ruler = {
+
+				save_scope_as = country_leader
+			}
+		}
+	}
+
+	option = { #Accept
+		name = ig_placation_events.3.a
+
+		custom_tooltip = tt_ig_placation_events.3.a
+
+		hidden_effect = {
+			scope:country_leader = {
+				kill_character = yes
+			}
+		}
+
+
+		scope:resignation_placation_ig = {
+			add_modifier = {
+				name = ig_placated
+				months = normal_modifier_time
+			}
+		}
+
+
+
+
+	}
+
+	option = { #Refuse
+		name = ig_placation_events.3.b
+		default_option = yes
+
+		scope:resignation_placation_ig = {
+			add_modifier = {
+				name = ig_not_placated
+				months = normal_modifier_time
+			}
+		}
+
+	}
+}

@@ -1,0 +1,98 @@
+﻿je_urbanization_events_1 = {
+	icon = "gfx/interface/icons/event_icons/event_trade.dds"
+	
+	is_shown_when_inactive = {
+		is_player = yes
+		# scope:example_country = {
+			# pop_type_percent = {
+				# pop_type = peasants
+				# percent > 60
+			# }
+		# }
+	}
+	
+	possible = {
+		NOR = {
+			has_law = law_type:law_serfdom 
+			has_law = law_type:law_land_based_taxation
+		}
+	}
+	
+	complete = {
+		# scope:example_country = {
+			# pop_type_percent = {
+				# pop_type = peasants
+				# percent < 50
+			# }
+		# }
+		NOT = {
+			has_law = law_type:law_serfdom 
+			has_law = law_type:law_land_based_taxation
+		}
+	}
+	
+	on_complete = {
+		trigger_event = { id = urbanization_events.1 }
+	}
+	
+	weight = 10
+	inheritable = no
+}
+
+je_urbanization_events_2 = {
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+	
+	is_shown_when_inactive = {
+		is_player = yes
+		any_scope_state = {
+			is_incorporated = yes
+			has_building = building_urban_center
+		}
+	}
+	
+	possible = {
+		any_scope_state = {
+			is_incorporated = yes
+			any_scope_building = {
+				is_building_type = building_urban_center
+				level >= 5
+			}
+		}
+	}
+	
+	complete = {
+		any_scope_state = {
+			filter = {
+				is_incorporated = yes
+			}
+			percent >= 0.75
+			any_scope_building = {
+				is_building_type = building_urban_center
+				level >= 5
+			}
+		}
+		any_scope_state = {
+			is_incorporated = yes
+			any_scope_building = {
+				is_building_type = building_urban_center
+				level >= 10
+			}
+		}
+	}
+	
+	on_monthly_pulse = {
+		random_events = {
+			100 = 0
+			10 = urbanization_events.2
+			10 = urbanization_events.4
+			10 = urbanization_events.6
+		}
+	}
+	
+	on_complete = {
+		trigger_event = { id = urbanization_events.5 }
+	}
+	
+	weight = 10
+	inheritable = no
+}

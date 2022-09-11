@@ -1,0 +1,11 @@
+﻿CAR = {
+	color = { 53 104 243 }
+	
+	country_type = recognized
+	
+	tier = empire
+	
+	cultures = { carthago }
+    
+	capital = STATE_TUNISIA
+}

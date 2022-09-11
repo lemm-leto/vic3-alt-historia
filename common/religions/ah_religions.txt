@@ -1,0 +1,7 @@
+﻿tanit = {
+	texture = "gfx/interface/icons/religion_icons/tanit.dds"
+	traits = {
+		tanit
+	}
+	color = { 0.8 0.8 0 }
+}

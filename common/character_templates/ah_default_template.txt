@@ -1,0 +1,49 @@
+﻿### HARDCODED ###
+# Must have one entry of the "default" template, the template itself can be modified but one instance of it MUST exist with all parameters filled out
+
+default = {
+	first_name = culture 		# Picks a random first and last name from the culture, combines those together to make one name
+	last_name = culture
+	culture = primary_culture
+	female = no
+	ethnicity = random 			# Pick random ethnicity based on culture
+	dna = random 				# Generate random dna from ethnicity
+	age = default 				# A random age base on AGE_GENERATION_STARTVAL + ( random_int % ( AGE_GENERATION_DICE_ROLL_MAGNITUDE + 1 ) )
+	interest_group = random 	# Select a random interest group based on clout
+	commander_rank = default	# commander rank if this character would be a military commander
+	on_created = { 				# this effect will run as soon as the character is created
+		add_experience = {		# Personality: 3, Skill: 1-3, Condition: 2
+			value = 4			# Adds 4 Experience as base, and the chance of getting 1 more for every 5 years of age above 20 the character is on creation
+			add = {
+				integer_range = {
+					min = 0
+					max = {
+						value = age
+						subtract = 20
+						divide = 5
+						min = 0
+					}
+				}
+			}
+		}			
+		add_random_trait = personality
+		if = {
+			limit = {
+				experience_level > trait_value
+			}
+			add_random_trait = skill
+		}
+		if = {
+			limit = {
+				experience_level > trait_value
+			}
+			add_random_trait = skill
+		}
+		if = {
+			limit = {
+				experience_level > trait_value
+			}
+			add_random_trait = condition
+		}
+	}
+}

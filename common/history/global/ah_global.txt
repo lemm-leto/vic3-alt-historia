@@ -1,0 +1,30 @@
+﻿# This is executed last among all history
+GLOBAL = {
+	every_country = {
+		limit = { has_law = law_type:law_slavery_banned }
+		ig:ig_intelligentsia = { add_ideology = ideology_anti_slavery }
+		ig:ig_trade_unions = { add_ideology = ideology_anti_slavery }
+		ig:ig_petty_bourgeoisie = { add_ideology = ideology_anti_slavery }
+		ig:ig_industrialists = { add_ideology = ideology_anti_slavery }
+	}
+	
+	every_country = {
+		limit = { NOT = { has_law = law_type:law_slavery_banned } }
+		ig:ig_landowners = { add_ideology = ideology_pro_slavery }
+	}
+
+	set_global_variable = {
+		name = number_of_mega_earthquakes
+		value = 0
+	}
+
+	set_global_variable = {
+		name = number_of_mega_floods
+		value = 0
+	}
+	
+	set_global_variable = {
+		name = number_of_mega_eruptions
+		value = 0
+	}
+}

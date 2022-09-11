@@ -1,0 +1,82 @@
+﻿objective_tutorial = {
+	texture = "gfx/interface/icons/placeholder_icons/objective.png"
+	
+	objective_subgoals = {
+		sg_expand_basic_building
+		sg_fix_budget_deficit
+		sg_import_goods
+		sg_export_goods
+		sg_change_production_method
+		sg_expand_productive_building
+		sg_fix_unprofitable_building
+		sg_grow_gdp
+		sg_promote_ig
+	}
+	
+	on_start = {
+		start_tutorial_lesson = { tutorial_lesson = lesson_basics }
+	}
+}
+
+objective_economic_dominance = {
+	texture = "gfx/interface/icons/placeholder_icons/objective.png"
+	
+	objective_subgoals = {
+		sg_expand_goods_production
+		sg_increase_gdp
+
+		sg_refining_goods
+		sg_specialized_goods
+		sg_home_market
+		sg_expanding_the_market
+
+		sg_expand_trading_potential
+		sg_export_focus
+		sg_join_another_market
+		sg_break_the_isolationists
+
+		sg_strong_market
+	}
+	
+	on_start = {
+		start_tutorial_lesson = { tutorial_lesson = economic_dominance }
+	}
+}
+
+objective_hegemon = {
+	texture = "gfx/interface/icons/placeholder_icons/objective.png"
+	
+	objective_subgoals = {
+		sg_colonization_laws
+		sg_african_colonies
+		sg_expand_navy_and_army
+		sg_form_alliance
+		sg_take_subject
+		sg_increase_technology
+		sg_greatest_power
+		sg_greater_power
+		sg_great_power
+		sg_the_hegemon
+	}
+	
+	on_start = {
+		start_tutorial_lesson = { tutorial_lesson = hegemon }
+	}
+}
+	
+objective_egalitarian_society = {
+	texture = "gfx/interface/icons/placeholder_icons/objective.png"
+	
+	objective_subgoals = {
+		sg_encourage_liberal_ideas
+		sg_pass_laws
+		sg_public_services
+		sg_liberate_the_slaves
+		sg_women_and_children
+		sg_egalitarian_society
+	}
+	
+	on_start = {
+		start_tutorial_lesson = { tutorial_lesson = egalitarian_society }
+	}
+}

@@ -1,0 +1,28 @@
+﻿CAR = {
+	pattern = "pattern_vertical_split_01.tga"
+	color1 = "parchment"
+	color2 = "astral"
+	
+	colored_emblem = {
+		texture = "ce_frame_circle_outline.dds"
+		color1 = "hunter_green"
+	
+		instance = { scale = { 0.65 0.65 } }				
+	}
+	colored_emblem = {
+		texture = "ce_circle.dds"
+		color1 = "white"			
+	}
+    colored_emblem = {
+        texture = "ce_frame_circle_triangles.dds"
+        color1 = "gold"
+
+		instance = { scale = { 0.9 0.9 } }	
+    }
+    colored_emblem = {
+        texture = "ce_tanit.dds"
+        color1 = "rose_vale"
+
+		instance = { scale = { 0.55 0.55 } }	
+    }
+}

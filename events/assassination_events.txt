@@ -1,0 +1,491 @@
+﻿namespace = assassination_events
+
+assassination_events.1 = {
+	type = country_event
+
+	hidden = yes
+
+	trigger = {
+		any_interest_group = {
+			is_in_government = no
+			is_marginal = no
+			ig_approval <= -5
+		}
+		exists = ruler
+		any_scope_character = {
+			is_ruler = yes
+			age > 18
+		}
+	}
+
+	immediate = {
+		random_interest_group = {
+			limit = {
+				is_in_government = no
+				is_marginal = no
+				ig_approval <= -5
+			}
+
+			save_scope_as = assassination_ig
+
+
+		}
+
+		random_scope_character = {
+			limit = {
+				is_ruler = yes
+				age > 18
+			}
+			save_scope_as = assassination_target
+
+		}
+
+		random_list = {
+			5 = { #Plot Stopped
+				modifier = {
+					if = {
+						limit = {
+							institution_investment_level = {
+								institution = institution_police
+								value > 2
+							}
+						}
+						add = 5
+					}
+				}
+
+				modifier = {
+					if = {
+						limit = {
+							institution_investment_level = {
+								institution = institution_police
+								value > 4
+							}
+						}
+						add = 5
+					}
+				}
+
+				modifier = {
+					if = {
+						limit = {
+							has_technology_researched = identification_documents
+						}
+						add = 5
+					}
+				}
+
+				modifier = {
+					if = {
+						limit = {
+							has_technology_researched = mass_surveillance
+						}
+						add = 5
+					}
+				}
+
+				trigger_event = {id = assassination_events.2 days = 60}
+			}
+
+			5 = { #Plot Discovered
+				trigger_event = {id = assassination_events.3 days = 60 }
+
+				modifier = {
+					if = {
+						limit = {
+							institution_investment_level = {
+								institution = institution_police
+								value > 2
+							}
+						}
+						add = 5
+					}
+				}
+
+				modifier = {
+					if = {
+						limit = {
+							institution_investment_level = {
+								institution = institution_police
+								value > 4
+							}
+						}
+						add = 5
+					}
+				}
+
+				modifier = {
+					if = {
+						limit = {
+							has_technology_researched = identification_documents
+						}
+						add = 5
+					}
+				}
+
+				modifier = {
+					if = {
+						limit = {
+							has_technology_researched = mass_surveillance
+						}
+						add = 5
+					}
+				}
+			}
+
+			15 = { #Plot Not uncovered
+				trigger_event = {id = assassination_events.6 days = 90 }
+			}
+
+
+		}
+	}
+
+
+}
+
+assassination_events.2 = { #Plot stopped
+	type = country_event
+	placement = root
+
+	title = assassination_events.2.t
+	desc = assassination_events.2.d
+	flavor = assassination_events.2.f
+
+	duration = 3
+
+	event_image = {
+
+		video = "gfx/event_pictures/middleeast_police_breaking_door.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/police_breaking_door"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+
+	}
+
+	immediate = {
+
+	}
+
+	option = {
+		default_option = yes
+
+		name = assassination_events.2.a
+
+	}
+
+	option = { #Crack down on IG
+		name = assassination_events.2.b
+
+		scope:assassination_ig = {
+			add_modifier = {
+				name = assassination_ig_monitored
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+assassination_events.3 = { #Plot found but still ongoing
+	type = country_event
+	placement = root
+
+	duration = 3
+
+	title = assassination_events.3.t
+	desc = assassination_events.3.d
+	flavor = assassination_events.3.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_public_figure_assassination.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/public_figure_assassination"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+
+	}
+
+	immediate = {
+
+	}
+
+	option = {
+		name = assassination_events.3.a
+		default_option = yes
+		hidden_effect = {
+			random_list = {
+			1 = { #Plot stopped
+
+				modifier = {
+					if = {
+						limit = {
+							institution_investment_level = {
+								institution = institution_police
+								value > 2
+							}
+						}
+						add = 5
+					}
+				}
+
+				modifier = {
+					if = {
+						limit = {
+							institution_investment_level = {
+								institution = institution_police
+								value > 4
+							}
+						}
+						add = 5
+					}
+				}
+
+				modifier = {
+					if = {
+						limit = {
+							has_technology_researched = identification_documents
+						}
+						add = 5
+					}
+				}
+
+				modifier = {
+					if = {
+						limit = {
+							has_technology_researched = mass_surveillance
+						}
+						add = 5
+					}
+				}
+
+					trigger_event = {id = assassination_events.4 days = 60 }
+			}
+
+			10 = { #Plot continues
+
+
+					trigger_event = {id = assassination_events.5 days = 90 }
+			}
+
+		}
+
+		}
+	}
+
+	option = {
+		name = assassination_events.3.b
+		default_option = yes
+		add_modifier = {
+			name = hightened_security
+			months = normal_modifier_time
+		}
+		hidden_effect = {
+			random_list = {
+			5 = { #Plot stopped
+
+				modifier = {
+					if = {
+						limit = {
+							institution_investment_level = {
+								institution = institution_police
+								value > 2
+							}
+						}
+						add = 5
+					}
+				}
+
+				modifier = {
+					if = {
+						limit = {
+							institution_investment_level = {
+								institution = institution_police
+								value > 4
+							}
+						}
+						add = 5
+					}
+				}
+
+				modifier = {
+					if = {
+						limit = {
+							has_technology_researched = identification_documents
+						}
+						add = 5
+					}
+				}
+
+				modifier = {
+					if = {
+						limit = {
+							has_technology_researched = mass_surveillance
+						}
+						add = 5
+					}
+				}
+
+					trigger_event = {id = assassination_events.4 days = 60 }
+			}
+			10 = { #Plot continues
+				trigger_event = {id = assassination_events.5 days = 60 }
+			}
+		}
+		}
+
+	}
+}
+
+assassination_events.4 = { #Plot stopped just before it happened
+	type = country_event
+	placement = root
+
+	duration = 3
+
+	title = assassination_events.4.t
+	desc = assassination_events.4.d
+	flavor = assassination_events.4.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_public_figure_assassination.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/public_figure_assassination"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+
+	}
+
+	immediate = {
+
+	}
+
+	option = {
+		name = assassination_events.4.a
+		default_option = yes
+
+	}
+
+	option = {
+		name = assassination_events.4.b
+		scope:assassination_ig = {
+			add_modifier = {
+				name = assassination_ig_monitored
+				months = normal_modifier_time
+			}
+		}
+
+	}
+}
+
+assassination_events.5 = { #Failure to stop assassination
+	type = country_event
+	placement = root
+
+	duration = 3
+
+	title = assassination_events.5.t
+	desc = assassination_events.5.d
+	flavor = assassination_events.5.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_public_figure_assassination.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/public_figure_assassination"
+
+	icon = "gfx/interface/icons/event_icons/event_skull.dds"
+
+	trigger = {
+
+	}
+
+	immediate = {
+
+	}
+
+	option = {
+		name = assassination_events.5.a
+		default_option = yes
+		scope:assassination_target = {
+			kill_character = yes
+		}
+
+	}
+
+	option = {
+		name = assassination_events.5.b
+		scope:assassination_target = {
+			kill_character = yes
+		}
+		scope:assassination_ig = {
+			add_modifier = {
+				name = assassination_ig_monitored
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+assassination_events.6 = { #Suprise Assassination
+	type = country_event
+	placement = root
+
+	duration = 3
+
+	title = assassination_events.6.t
+	desc = assassination_events.6.d
+	flavor = assassination_events.6.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_public_figure_assassination.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/public_figure_assassination"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	trigger = {
+
+	}
+
+	immediate = {
+
+	}
+
+	option = {
+		name = assassination_events.6.a
+		default_option = yes
+		scope:assassination_target = {
+			kill_character = yes
+		}
+	}
+
+	option = {
+		name = assassination_events.6.b
+		scope:assassination_target = {
+			kill_character = yes
+		}
+		scope:assassination_ig = {
+			add_modifier = {
+				name = assassination_ig_monitored
+				months = normal_modifier_time
+			}
+		}
+
+	}
+}

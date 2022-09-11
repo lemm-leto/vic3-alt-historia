@@ -1,0 +1,279 @@
+﻿namespace = ARoAI_research_simulation
+
+ARoAI_research_simulation.1 = {
+	type = country_event
+	placement = root
+	hidden = yes
+	
+	trigger = {
+		is_player = no
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				OR = {
+					has_variable = mass_communication_research
+					AND = {
+						OR = {
+							AND = {
+								year >= 1845
+								country_rank >= rank_value:minor_power
+							}
+							AND = {
+								year >= 1850
+								country_rank >= rank_value:major_power
+							}
+						}
+						has_technology_researched = democracy
+						NOR = {
+							is_researching_technology = mass_communication
+							has_technology_researched = mass_communication
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					AND = {
+						has_technology_researched = democracy
+						NOR = {
+							is_researching_technology = mass_communication
+							has_technology_researched = mass_communication
+						}
+					}
+					NOT = {
+						has_variable = mass_communication_research
+					}
+				}
+				set_variable = {
+					name = mass_communication_research
+					value = 0
+				}
+				add_modifier = { name = research_simulation months = -1 }
+			}
+			else_if = {
+				limit = {
+					is_researching_technology = mass_communication
+					has_variable = mass_communication_research
+				}
+				remove_modifier = research_simulation
+				ARoAI_add_mass_communication_research_to_mass_communication = yes
+				remove_variable = mass_communication_research
+			}
+			else_if = {
+				limit = {
+					has_technology_researched = mass_communication
+					has_variable = mass_communication_research
+				}
+				remove_modifier = research_simulation
+				ARoAI_add_mass_communication_research_to_nationalism = yes
+				remove_variable = mass_communication_research
+			}
+			else_if = {
+				limit = {
+					NOR = {
+						is_researching_technology = mass_communication
+						has_technology_researched = mass_communication
+					}
+					has_variable = mass_communication_research
+				}
+				set_variable = {
+					name = research_simulation
+					value = modifier:country_weekly_innovation_add
+				}
+				change_variable = {
+					name = research_simulation
+					multiply = 4.345
+				}
+				change_variable = {
+					name = mass_communication_research
+					add = var:research_simulation
+				}
+				remove_variable = research_simulation
+				if = {
+					limit = {
+						var:mass_communication_research >= 15000
+					}
+					add_technology_researched = mass_communication
+					remove_variable = mass_communication_research
+					remove_modifier = research_simulation
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					has_variable = nationalism_research
+					AND = {
+						OR = {
+							AND = {
+								year >= 1850
+								country_rank >= rank_value:minor_power
+							}
+							AND = {
+								year >= 1855
+								country_rank >= rank_value:major_power
+							}
+						}
+						has_technology_researched = mass_communication
+						NOR = {
+							is_researching_technology = nationalism
+							has_technology_researched = nationalism
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					AND = {
+						has_technology_researched = mass_communication
+						NOR = {
+							is_researching_technology = nationalism
+							has_technology_researched = nationalism
+						}
+					}
+					NOT = {
+						has_variable = nationalism_research
+					}
+				}
+				set_variable = {
+					name = nationalism_research
+					value = 0
+				}
+				add_modifier = { name = research_simulation months = -1 }
+			}
+			else_if = {
+				limit = {
+					is_researching_technology = nationalism
+					has_variable = nationalism_research
+				}
+				remove_modifier = research_simulation
+				ARoAI_add_nationalism_research_to_nationalism = yes
+				remove_variable = nationalism_research
+			}
+			else_if = {
+				limit = {
+					has_technology_researched = nationalism
+					has_variable = nationalism_research
+				}
+				remove_modifier = research_simulation
+				ARoAI_add_nationalism_research_to_pan_nationalism = yes
+				remove_variable = nationalism_research
+			}
+			else_if = {
+				limit = {
+					NOR = {
+						is_researching_technology = nationalism
+						has_technology_researched = nationalism
+					}
+					has_variable = nationalism_research
+				}
+				set_variable = {
+					name = research_simulation
+					value = modifier:country_weekly_innovation_add
+				}
+				change_variable = {
+					name = research_simulation
+					multiply = 4.345
+				}
+				change_variable = {
+					name = nationalism_research
+					add = var:research_simulation
+				}
+				remove_variable = research_simulation
+				if = {
+					limit = {
+						var:nationalism_research >= 15000
+					}
+					add_technology_researched = nationalism
+					remove_variable = nationalism_research
+					remove_modifier = research_simulation
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					has_variable = pan_nationalism_research
+					AND = {
+						year >= 1860
+						country_rank >= rank_value:major_power
+						has_technology_researched = nationalism
+						NOR = {
+							is_researching_technology = pan-nationalism
+							has_technology_researched = pan-nationalism
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					AND = {
+						has_technology_researched = nationalism
+						NOR = {
+							is_researching_technology = pan-nationalism
+							has_technology_researched = pan-nationalism
+						}
+					}
+					NOT = {
+						has_variable = pan_nationalism_research
+					}
+				}
+				set_variable = {
+					name = pan_nationalism_research
+					value = 0
+				}
+				add_modifier = { name = research_simulation months = -1 }
+			}
+			else_if = {
+				limit = {
+					is_researching_technology = pan-nationalism
+					has_variable = pan_nationalism_research
+				}
+				remove_modifier = research_simulation
+				ARoAI_add_pan_nationalism_research_to_pan_nationalism = yes
+				remove_variable = pan_nationalism_research
+			}
+			else_if = {
+				limit = {
+					has_technology_researched = pan-nationalism
+					has_variable = pan_nationalism_research
+				}
+				remove_modifier = research_simulation
+				ARoAI_add_pan_nationalism_research_to_political_agitation = yes
+				remove_variable = pan_nationalism_research
+			}
+			else_if = {
+				limit = {
+					NOR = {
+						is_researching_technology = pan-nationalism
+						has_technology_researched = pan-nationalism
+					}
+					has_variable = pan_nationalism_research
+				}
+				set_variable = {
+					name = research_simulation
+					value = modifier:country_weekly_innovation_add
+				}
+				change_variable = {
+					name = research_simulation
+					multiply = 4.345
+				}
+				change_variable = {
+					name = pan_nationalism_research
+					add = var:research_simulation
+				}
+				remove_variable = research_simulation
+				if = {
+					limit = {
+						var:pan_nationalism_research >= 20000
+					}
+					add_technology_researched = pan-nationalism
+					remove_variable = pan_nationalism_research
+					remove_modifier = research_simulation
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,220 @@
+﻿# THIS EFFECT TO BE USED IN STATE SCOPE FOR ADDING/REFRESHING PLAGUE MODIFIERS
+randomize_plague_level_effect = {
+	# first we need a random number between 1 and 5
+	set_variable = {
+		name = plague_level
+		value = 1
+	}
+	hidden_effect = {
+		# it's maths time
+		random_list = {
+			1 = {
+			 # no effect
+			}
+			1 = {
+				change_variable = {
+					name = plague_level
+					add = 1
+				}
+			}
+			1 = {
+				change_variable = {
+					name = plague_level
+					add = 2
+				}
+			}
+			1 = {
+				change_variable = {
+					name = plague_level
+					add = 3
+				}
+			}
+			1 = {
+				change_variable = {
+					name = plague_level
+					add = 4
+				}
+			}
+		}
+	}
+	# now we modify that number if the country has mitigation efforts
+	if = {
+		limit = {
+			owner = {
+				has_variable = plague_lockdown
+			}
+		}
+		change_variable = {
+			name = plague_level
+			add = -3
+		}
+	}
+	if = {
+		limit = {
+			owner = {
+				has_variable = plague_measures
+			}
+		}
+		change_variable = {
+			name = plague_level
+			add = -1
+		}
+	}
+	if = {
+		limit = {
+			owner = { # treatments were not very effective but care affects mortality
+				institution_investment_level = { 
+					institution = institution_health_system
+					value = 3
+				}
+			}
+		}
+		change_variable = {
+			name = plague_level
+			add = -1
+		}
+	}
+	clamp_variable = {
+		name = plague_level
+		max = 5
+		min = 1
+	}
+}
+
+add_plague_modifier_effect = {
+	# clear any old plague modifiers
+	hidden_effect = {
+		remove_modifier = plague_modifier
+		remove_modifier = plague_lockdown_mod
+		remove_modifier = plague_measures_mod
+	}
+	# now we can add the modifiers based on the final number
+	if = {
+		limit = {
+			var:plague_level = 1
+		}
+		add_modifier = {
+			name = plague_modifier
+			months = 6
+		}
+	}
+	else_if = {
+		limit = {
+			var:plague_level = 2
+		}
+		add_modifier = {
+			name = plague_modifier
+			months = 6
+			multiplier = 2
+		}
+	}
+	else_if = {
+		limit = {
+			var:plague_level = 3
+		}
+		add_modifier = {
+			name = plague_modifier
+			months = 6
+			multiplier = 3
+		}
+	}
+	else_if = {
+		limit = {
+			var:plague_level = 4
+		}
+		add_modifier = {
+			name = plague_modifier
+			months = 6
+			multiplier = 4
+		}
+	}
+	else_if = {
+		limit = {
+			var:plague_level = 5
+		}
+		add_modifier = {
+			name = plague_modifier
+			months = 6
+			multiplier = 5
+		}
+	}
+	# remove the variable for safety
+	remove_variable = plague_level
+	# now add anti-plague measures modifiers for economy
+	if = {
+		limit = {
+			owner = {
+				has_variable = plague_lockdown
+			}
+		}
+		add_modifier = {
+			name = plague_lockdown_mod
+			months = 6
+		}
+	}
+	if = {
+		limit = {
+			owner = {
+				has_variable = plague_measures
+			}
+		}
+		add_modifier = {
+			name = plague_measures_mod
+			months = 6
+		}
+	}
+	# set the wave
+	if = {
+		limit = {
+			NOT = { 
+				has_variable = plague_wave
+			}
+		}
+		set_variable = {
+			name = plague_wave
+			value = 1
+		}
+	}
+	else = {
+		change_variable = {
+			name = plague_wave
+			add = 1
+		}
+	}
+	# determine whether the state will get another wave of plague in 6 months
+	hidden_effect = {
+		if = {
+			limit = {
+				owner = {
+					has_variable = plague_lockdown
+				}
+			}
+			random_list = {
+				1 = {
+					trigger_event = { id = plague.3 days = 162 }
+				}
+				2 = {
+					# no effect
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				owner = {
+					has_variable = plague_measures
+				}
+			}
+			random_list = {
+				3 = {
+					trigger_event = { id = plague.3 days = 162 }
+				}
+				2 = {
+					# no effect
+				}
+			}
+		}
+		else = {
+			trigger_event = { id = plague.3 days = 162 }
+		}
+	}
+}

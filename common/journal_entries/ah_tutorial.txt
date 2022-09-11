@@ -1,0 +1,339 @@
+﻿je_tutorial_expand_basic_building = {
+	how_tutorial = lesson_expand_building_how
+	why_tutorial = lesson_expand_building_why
+
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	complete = {
+		scope:journal_entry = { is_goal_complete = yes }
+	}
+	
+	current_value = {
+		value = scope:target.level
+	}
+	
+	goal_add_value = {
+		value = 1
+	}
+	
+	is_progressing = {
+		exists = scope:target
+		scope:target = { is_under_construction = yes }
+	}
+	
+	invalid = {
+		custom_tooltip = {
+			text = je_tutorial_expand_basic_building_invalid_tooltip
+			OR = {
+				NOT = { exists = scope:target }
+				NOT = { scope:target.owner = root }
+			}
+		} 			
+	}
+	
+	on_complete = {
+		owner = {
+			start_tutorial_lesson = { 
+				tutorial_lesson = lesson_expand_basic_building_complete
+				journal_entry = je:je_tutorial_expand_basic_building
+			}
+		}
+	}
+	
+	on_invalid = {
+		remove_active_objective_subgoal = sg_expand_basic_building
+	}
+	
+	weight = 1000
+	inheritable = yes
+	should_update_on_player_command = yes
+}
+
+je_tutorial_fix_budget_deficit = {
+	how_tutorial = lesson_budget_balance_how
+	why_tutorial = lesson_budget_balance_why
+
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	immediate = {
+		set_variable = {
+			name = original_tax_level
+			value = tax_level_value
+		}
+		set_variable = {
+			name = original_num_taxed_goods
+			value = num_taxed_goods
+		}		
+	}
+	
+	complete = {
+		treasury > 0
+	}
+
+	is_progressing = {
+		weekly_net_fixed_income > 0
+	}
+
+	fail = {
+		in_default = yes
+	}
+
+	on_fail = {
+		owner = {
+			start_tutorial_lesson = { 
+				tutorial_lesson = lesson_budget_balance_fail
+				journal_entry = je:je_tutorial_fix_budget_deficit
+			}
+		}
+	}
+	
+	weight = 1010
+	inheritable = yes
+	should_update_on_player_command = yes
+}
+
+je_tutorial_export_goods = {
+	how_tutorial = lesson_export_goods_how
+	why_tutorial = lesson_export_goods_why
+
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+		
+	complete = {
+		exists = scope:target
+		scope:target = { market_goods_exports > 0 }	
+	}
+	
+	invalid = {	
+		NOT = { exists = scope:target }
+	}
+	
+	weight = 1010
+	inheritable = yes
+	should_update_on_player_command = yes
+}
+
+je_tutorial_import_goods = {
+	how_tutorial = lesson_import_goods_how
+	why_tutorial = lesson_import_goods_why
+
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	complete = {
+		exists = scope:target
+		scope:target = { market_goods_imports > 0 }	
+	}
+	
+	invalid = {
+		NOT = { exists = scope:target }
+	}
+		
+	weight = 1010
+	inheritable = yes
+	should_update_on_player_command = yes
+}
+
+je_tutorial_change_production_method = {
+	how_tutorial = lesson_production_methods_how
+	why_tutorial = lesson_production_methods_why
+
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+	
+	immediate = {
+		scope:journal_entry = {
+			set_variable = {
+				name = num_weeks_in_progress
+				value = 0
+			}
+		}
+	}
+	
+	complete = {
+		scope:journal_entry = { is_goal_complete = yes }
+	}
+	
+	current_value = {
+		value = scope:journal_entry.var:num_weeks_in_progress
+	}
+	
+	goal_add_value = {
+		value = 4
+	}
+	
+	is_progressing = {
+		has_variable = has_changed_production_method
+	}
+	
+	on_weekly_pulse = {
+		effect = {
+			scope:journal_entry = { 
+				if = {
+					limit = {
+						is_progressing = yes 
+					}
+					change_variable = {
+						name = num_weeks_in_progress
+						add = 1
+					}
+				}
+			}
+		}
+	}
+	
+	invalid = {
+		custom_tooltip = {
+			text = je_tutorial_change_production_method_invalid_tooltip
+			OR = {
+				NOT = { exists = scope:target }
+				NOT = { scope:target.owner = root }
+			}	
+		} 			
+	}
+	
+	weight = 1010
+	inheritable = yes
+	should_update_on_player_command = yes
+}
+
+je_tutorial_expand_productive_building = {
+	how_tutorial = lesson_expand_productive_building_how
+	why_tutorial = lesson_expand_productive_building_why
+
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	complete = {
+		scope:journal_entry = { is_goal_complete = yes }
+	}
+	
+	is_progressing = {
+		exists = scope:target
+		scope:target = { is_under_construction = yes }
+	}
+	
+	current_value = {
+		value = scope:target.level
+	}
+	
+	goal_add_value = {
+		value = 1
+	}
+	
+	invalid = {
+		custom_tooltip = {
+			text = je_tutorial_expand_productive_building_invalid_tooltip
+			OR = {
+				NOT = { exists = scope:target }
+				NOT = { scope:target.owner = root }
+			}	
+		} 			
+	}
+	
+	on_invalid = {
+		remove_active_objective_subgoal = sg_expand_productive_building
+	}
+	
+	weight = 1001
+	inheritable = yes
+	should_update_on_player_command = yes
+}
+
+je_tutorial_fix_unprofitable_building = {
+	how_tutorial = lesson_fix_unprofitable_building
+
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	complete = {
+		scope:target = {
+			OR = {
+				earnings >= 5.0
+				is_subsidized = yes
+			}	
+		}
+	}
+	
+	invalid = {
+		custom_tooltip = {
+			text = je_tutorial_fix_unprofitable_building_invalid_tooltip
+			OR = {
+				NOT = { exists = scope:target }
+				NOT = { scope:target.owner = root }
+			}	
+		} 			
+	}	
+	
+	weight = 1010
+	inheritable = yes
+	should_update_on_player_command = yes
+}
+
+je_tutorial_grow_gdp = {
+	complete = {
+		scope:journal_entry = { is_goal_complete = yes }
+	}
+	
+	current_value = {
+		value = gdp
+	}
+	goal_add_value = {
+		value = gdp
+		multiply = 0.25
+	}
+	
+	weight = 1002
+	inheritable = yes
+	should_update_on_player_command = yes
+}
+
+je_tutorial_promote_ig = {
+	
+	how_tutorial = lesson_promote_ig_how
+	why_tutorial = lesson_promote_ig_why
+
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	complete = {
+		scope:journal_entry = { is_goal_complete = yes }
+	}
+	
+	is_progressing = {
+		any_interest_group = {
+			is_being_promoted = yes
+		}
+	}
+	
+	immediate = {
+		scope:journal_entry = {
+			set_variable = {
+				name = num_weeks_in_progress
+				value = 0
+			}
+		}
+	}
+	
+	on_weekly_pulse = {
+		effect = {
+			scope:journal_entry = { 
+				if = {
+					limit = {
+						is_progressing = yes 
+					}
+					change_variable = {
+						name = num_weeks_in_progress
+						add = 1
+					}
+				}
+			}
+		}
+	}
+	
+	current_value = {
+		value = scope:journal_entry.var:num_weeks_in_progress
+	}
+	
+	goal_add_value = {
+		value = 26
+	}
+	
+	weight = 1002
+	inheritable = yes
+	should_update_on_player_command = yes
+}

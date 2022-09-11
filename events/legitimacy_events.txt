@@ -1,0 +1,545 @@
+﻿namespace = legitimacy_events
+
+legitimacy_events.1 = { #Landed interest petitioned to be removed by intelligentsia
+	type = country_event
+	placement = root
+
+	title = legitimacy_events.1.t
+	desc = legitimacy_events.1.d
+	flavor = legitimacy_events.1.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_election.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/election"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 3
+
+	trigger = {
+		government_legitimacy <= 50
+
+		ig:ig_landowners = {
+			is_in_government = yes
+			is_powerful = no
+		}
+
+		 ig:ig_intelligentsia = {
+			is_powerful = yes
+			is_in_government = no
+		}
+
+	}
+
+	immediate = {
+
+	}
+
+	option = { #Promise to remove
+		name = legitimacy_events.1.a
+		default_option = yes
+		ig:ig_landowners = {
+			remove_ruling_interest_group = yes
+			add_modifier = {
+				name = removed_from_government
+				months = normal_modifier_time
+			}
+		}
+
+		ig:ig_intelligentsia = {
+			add_modifier = {
+				name = enemy_removed_from_government
+				months = normal_modifier_time
+			}
+		}
+	}
+
+	option = { #Refuse to remove
+		name = legitimacy_events.1.b
+		ig:ig_intelligentsia = {
+			add_modifier = {
+				name = government_legitimacy_change_denied
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+legitimacy_events.2 = { #Intelligentisa want to remove devout
+	type = country_event
+	placement = root
+
+	title = legitimacy_events.2.t
+	desc = legitimacy_events.2.d
+	flavor = legitimacy_events.2.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_election.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/election"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 3
+
+	trigger = {
+		government_legitimacy <= 50
+
+		ig:ig_devout = {
+			is_in_government = yes
+			is_powerful = no
+		}
+
+		 ig:ig_intelligentsia = {
+			is_powerful = yes
+			is_in_government = no
+		}
+
+	}
+
+	immediate = {
+
+	}
+
+	option = { #Promise to remove
+		name = legitimacy_events.2.a
+		default_option = yes
+		ig:ig_devout = {
+			remove_ruling_interest_group = yes
+			add_modifier = {
+				name = removed_from_government
+				months = normal_modifier_time
+			}
+		}
+
+		ig:ig_intelligentsia = {
+			add_modifier = {
+				name = enemy_removed_from_government
+				months = normal_modifier_time
+			}
+		}
+	}
+
+	option = { #Refuse to remove
+		name = legitimacy_events.2.b
+		ig:ig_intelligentsia = {
+			add_modifier = {
+				name = government_legitimacy_change_denied
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+legitimacy_events.3 = { #trade unions want to remove petty bourgeoisie
+	type = country_event
+	placement = root
+
+	title = legitimacy_events.3.t
+	desc = legitimacy_events.3.d
+	flavor = legitimacy_events.3.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_election.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/election"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 3
+
+	trigger = {
+		government_legitimacy <= 50
+
+		ig:ig_petty_bourgeoisie = {
+			is_in_government = yes
+			is_powerful = no
+		}
+
+		 ig:ig_intelligentsia = {
+			is_powerful = yes
+			is_in_government = no
+		}
+
+	}
+
+	immediate = {
+
+	}
+
+	option = { #Promise to remove
+		name = legitimacy_events.3.a
+		default_option = yes
+		ig:ig_petty_bourgeoisie = {
+			remove_ruling_interest_group = yes
+			add_modifier = {
+				name = removed_from_government
+				months = normal_modifier_time
+			}
+		}
+
+		ig:ig_intelligentsia = {
+			add_modifier = {
+				name = enemy_removed_from_government
+				months = normal_modifier_time
+			}
+		}
+	}
+
+	option = { #Refuse to remove
+		name = legitimacy_events.3.b
+		ig:ig_intelligentsia = {
+			add_modifier = {
+				name = government_legitimacy_change_denied
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+legitimacy_events.4 = { #Landowners want to remove the rural folk
+	type = country_event
+	placement = root
+
+	title = legitimacy_events.4.t
+	desc = legitimacy_events.4.d
+	flavor = legitimacy_events.4.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_election.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/election"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 3
+
+	trigger = {
+		government_legitimacy <= 50
+
+		ig:ig_rural_folk = {
+			is_in_government = yes
+			is_powerful = no
+		}
+
+		 ig:ig_landowners = {
+			is_powerful = yes
+			is_in_government = no
+		}
+
+	}
+
+	immediate = {
+
+	}
+
+	option = { #Promise to remove
+		name = legitimacy_events.4.a
+		default_option = yes
+		ig:ig_rural_folk = {
+			remove_ruling_interest_group = yes
+			add_modifier = {
+				name = removed_from_government
+				months = normal_modifier_time
+			}
+		}
+
+		ig:ig_landowners = {
+			add_modifier = {
+				name = enemy_removed_from_government
+				months = normal_modifier_time
+			}
+		}
+	}
+
+	option = { #Refuse to remove
+		name = legitimacy_events.4.b
+		ig:ig_landowners = {
+			add_modifier = {
+				name = government_legitimacy_change_denied
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+legitimacy_events.5 = { #Trade unions want to remove industralists
+	type = country_event
+	placement = root
+
+	title = legitimacy_events.5.t
+	desc = legitimacy_events.5.d
+	flavor = legitimacy_events.5.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_election.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/election"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 3
+
+	trigger = {
+		government_legitimacy <= 50
+
+		ig:ig_industrialists = {
+			is_in_government = yes
+			is_powerful = no
+		}
+
+		 ig:ig_trade_unions = {
+			is_powerful = yes
+			is_in_government = no
+		}
+
+	}
+
+	immediate = {
+
+	}
+
+	option = { #Promise to remove
+		name = legitimacy_events.5.a
+		default_option = yes
+		ig:ig_industrialists = {
+			remove_ruling_interest_group = yes
+			add_modifier = {
+				name = removed_from_government
+				months = normal_modifier_time
+			}
+		}
+
+		ig:ig_trade_unions = {
+			add_modifier = {
+				name = enemy_removed_from_government
+				months = normal_modifier_time
+			}
+		}
+	}
+
+	option = { #Refuse to remove
+		name = legitimacy_events.5.b
+		ig:ig_trade_unions = {
+			add_modifier = {
+				name = government_legitimacy_change_denied
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+legitimacy_events.6 = { #the devout want to remove the intelligentsia
+	type = country_event
+	placement = root
+
+	title = legitimacy_events.6.t
+	desc = legitimacy_events.6.d
+	flavor = legitimacy_events.6.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_election.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/election"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 3
+
+	trigger = {
+		government_legitimacy <= 50
+
+		ig:ig_intelligentsia = {
+			is_in_government = yes
+			is_powerful = no
+		}
+
+		 ig:ig_devout = {
+			is_powerful = yes
+			is_in_government = no
+		}
+
+	}
+
+	immediate = {
+
+	}
+
+	option = { #Promise to remove
+		name = legitimacy_events.6.a
+		default_option = yes
+		ig:ig_intelligentsia = {
+			remove_ruling_interest_group = yes
+			add_modifier = {
+				name = removed_from_government
+				months = normal_modifier_time
+			}
+		}
+
+		ig:ig_devout = {
+			add_modifier = {
+				name = enemy_removed_from_government
+				months = normal_modifier_time
+			}
+		}
+	}
+
+	option = { #Refuse to remove
+		name = legitimacy_events.6.b
+		ig:ig_devout = {
+			add_modifier = {
+				name = government_legitimacy_change_denied
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+legitimacy_events.7 = { #Someone wants to remove the trade unions
+	type = country_event
+	placement = root
+
+	title = legitimacy_events.7.t
+	desc = legitimacy_events.7.d
+	flavor = legitimacy_events.7.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_election.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/election"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 3
+
+	trigger = {
+		government_legitimacy <= 50
+
+		ig:ig_trade_unions = {
+			is_in_government = yes
+			is_powerful = no
+		}
+
+		 ig:ig_industrialists = {
+			is_powerful = yes
+			is_in_government = no
+		}
+
+	}
+
+	immediate = {
+
+	}
+
+	option = { #Promise to remove
+		name = legitimacy_events.7.a
+		default_option = yes
+		ig:ig_trade_unions = {
+			remove_ruling_interest_group = yes
+			add_modifier = {
+				name = removed_from_government
+				months = normal_modifier_time
+			}
+		}
+
+		ig:ig_industrialists = {
+			add_modifier = {
+				name = enemy_removed_from_government
+				months = normal_modifier_time
+			}
+		}
+	}
+
+	option = { #Refuse to remove
+		name = legitimacy_events.7.b
+		ig:ig_industrialists = {
+			add_modifier = {
+				name = government_legitimacy_change_denied
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+legitimacy_events.8 = { #Someone wants to remove the armed forces
+	type = country_event
+	placement = root
+
+	duration = 3
+
+	title = legitimacy_events.8.t
+	desc = legitimacy_events.8.d
+	flavor = legitimacy_events.8.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_election.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/election"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	trigger = {
+		government_legitimacy <= 50
+
+		ig:ig_armed_forces = {
+			is_in_government = yes
+			is_powerful = no
+		}
+
+		 ig:ig_trade_unions = {
+			is_powerful = yes
+			is_in_government = no
+		}
+
+	}
+
+	immediate = {
+
+	}
+
+	option = { #Promise to remove
+		name = legitimacy_events.8.a
+		default_option = yes
+		ig:ig_armed_forces = {
+			remove_ruling_interest_group = yes
+			add_modifier = {
+				name = removed_from_government
+				months = normal_modifier_time
+			}
+		}
+
+		ig:ig_trade_unions = {
+			add_modifier = {
+				name = enemy_removed_from_government
+				months = normal_modifier_time
+			}
+		}
+	}
+
+	option = { #Refuse to remove
+		name = legitimacy_events.8.b
+		ig:ig_trade_unions = {
+			add_modifier = {
+				name = government_legitimacy_change_denied
+				months =normal_modifier_time
+			}
+		}
+	}
+}

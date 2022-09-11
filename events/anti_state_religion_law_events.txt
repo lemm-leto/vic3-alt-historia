@@ -1,0 +1,291 @@
+﻿namespace = anti_state_religion
+
+# Religious corruption exposed
+anti_state_religion.1 = { # Advance
+	type = country_event
+
+	title = anti_state_religion.1.t
+	desc = anti_state_religion.1.d
+	flavor = anti_state_religion.1.f
+
+	event_image = {
+		video = "gfx/event_pictures/asia_union_leader.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/situation"
+	on_opened_soundeffect = "event:/SFX/Events/asia/union_leader"
+
+	icon = "gfx/interface/icons/event_icons/event_newspaper.dds"
+
+	duration = 3
+	
+	trigger = {
+		NOT = { has_modifier = natural_state_of_man }
+		has_law = law_type:law_state_religion
+		OR = {
+			is_enacting_law = law_type:law_freedom_of_conscience
+			is_enacting_law = law_type:law_total_separation
+		}
+	}
+	
+	immediate = {
+		currently_enacting_law = {
+			save_scope_as = current_law_scope
+		}
+		random_scope_state = {
+			limit = {
+				is_incorporated = yes
+				any_scope_pop = {
+					religion = ROOT.religion
+				}
+			}
+			random_scope_pop = {
+				limit = {
+					religion = ROOT.religion
+				}
+				save_scope_as = country_religion_pop
+			}
+		}
+	}
+
+	option = {
+		name = anti_state_religion.1.a
+        default_option = yes
+
+		add_enactment_modifier = {
+			name = anti_religious_fury
+		}
+	}
+
+	option = {
+		name = anti_state_religion.1.b
+
+		trigger = {
+			any_scope_character = {
+				is_ruler = yes
+				OR = { 
+					AND = {
+						NOT = { has_ideology = ideology_atheist }
+						#OR = {
+						#	interest_group = {
+						#		this = ig:ig_trade_unions
+						#	}
+						#	interest_group = {
+						#		this = ig:ig_armed_forces
+						#	}
+						#	interest_group = {
+						#		this = ig:ig_petty_bourgeoisie
+						#	}
+						#	interest_group = {
+						#		this = ig:ig_industrialists
+						#	}
+						#}
+					}
+					has_ideology = ideology_theocrat
+					has_ideology = ideology_traditionalist
+				} 
+			}
+		}
+
+		if = {
+			limit = {
+				ruler = { has_ideology = ideology_theocrat }
+			}
+			ruler = { set_ideology = ideology_moderate }
+		}
+		else_if = {
+			limit = {
+				ruler = { has_ideology = ideology_traditionalist }
+			}
+			ruler = { set_ideology = ideology_moderate }
+		}
+		else_if = {
+			limit = {
+				ruler = {
+					NOT = { has_ideology = ideology_atheist }
+					#OR = {
+					#	interest_group = {
+					#		this = ig:ig_trade_unions
+					#	}
+					#	interest_group = {
+					#		this = ig:ig_armed_forces
+					#	}
+					#	interest_group = {
+					#		this = ig:ig_petty_bourgeoisie
+					#	}
+					#	interest_group = {
+					#		this = ig:ig_industrialists
+					#	}
+					#}
+				}
+			}
+			ruler = { set_ideology = ideology_atheist }
+		}
+	}
+}
+
+# Anti-Clericalism
+# Debate
+anti_state_religion.2 = {
+	type = country_event
+	placement = root
+	title = anti_state_religion.2.t
+	desc = anti_state_religion.2.d
+	flavor = anti_state_religion.2.f
+
+	duration = 3
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_christianity.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/situation"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/christianity"
+
+	icon = "gfx/interface/icons/event_icons/event_scales.dds"
+
+	trigger = {
+		has_law = law_type:law_state_religion
+		OR = {
+			is_enacting_law = law_type:law_freedom_of_conscience
+			is_enacting_law = law_type:law_total_separation
+		}
+		any_scope_pop = {
+			is_pop_type = clergymen # sanity check
+		}
+		any_interest_group = { # probably Devout but not necessarily
+			is_marginal = no
+			law_stance = {
+				law = owner.currently_enacting_law.type
+				value < neutral
+			}
+		}
+	}
+
+	immediate = {
+		currently_enacting_law = {
+			save_scope_as = current_law_scope
+		}
+		random_interest_group = {
+			limit = {
+				is_marginal = no
+				is_insurrectionary = no
+				law_stance = {
+					law = owner.currently_enacting_law.type
+					value < neutral
+				}
+			}
+			save_scope_as = community_rel_ig_scope
+			leader = {
+				save_scope_as = community_rel_ig_leader_scope
+			}
+		}
+	}
+
+	option = {
+		name = anti_state_religion.2.a
+		default_option = yes
+		add_enactment_modifier = {
+			name = anti_clericalism_pushed_through
+		}
+		add_radicals = {
+			value = 0.2
+			pop_type = clergymen
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = anti_state_religion.2.b
+		add_enactment_modifier = {
+			name = anti_clericalism_halted
+		}
+		ai_chance = {
+			base = 20
+		}
+	}
+}
+
+# The Martyr
+# Stall
+anti_state_religion.3 = {
+	type = country_event
+	placement = root
+	title = anti_state_religion.3.t
+	desc = anti_state_religion.3.d
+	flavor = anti_state_religion.3.f
+
+	duration = 3
+
+	event_image = {
+		video = "gfx/event_pictures/middleeast_courtroom_upheaval.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/situation"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/courtroom_upheaval"
+
+	icon = "gfx/interface/icons/event_icons/event_fire.dds"
+
+	trigger = {
+		has_law = law_type:law_state_religion
+		OR = {
+			is_enacting_law = law_type:law_freedom_of_conscience
+			is_enacting_law = law_type:law_total_separation
+		}
+		any_scope_pop = {
+			is_pop_type = clergymen # sanity check
+		}
+	}
+
+	immediate = {
+		random_scope_state = {
+			limit = {
+				is_incorporated = yes
+				any_scope_pop = {
+					religion = ROOT.religion
+				}
+			}
+			random_scope_pop = {
+				limit = {
+					religion = ROOT.religion
+				}
+				save_scope_as = country_religion_pop
+			}
+		}
+	}
+
+	option = {
+		name = anti_state_religion.3.a
+		default_option = yes
+		random_list = {
+			1 = {
+				add_enactment_modifier = {
+					name = example_made_of_preacher
+				}
+			}
+			3 = {
+				add_enactment_modifier = {
+					name = martyr_motivated_commotion
+				}
+				add_radicals = {
+					value = 0.1
+					pop_type = clergymen
+				}
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+	option = {
+		name = anti_state_religion.3.b
+		add_enactment_modifier = {
+			name = street_preachers
+		}
+		ai_chance = {
+			base = 20
+		}
+	}
+}

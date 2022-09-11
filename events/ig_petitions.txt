@@ -1,0 +1,1074 @@
+﻿namespace = ig_petitions
+
+# Landowners wants to roll back suffrage
+ig_petitions.1 = {
+	type = country_event
+	placement = ROOT
+
+	title = ig_petitions.1.t
+	desc = ig_petitions.1.d
+	flavor = ig_petitions.1.f
+
+	event_image = {
+		video = "gfx/event_pictures/europenorthamerica_capitalists_meeting.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/europenorthamerica/capitalists_meeting"
+
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	duration = 3
+
+	trigger = {
+		has_law = law_type:law_universal_suffrage
+		NOT = { has_variable = landowners_promise }
+		NOT = { has_modifier = failed_to_deliver }
+		ig:ig_landowners = {
+			is_powerful = yes
+			is_in_government = no
+			NOT = { has_modifier = rejected_petition }
+		}
+	}
+
+	option = {
+		name = ig_petitions.1.a
+		add_journal_entry = {
+			type = je_landowners_suffrage_roll_back
+		}
+		set_variable = {
+			name = landowners_promise
+			days = 1825 # five years
+		}
+		add_modifier = {
+			name = accepted_petition_LI
+			months = normal_modifier_time
+		}
+	}
+
+	option = {
+		name = ig_petitions.1.b
+		default_option = yes
+		ig:ig_landowners = {
+			add_modifier = {
+				name = rejected_petition
+				months = 12
+			}
+		}
+	}
+}
+
+# The Landowners were promised change, but change didn't come.
+ig_petitions.2 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.2.t
+	desc = ig_petitions.2.d
+	flavor = ig_petitions.2.f
+
+	event_image = {
+		video = "gfx/event_pictures/europenorthamerica_capitalists_meeting.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/europenorthamerica/capitalists_meeting"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 1
+
+	trigger = {
+	}
+
+	option = {
+		name = ig_petitions.2.a
+		remove_variable = landowners_promise
+		remove_modifier = accepted_petition_LI
+		add_modifier = {
+			name = failed_to_deliver
+			months = normal_modifier_time
+		}
+	}
+}
+
+# The Landowners were promised change, and lo, change did come.
+ig_petitions.3 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.3.t
+	desc = ig_petitions.3.d
+	flavor = ig_petitions.3.f
+
+	event_image = {
+		video = "gfx/event_pictures/europenorthamerica_capitalists_meeting.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/europenorthamerica/capitalists_meeting"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 1
+
+	trigger = {
+	}
+
+	option = {
+		name = ig_petitions.3.a
+		remove_variable = landowners_promise
+		remove_modifier = accepted_petition_LI
+		ig:ig_landowners = {
+			add_modifier = {
+				name = fulfilled_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# Devout want State Religion
+ig_petitions.4 = {
+	type = country_event
+	placement = ROOT
+
+	title = ig_petitions.4.t
+	desc = ig_petitions.4.d
+	flavor = ig_petitions.4.f
+
+	event_image = {
+		video = "gfx/event_pictures/middleeast_islam.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/islam"
+
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	duration = 3
+
+	trigger = {
+		NOT = { has_law = law_type:law_state_religion }
+		NOT = { has_variable = devout_promise }
+		NOT = { has_modifier = failed_to_deliver }
+		ig:ig_devout = {
+			is_powerful = yes
+			is_in_government = no
+			NOT = { has_modifier = rejected_petition }
+		}
+	}
+
+	option = {
+		name = ig_petitions.4.a
+
+		add_journal_entry = {
+			type = je_devout_want_state_religion
+		}
+		set_variable = {
+			name = devout_promise
+			days = 1825 # five years
+		}
+		add_modifier = {
+			name = accepted_petition_DV
+			months = 66
+		}
+	}
+
+	option = {
+		name = ig_petitions.4.b
+		default_option = yes
+		ig:ig_devout = {
+			add_modifier = {
+				name = rejected_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# The Devout were promised change, but change didn't come.
+ig_petitions.5 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.5.t
+	desc = ig_petitions.5.d
+	flavor = ig_petitions.5.f
+
+	event_image = {
+		video = "gfx/event_pictures/middleeast_islam.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/islam"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 1
+
+	trigger = {
+
+	}
+
+	option = {
+		name = ig_petitions.5.a
+		remove_variable = devout_promise
+		remove_modifier = accepted_petition_DV
+		add_modifier = {
+			name = failed_to_deliver
+			months = normal_modifier_time
+		}
+	}
+}
+
+# The Devout were promised change, and lo, change did come.
+ig_petitions.6 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.6.t
+	desc = ig_petitions.6.d
+	flavor = ig_petitions.6.f
+
+	event_image = {
+		video = "gfx/event_pictures/middleeast_islam.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/islam"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 1
+
+	trigger = {
+
+	}
+
+	option = {
+		name = ig_petitions.6.a
+		remove_variable = devout_promise
+		remove_modifier = accepted_petition_DV
+		ig:ig_devout = {
+			add_modifier = {
+				name = fulfilled_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# Intelligentsia wants Free Speech
+ig_petitions.7 = {
+	type = country_event
+	placement = ROOT
+
+	title = ig_petitions.7.t
+	desc = ig_petitions.7.d
+	flavor = ig_petitions.7.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_election.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/election"
+
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	duration = 3
+
+	trigger = {
+		NOT = { has_law = law_type:law_right_of_assembly }
+		NOT = { has_variable = intelligentsia_promise }
+		NOT = { has_modifier = failed_to_deliver }
+		ig:ig_intelligentsia = {
+			is_powerful = yes
+			is_in_government = no
+			NOT = { has_modifier = rejected_petition }
+		}
+	}
+
+	option = {
+		name = ig_petitions.7.a
+		add_journal_entry = {
+			type = je_intelligentsia_want_free_speech
+		}
+		set_variable = {
+			name = intelligentsia_promise
+			days = 1825 # five years
+		}
+		add_modifier = {
+			name = accepted_petition_IT
+			months = normal_modifier_time
+		}
+	}
+
+	option = {
+		name = ig_petitions.7.b
+		default_option = yes
+		ig:ig_intelligentsia = {
+			add_modifier = {
+				name = rejected_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# The Intelligentsia promised change, but change didn't come.
+ig_petitions.8 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.8.t
+	desc = ig_petitions.8.d
+	flavor = ig_petitions.8.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_election.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/election"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 1
+
+	trigger = {
+
+	}
+
+	option = {
+		name = ig_petitions.8.a
+		remove_variable = intelligentsia_promise
+		remove_modifier = accepted_petition_IT
+		ig:ig_intelligentsia = {
+			add_modifier = {
+				name = failed_to_deliver
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# The Intelligentsia promised change, and lo, change did come.
+ig_petitions.9 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.9.t
+	desc = ig_petitions.9.d
+	flavor = ig_petitions.9.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_election.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/election"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 1
+
+	trigger = {
+	}
+
+	option = {
+		name = ig_petitions.9.a
+		remove_variable = intelligentsia_promise
+		remove_modifier = accepted_petition_IT
+		ig:ig_intelligentsia = {
+			add_modifier = {
+				name = fulfilled_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# Rural Folk want No Conscription
+ig_petitions.10 = {
+	type = country_event
+	placement = ROOT
+
+	title = ig_petitions.10.t
+	desc = ig_petitions.10.d
+	flavor = ig_petitions.10.f
+
+	event_image = {
+		video = "gfx/event_pictures/asia_farmers_market.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/asia/farmers_market"
+
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	duration = 3
+
+	trigger = {
+		NOT = { OR = { has_law = law_type:law_national_militia has_law = law_type:law_professional_army } }
+		NOT = { has_variable = rural_folk_promise }
+		NOT = { has_modifier = failed_to_deliver }
+		ig:ig_rural_folk = {
+			is_powerful = yes
+			is_in_government = no
+			NOT = { has_modifier = rejected_petition }
+		}
+	}
+
+	option = {
+		name = ig_petitions.10.a
+		add_journal_entry = {
+			type = je_rural_folk_no_conscription
+		}
+		set_variable = {
+			name = rural_folk_promise
+			days = 1825 # five years
+		}
+		add_modifier = {
+			name = accepted_petition_RF
+			months = normal_modifier_time
+		}
+	}
+
+	option = {
+		name = ig_petitions.10.b
+		default_option = yes
+		ig:ig_rural_folk = {
+			add_modifier = {
+				name = rejected_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# The Rural Folk were promised change, but change didn't come.
+ig_petitions.11 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.11.t
+	desc = ig_petitions.11.d
+	flavor = ig_petitions.11.f
+
+	event_image = {
+		video = "gfx/event_pictures/asia_farmers_market.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/asia/farmers_market"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 1
+
+	trigger = {
+
+	}
+
+	option = {
+		name = ig_petitions.11.a
+		remove_variable = rural_folk_promise
+		remove_modifier = accepted_petition_RF
+		ig:ig_rural_folk = {
+			add_modifier = {
+				name = failed_to_deliver
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# The Rural Folk were promised change, and lo, change did come.
+ig_petitions.12 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.12.t
+	desc = ig_petitions.12.d
+	flavor = ig_petitions.12.f
+
+	event_image = {
+		video = "gfx/event_pictures/asia_farmers_market.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/asia/farmers_market"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 1
+
+	trigger = {
+
+	}
+
+	option = {
+		name = ig_petitions.12.a
+		remove_variable = rural_folk_promise
+		remove_modifier = accepted_petition_RF
+		ig:ig_rural_folk = {
+			add_modifier = {
+				name = fulfilled_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# Trade Unions want compulsory primary schooling
+ig_petitions.13 = {
+	type = country_event
+	placement = ROOT
+
+	title = ig_petitions.13.t
+	desc = ig_petitions.13.d
+	flavor = ig_petitions.13.f
+
+	event_image = {
+		video = "gfx/event_pictures/asia_union_leader.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/asia/union_leader"
+
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	duration = 3
+
+	trigger = {
+		NOT = { has_law = law_type:law_compulsory_primary_school }
+		NOT = { has_variable = trade_unions_promise }
+		NOT = { has_modifier = failed_to_deliver }
+		has_technology_researched = labor_movement
+		ig:ig_trade_unions = {
+			is_powerful = yes
+			is_in_government = no
+			NOT = { has_modifier = rejected_petition }
+		}
+	}
+
+	option = {
+		name = ig_petitions.13.a
+		add_journal_entry = {
+			type = je_trade_unions_want_compulsory_schooling
+		}
+		set_variable = {
+			name = trade_unions_promise
+			days = 1825 # five years
+		}
+		add_modifier = {
+			name = accepted_petition_TU
+			months = normal_modifier_time
+		}
+	}
+
+	option = {
+		name = ig_petitions.13.b
+		default_option = yes
+		ig:ig_trade_unions = {
+			add_modifier = {
+				name = rejected_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# The Trade Unions were promised change, but change didn't come.
+ig_petitions.14 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.14.t
+	desc = ig_petitions.14.d
+	flavor = ig_petitions.14.f
+
+	event_image = {
+		video = "gfx/event_pictures/asia_union_leader.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/asia/union_leader"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 1
+
+	trigger = {
+
+	}
+
+	option = {
+		name = ig_petitions.14.a
+		remove_variable = trade_unions_promise
+		remove_modifier = accepted_petition_TU
+		ig:ig_trade_unions = {
+			add_modifier = {
+				name = failed_to_deliver
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# The Trade Unions were promised change, and lo, change did come.
+ig_petitions.15 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.15.t
+	desc = ig_petitions.15.d
+	flavor = ig_petitions.15.f
+
+	event_image = {
+		video = "gfx/event_pictures/asia_union_leader.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/asia/union_leader"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 1
+
+	trigger = {
+
+	}
+
+	option = {
+		name = ig_petitions.15.a
+		remove_variable = trade_unions_promise
+		remove_modifier = accepted_petition_TU
+		ig:ig_trade_unions = {
+			add_modifier = {
+				name = fulfilled_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# Industrialists want no graduated taxes
+ig_petitions.16 = {
+	type = country_event
+	placement = ROOT
+
+	title = ig_petitions.16.t
+	desc = ig_petitions.16.d
+	flavor = ig_petitions.16.f
+
+	event_image = {
+		video = "gfx/event_pictures/middleeast_upperclass_party.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/upperclass_party"
+
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	duration = 3
+
+	trigger = {
+		has_law = law_type:law_graduated_taxation
+		NOT = { has_variable = industrialists_promise }
+		NOT = { has_modifier = failed_to_deliver }
+		ig:ig_industrialists = {
+			is_powerful = yes
+			is_in_government = no
+			NOT = { has_modifier = rejected_petition }
+		}
+	}
+
+	option = {
+		name = ig_petitions.16.a
+		add_journal_entry = {
+			type = je_industrialists_want_no_graduated_tax
+		}
+		set_variable = {
+			name = industrialists_promise
+			days = 1825 # five years
+		}
+		add_modifier = {
+			name = accepted_petition_IN
+			months = normal_modifier_time
+		}
+	}
+
+	option = {
+		name = ig_petitions.16.b
+		default_option = yes
+		ig:ig_industrialists = {
+			add_modifier = {
+				name = rejected_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# The Industrialists were promised change, but change didn't come.
+ig_petitions.17 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.17.t
+	desc = ig_petitions.17.d
+	flavor = ig_petitions.17.f
+
+	event_image = {
+		video = "gfx/event_pictures/middleeast_upperclass_party.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/upperclass_party"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 1
+
+	trigger = {
+
+	}
+
+	option = {
+		name = ig_petitions.17.a
+		remove_variable = industrialists_promise
+		remove_modifier = accepted_petition_IN
+		ig:ig_industrialists = {
+			add_modifier = {
+				name = failed_to_deliver
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# The Industrialists were promised change, and lo, change did come.
+ig_petitions.18 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.18.t
+	desc = ig_petitions.18.d
+	flavor = ig_petitions.18.f
+
+	event_image = {
+		video = "gfx/event_pictures/middleeast_upperclass_party.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/upperclass_party"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 1
+
+	trigger = {
+
+	}
+
+	option = {
+		name = ig_petitions.18.a
+		remove_variable = industrialists_promise
+		remove_modifier = accepted_petition_IN
+		ig:ig_industrialists = {
+			add_modifier = {
+				name = fulfilled_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# Armed Forces want conscription
+ig_petitions.19 = {
+	type = country_event
+	placement = ROOT
+
+	title = ig_petitions.19.t
+	desc = ig_petitions.19.d
+	flavor = ig_petitions.19.f
+
+	event_image = {
+		video = "gfx/event_pictures/middleeast_battlefield_trenches.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/battlefield_trenches"
+
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	duration = 3
+
+	trigger = {
+		NOT = { has_law = law_type:law_mass_conscription }
+		NOT = { has_variable = armed_forces_promise }
+		NOT = { has_modifier = failed_to_deliver }
+		ig:ig_armed_forces = {
+			is_powerful = yes
+			is_in_government = no
+			NOT = { has_modifier = rejected_petition }
+		}
+	}
+
+	option = {
+		name = ig_petitions.19.a
+		add_journal_entry = {
+			type = je_armed_forces_want_conscription
+		}
+		set_variable = {
+			name = armed_forces_promise
+			days = 1825 # five years
+		}
+		add_modifier = {
+			name = accepted_petition_AF
+			months = normal_modifier_time
+		}
+	}
+
+	option = {
+		name = ig_petitions.19.b
+		default_option = yes
+		ig:ig_armed_forces = {
+			add_modifier = {
+				name = rejected_petition
+				months = 12
+			}
+		}
+	}
+}
+
+# The Armed Forces were promised change, but change didn't come.
+ig_petitions.20 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.20.t
+	desc = ig_petitions.20.d
+	flavor = ig_petitions.20.f
+
+	event_image = {
+		video = "gfx/event_pictures/middleeast_battlefield_trenches.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/battlefield_trenches"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 1
+
+	trigger = {
+
+	}
+
+	option = {
+		name = ig_petitions.20.a
+		remove_variable = armed_forces_promise
+		remove_modifier = accepted_petition_AF
+		ig:ig_armed_forces = {
+			add_modifier = {
+				name = failed_to_deliver
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# The Armed Forces were promised change, and lo, change did come.
+ig_petitions.21 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.21.t
+	desc = ig_petitions.21.d
+	flavor = ig_petitions.21.f
+
+	event_image = {
+		video = "gfx/event_pictures/middleeast_battlefield_trenches.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/battlefield_trenches"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 1
+
+	trigger = {
+
+	}
+
+	option = {
+		name = ig_petitions.21.a
+		remove_variable = armed_forces_promise
+		remove_modifier = accepted_petition_AF
+		ig:ig_armed_forces = {
+			add_modifier = {
+				name = fulfilled_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# The Petite-Bourgeoisie wants Restricted Citizenship
+ig_petitions.22 = {
+	type = country_event
+	placement = ROOT
+
+	title = ig_petitions.22.t
+	desc = ig_petitions.22.d
+	flavor = ig_petitions.22.f
+
+	event_image = {
+		video = "gfx/event_pictures/asia_poor_people_moving.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/asia/poor_people_moving"
+
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	duration = 3
+
+	trigger = {
+		NOT = { has_law = law_type:law_national_supremacy }
+		NOT = { has_variable = petty_bourgeoisie_promise }
+		NOT = { has_modifier = failed_to_deliver }
+		ig:ig_petty_bourgeoisie = {
+			is_powerful = yes
+			is_in_government = no
+			NOT = { has_modifier = rejected_petition }
+		}
+	}
+
+	option = {
+		name = ig_petitions.22.a
+		add_journal_entry = {
+			type = je_petite_bourgeoisie_want_restricted_citizenship
+		}
+		set_variable = {
+			name = petty_bourgeoisie_promise
+			days = 1825 # five years
+		}
+		add_modifier = {
+			name = accepted_petition_PB
+			months = normal_modifier_time
+		}
+	}
+
+	option = {
+		name = ig_petitions.22.b
+		default_option = yes
+		ig:ig_petty_bourgeoisie = {
+			add_modifier = {
+				name = rejected_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# The Petite-Bourgeoisie were promised change, but change didn't come.
+ig_petitions.23 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.23.t
+	desc = ig_petitions.23.d
+	flavor = ig_petitions.23.f
+
+	event_image = {
+		video = "gfx/event_pictures/asia_poor_people_moving.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/asia/poor_people_moving"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 1
+
+	trigger = {
+		NOT = { has_law = law_type:law_national_supremacy }
+		NOT = {
+			has_variable = petty_bourgeoisie_promise
+		}
+		has_modifier = accepted_petition_PB
+	}
+
+	option = {
+		name = ig_petitions.23.a
+		remove_variable = petty_bourgeoisie_promise
+		remove_modifier = accepted_petition_PB
+		ig:ig_petty_bourgeoisie = {
+			add_modifier = {
+				name = failed_to_deliver
+				months = normal_modifier_time
+			}
+		}
+	}
+}
+
+# The Petite-Bourgeoisie were promised change, and lo, change did come.
+ig_petitions.24 = {
+	type = country_event
+	placement = ROOT
+	# is_popup = yes
+
+	title = ig_petitions.24.t
+	desc = ig_petitions.24.d
+	flavor = ig_petitions.24.f
+
+	event_image = {
+		video = "gfx/event_pictures/asia_poor_people_moving.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/asia/poor_people_moving"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 1
+
+	trigger = {
+		has_law = law_type:law_national_supremacy
+		has_variable = petty_bourgeoisie_promise
+		has_modifier = accepted_petition_PB
+	}
+
+	option = {
+		name = ig_petitions.24.a
+		remove_variable = petty_bourgeoisie_promise
+		remove_modifier = accepted_petition_PB
+		ig:ig_petty_bourgeoisie = {
+			add_modifier = {
+				name = fulfilled_petition
+				months = normal_modifier_time
+			}
+		}
+	}
+}

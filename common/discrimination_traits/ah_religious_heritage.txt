@@ -1,0 +1,7 @@
+﻿tanit = {
+    heritage = yes
+}
+
+judaism = {
+    heritage = yes
+}

@@ -1,0 +1,52 @@
+﻿carthago = {
+    color={ 140 209 167 }
+
+	religion = tanit
+
+	traits = { semitic_heritage semitic_group }
+
+	male_common_first_names={
+		Hannibaal
+        Hasdrubal
+        Hamilqart
+        Hannon
+        Malkh
+        Magon
+        Himilkon
+        Baalhannon
+        Abdmelqart
+        Abdastart
+        Hermelqart
+        Adgerbal
+	}
+	female_common_first_names = {
+		Shuffet
+        Matan
+        Bodmelqart
+        Arishatbaal
+        Adonibaal
+        Hempsiqart
+        Sophonisbaal
+	}	
+	noble_last_names = {
+		Geskon
+        Carthalon
+        Misdes
+        Boetarh
+        Levk
+        Tigilla
+        Muttin
+	}
+	common_last_names={
+		Barka
+        Pen
+        Mathos
+        Suniath
+        Hamil
+        Selinunt
+        Saphon
+	}
+	ethnicities = {
+		1 = semitic
+	}
+}

@@ -1,0 +1,468 @@
+﻿namespace = law_events
+
+# This event has been reworked into a Debate event for law enactment
+law_events.1 = { #conscientious objectors
+	type = country_event
+	placement = root
+
+	title = law_events.1.t
+	desc = law_events.1.d
+	flavor = law_events.1.f
+
+	event_image = {
+		video = "gfx/event_pictures/europenorthamerica_before_the_battle.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/europenorthamerica/before_the_battle"
+
+	icon = "gfx/interface/icons/event_icons/event_military.dds"
+
+	duration = 3
+
+	trigger = {
+		is_enacting_law = law_type:law_mass_conscription
+		NOT = { has_variable = conscientious_objection }
+		any_interest_group = {
+			is_marginal = no
+			law_stance = {
+				law = law_type:law_mass_conscription
+				value > neutral
+			}
+		}
+		any_interest_group = {
+			is_marginal = no
+			law_stance = {
+				law = law_type:law_mass_conscription
+				value < neutral
+			}
+		}
+	}
+
+	immediate = {
+		currently_enacting_law = {
+    		save_scope_as = current_law_scope
+    	}
+		set_variable = {
+			name = conscientious_objection
+			days = 1825 # five years
+		}
+		random_interest_group = {
+			limit = {
+				is_marginal = no
+				law_stance = {
+					law = law_type:law_mass_conscription
+					value > neutral
+				}
+			}
+			save_scope_as = pro_conscription_ig
+		}
+		random_interest_group = {
+			limit = {
+				is_marginal = no
+				law_stance = {
+					law = law_type:law_mass_conscription
+					value < neutral
+				}
+			}
+			save_scope_as = anti_conscription_ig
+		}
+	}
+
+	option = { # allow objectors to sit out
+		name = law_events.1.a
+		default_option = yes
+		add_enactment_modifier = {
+			name = objectors_conscription_law
+		}
+		scope:pro_conscription_ig = {
+			add_modifier = {
+				name = modifier_conscientious_objection
+				months = normal_modifier_time
+				multiplier = -1
+			}
+		}
+		scope:anti_conscription_ig = {
+			add_modifier = {
+				name = modifier_conscientious_objection
+				months = normal_modifier_time
+			}
+		}
+		add_modifier = {
+			name = modifier_conscription_rate_lowered
+			months = long_modifier_time
+		}
+	}
+
+	option = {  # everyone must fight
+		name = law_events.1.b
+		add_enactment_modifier = {
+			name = objectors_conscription_law
+			multiplier = -1
+		}
+		scope:pro_conscription_ig = {
+			add_modifier = {
+				name = modifier_conscientious_objection
+				months = normal_modifier_time
+			}
+		}
+		scope:anti_conscription_ig = {
+			add_modifier = {
+				name = modifier_conscientious_objection
+				months = normal_modifier_time
+				multiplier = -1
+			}
+		}
+	}
+}
+
+law_events.2 = { #Police need light
+	type = country_event
+	placement = root
+
+	title = law_events.2.t
+	desc = law_events.2.d
+	flavor = law_events.2.f
+
+	event_image = {
+		video = "gfx/event_pictures/southamerica_public_figure_assassination.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/southamerica/public_figure_assassination"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 3
+
+	trigger = {
+		OR = {
+		has_law = law_type:law_local_police
+		has_law = law_type:law_dedicated_police
+		}
+		NOT = { has_variable = police_lights }
+		any_scope_state = {
+			filter = { has_building = building_urban_center}
+			percent < 0.5
+
+			OR = {
+				is_production_method_active = {
+					building_type = building_urban_center
+					production_method = pm_gas_streetlights
+				}
+
+				is_production_method_active = {
+					building_type = building_urban_center
+					production_method = pm_electric_streetlights
+				}
+			}
+		}
+
+	}
+
+	immediate = {
+		set_variable = {
+			name = police_lights
+			days = 1825 # five years
+		}
+	}
+
+	option = { #Of course
+		name = law_events.2.a
+		add_journal_entry = {
+			type = je_police_want_light
+		}
+	}
+
+	option = { #Not a chance
+		name = law_events.2.b
+		default_option = yes
+		ig:ig_petty_bourgeoisie = {
+			add_modifier = {
+				name = modifier_police_ignored
+				months = 24
+			}
+		}
+		ig:ig_armed_forces = {
+			add_modifier = {
+				name = modifier_police_ignored
+				months = normal_modifier_time
+			}
+		}
+	}
+
+}
+
+law_events.3 = { #The light was removed later
+	type = country_event
+	placement = root
+
+	title = law_events.3.t
+	desc = law_events.3.d
+	flavor = law_events.3.f
+
+	event_image = {
+		video = "gfx/event_pictures/middleeast_police_breaking_door.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/police_breaking_door"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	duration = 3
+
+	trigger = {
+		any_scope_state = {
+			filter = { has_building = building_urban_center}
+			percent < 0.5
+
+			OR = {
+				is_production_method_active = {
+					building_type = building_urban_center
+					production_method = pm_gas_streetlights
+				}
+
+				is_production_method_active = {
+					building_type = building_urban_center
+					production_method = pm_electric_streetlights
+				}
+			}
+		}
+		has_variable = police_lights_complete
+		NOT = { has_variable = police_lights_followup }
+	}
+
+
+
+	option = {
+		name = law_events.3.a
+		default_option = yes
+		ig:ig_petty_bourgeoisie = {
+			add_modifier = {
+				name = modifier_police_ignored
+				months = normal_modifier_time
+			}
+		}
+		ig:ig_armed_forces = {
+			add_modifier = {
+				name = modifier_police_ignored
+				months = normal_modifier_time
+			}
+		}
+
+		set_variable = {
+			name = police_lights_followup
+			days = 1825 # five years
+		}
+	}
+}
+
+#law_events.4 = { #secret police request research
+#	type = country_event
+#	placement = root
+#
+#	title = law_events.4.t
+#	desc = law_events.4.d
+#	flavor = law_events.4.f
+#
+#	duration = 3
+#
+#	trigger = {
+#		has_law = law_type:law_secret_police
+#		has_technology_researched = camera
+#		NOT = { has_technology_researched = identification_documents }
+#	}
+#
+#	immediate = {
+#
+#	}
+#
+#	option = {
+#		name = law_events.4.a
+#		add_journal_entry = {
+#			type = je_secret_police_research_identification
+#		}
+#	}
+#
+#	option = {
+#		name = law_events.4.b
+#		default_option = yes
+#		add_modifier = {
+#				name = modifier_secret_police_ignored
+#				months = months = normal_modifier_time
+#		}
+#	}
+#
+#}
+
+law_events.5 = { #Landowners in state request you turn a blind eye to their working conditions
+	type = country_event
+	placement = root
+
+	title = law_events.5.t
+	desc = law_events.5.d
+	flavor = law_events.5.f
+
+	event_image = {
+		video = "gfx/event_pictures/asia_factory_accident.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/asia/factory_accident"
+
+	icon = "gfx/interface/icons/event_icons/event_industry.dds"
+
+	duration = 3
+
+	trigger = {
+		ig:ig_landowners = {
+			is_marginal = no
+		}
+		OR = {
+			has_law = law_type:law_regulatory_bodies
+			has_law = law_type:law_worker_protections
+		}
+		NOT = { has_variable = mineowners_request }
+		any_scope_state = {
+			OR = {
+				has_building = building_coal_mine
+				has_building = building_iron_mine
+				has_building = building_lead_mine
+				has_building = building_sulfur_mine
+			}
+		}
+	}
+
+	immediate = {
+		random_scope_state = {
+			limit = {
+				OR = {
+					has_building = building_coal_mine
+					has_building = building_iron_mine
+					has_building = building_lead_mine
+					has_building = building_sulfur_mine
+				}
+			}
+			save_scope_as = state_with_mine
+		}
+
+		set_variable = {
+			name = mineowners_request
+			days = 1825 # five years
+		}
+	}
+
+	option = {
+		name = law_events.5.a
+		ig:ig_landowners = {
+			add_modifier = {
+					name = modifier_mine_regulations_not_enforced
+					months = normal_modifier_time
+			}
+		}
+
+		scope:state_with_mine = {
+			add_modifier = {
+					name = modifier_mine_regulations_not_enforced_state
+					months = normal_modifier_time
+			}
+		}
+	}
+
+	option = {
+		name = law_events.5.b
+		default_option = yes
+		ig:ig_landowners = {
+			add_modifier = {
+					name = modifier_mine_regulations_enforced
+					months = normal_modifier_time
+			}
+		}
+
+	}
+
+}
+
+law_events.6 = { #Intelligentsia disapprove of religious schools
+	type = country_event
+	placement = root
+
+	title = law_events.6.t
+	desc = law_events.6.d
+	flavor = law_events.6.f
+
+	event_image = {
+		video = "gfx/event_pictures/europenorthamerica_judaism.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/europenorthamerica/judaism"
+
+	icon = "gfx/interface/icons/event_icons/event_protest.dds"
+
+	duration = 3
+
+	trigger = {
+		ig:ig_intelligentsia = {
+			is_marginal = no
+		}
+		NOT = { has_variable = intelligentsia_disapprove_religious_schools}
+		OR = {
+			has_law = law_type:law_religious_schools
+		}
+	}
+
+	immediate = {
+		set_variable = {
+			name = intelligentsia_disapprove_religious_schools
+			days = 1825 # five years
+		}
+	}
+
+	option = {
+		name = law_events.6.a
+		add_journal_entry = {
+			type = je_make_schools_secular
+		}
+	}
+
+	option = {
+		default_option = yes
+		name = law_events.6.b
+		ig:ig_intelligentsia = {
+			add_modifier = {
+					name = modifier_ignored_intelligentsia_request
+					months = normal_modifier_time
+			}
+		}
+	}
+
+}
+
+law_events.7 = { # Slaves to Laborers
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {
+        has_law = law_type:law_slavery_banned
+        any_scope_state = {
+           any_scope_pop = { is_pop_type = slaves }
+        }
+	}
+
+	immediate = {
+		every_scope_pop = {
+			limit = {
+				is_pop_type = slaves
+			}
+			change_poptype = pop_type:laborers
+		}
+		trigger_event = {
+			id = law_events.7
+			days = 5
+		}
+	}
+}
+

@@ -1,0 +1,63 @@
+﻿# Fallback party for Devout
+# When devout are powerful, other religious IG's might join
+
+religious_party = {
+	name = {
+		first_valid = {
+			triggered_desc = {
+				desc = party_religious
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+	icon = {
+		default = "/gfx/interface/icons/political_parties/religious.dds"
+	}
+	# THIS IS RUN ONLY ONCE AT GAME START
+	valid_for_country = {
+		always = yes
+	}
+	available_for_interest_group = {
+		owner = {
+			country_has_voting_franchise = yes
+			ig:ig_devout = {
+				is_powerful = yes
+			}
+		}
+		NOR = {
+			has_ideology = ideology_anti_clerical
+			AND = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_atheist
+				}
+			}
+		}
+	}
+	join_weight = {
+		value = -5
+		if = { # a party for lonely religious people
+			limit = {
+				is_interest_group_type = ig_devout
+			}
+			add = 15
+		}
+		if = { # religiously inclined people might join if devout are powerful
+			limit = {
+				is_powerful = no
+				owner = {
+					ig:ig_devout = {
+						is_powerful = yes
+					}
+				}
+				OR = {
+					has_ideology = ideology_traditionalist
+					has_ideology = ideology_theocrat
+				}
+			}
+			add = 10
+		}
+	}
+}

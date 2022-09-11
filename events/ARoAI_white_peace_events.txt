@@ -1,0 +1,457 @@
+﻿namespace = ARoAI_white_peace_events
+
+ARoAI_white_peace_events.1 = { # Monthly
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {
+		is_player = no
+		is_at_war = yes
+	}
+	
+	immediate = {
+		every_scope_war = {
+			limit = {
+				is_warleader = root
+			}
+			
+			root = {
+				set_variable = {
+					name = fronts_of_stalemate_war
+					value = 0
+				}
+			}
+			every_scope_front = {
+				root = {
+					change_variable = {
+						name = fronts_of_stalemate_war
+						add = 1
+					}
+				}
+			}
+			
+			every_country = {
+				limit = {
+					NOT = {
+						this = root
+					}
+					save_temporary_scope_as = potential_warleader
+					prev = {
+						is_warleader = scope:potential_warleader
+					}
+				}
+				save_scope_as = enemy_warleader
+			}
+			
+			if = {
+				limit = {
+					exists = scope:enemy_warleader
+					scope:enemy_warleader = {
+						is_player = no
+					}
+					OR = {
+						root = {
+							var:fronts_of_stalemate_war = 0
+						}
+						ARoAI_stalemate_war_with_zero_support = yes
+					}
+				}
+				root = {
+					if = {
+						limit = {
+							NOT = {
+								has_variable = has_stalemate_war
+							}
+						}
+						set_variable = {
+							name = has_stalemate_war
+							value = 1
+						}
+					}
+					if = {
+						limit = {
+							NOR = {
+								is_target_in_variable_list = {
+									name = stalemate_for_1_check
+									target = prev
+								}
+								is_target_in_variable_list = {
+									name = stalemate_for_2_checks
+									target = prev
+								}
+								is_target_in_variable_list = {
+									name = stalemate_for_3_checks
+									target = prev
+								}
+								is_target_in_variable_list = {
+									name = stalemate_for_4_checks
+									target = prev
+								}
+								is_target_in_variable_list = {
+									name = stalemate_for_5_checks
+									target = prev
+								}
+								is_target_in_variable_list = {
+									name = stalemate_for_6_checks
+									target = prev
+								}
+								is_target_in_variable_list = {
+									name = stalemate_for_7_checks
+									target = prev
+								}
+								is_target_in_variable_list = {
+									name = stalemate_for_8_checks
+									target = prev
+								}
+								is_target_in_variable_list = {
+									name = stalemate_for_9_checks
+									target = prev
+								}
+								is_target_in_variable_list = {
+									name = stalemate_for_10_checks
+									target = prev
+								}
+								is_target_in_variable_list = {
+									name = stalemate_for_11_checks
+									target = prev
+								}
+								is_target_in_variable_list = {
+									name = stalemate_for_12_checks
+									target = prev
+								}
+							}
+						}
+						add_to_variable_list = {
+							name = stalemate_for_1_check
+							target = prev
+						}
+					}
+					else_if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = stalemate_for_1_check
+								target = prev
+							}
+						}
+						remove_list_variable = {
+							name = stalemate_for_1_check
+							target = prev
+						}
+						add_to_variable_list = {
+							name = stalemate_for_2_checks
+							target = prev
+						}
+					}
+					else_if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = stalemate_for_2_checks
+								target = prev
+							}
+						}
+						remove_list_variable = {
+							name = stalemate_for_2_checks
+							target = prev
+						}
+						add_to_variable_list = {
+							name = stalemate_for_3_checks
+							target = prev
+						}
+					}
+					else_if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = stalemate_for_3_checks
+								target = prev
+							}
+						}
+						remove_list_variable = {
+							name = stalemate_for_3_checks
+							target = prev
+						}
+						if = {
+							limit = {
+								var:fronts_of_stalemate_war = 0
+								prev = {
+									ARoAI_stalemate_war_with_zero_support = yes
+								}
+							}
+							prev = {
+								ARoAI_white_peace_stalemate_war = yes
+							}
+						}
+						else = {
+							add_to_variable_list = {
+								name = stalemate_for_4_checks
+								target = prev
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = stalemate_for_4_checks
+								target = prev
+							}
+						}
+						remove_list_variable = {
+							name = stalemate_for_4_checks
+							target = prev
+						}
+						if = {
+							limit = {
+								var:fronts_of_stalemate_war = 0
+								prev = {
+									ARoAI_stalemate_war_with_zero_support = yes
+								}
+							}
+							prev = {
+								ARoAI_white_peace_stalemate_war = yes
+							}
+						}
+						else = {
+							add_to_variable_list = {
+								name = stalemate_for_5_checks
+								target = prev
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = stalemate_for_5_checks
+								target = prev
+							}
+						}
+						remove_list_variable = {
+							name = stalemate_for_5_checks
+							target = prev
+						}
+						if = {
+							limit = {
+								var:fronts_of_stalemate_war = 0
+								prev = {
+									ARoAI_stalemate_war_with_zero_support = yes
+								}
+							}
+							prev = {
+								ARoAI_white_peace_stalemate_war = yes
+							}
+						}
+						else = {
+							add_to_variable_list = {
+								name = stalemate_for_6_checks
+								target = prev
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = stalemate_for_6_checks
+								target = prev
+							}
+						}
+						remove_list_variable = {
+							name = stalemate_for_6_checks
+							target = prev
+						}
+						if = {
+							limit = {
+								var:fronts_of_stalemate_war = 0
+							}
+							prev = {
+								ARoAI_white_peace_stalemate_war = yes
+							}
+						}
+						else = {
+							add_to_variable_list = {
+								name = stalemate_for_7_checks
+								target = prev
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = stalemate_for_7_checks
+								target = prev
+							}
+						}
+						remove_list_variable = {
+							name = stalemate_for_7_checks
+							target = prev
+						}
+						if = {
+							limit = {
+								var:fronts_of_stalemate_war = 0
+							}
+							prev = {
+								ARoAI_white_peace_stalemate_war = yes
+							}
+						}
+						else = {
+							add_to_variable_list = {
+								name = stalemate_for_8_checks
+								target = prev
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = stalemate_for_8_checks
+								target = prev
+							}
+						}
+						remove_list_variable = {
+							name = stalemate_for_8_checks
+							target = prev
+						}
+						if = {
+							limit = {
+								var:fronts_of_stalemate_war = 0
+							}
+							prev = {
+								ARoAI_white_peace_stalemate_war = yes
+							}
+						}
+						else = {
+							add_to_variable_list = {
+								name = stalemate_for_9_checks
+								target = prev
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = stalemate_for_9_checks
+								target = prev
+							}
+						}
+						remove_list_variable = {
+							name = stalemate_for_9_checks
+							target = prev
+						}
+						if = {
+							limit = {
+								var:fronts_of_stalemate_war = 0
+							}
+							prev = {
+								ARoAI_white_peace_stalemate_war = yes
+							}
+						}
+						else = {
+							add_to_variable_list = {
+								name = stalemate_for_10_checks
+								target = prev
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = stalemate_for_10_checks
+								target = prev
+							}
+						}
+						remove_list_variable = {
+							name = stalemate_for_10_checks
+							target = prev
+						}
+						if = {
+							limit = {
+								var:fronts_of_stalemate_war = 0
+							}
+							prev = {
+								ARoAI_white_peace_stalemate_war = yes
+							}
+						}
+						else = {
+							add_to_variable_list = {
+								name = stalemate_for_11_checks
+								target = prev
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = stalemate_for_11_checks
+								target = prev
+							}
+						}
+						remove_list_variable = {
+							name = stalemate_for_11_checks
+							target = prev
+						}
+						if = {
+							limit = {
+								var:fronts_of_stalemate_war = 0
+							}
+							prev = {
+								ARoAI_white_peace_stalemate_war = yes
+							}
+						}
+						else = {
+							add_to_variable_list = {
+								name = stalemate_for_12_checks
+								target = prev
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							is_target_in_variable_list = {
+								name = stalemate_for_12_checks
+								target = prev
+							}
+						}
+						remove_list_variable = {
+							name = stalemate_for_12_checks
+							target = prev
+						}
+						prev = {
+							ARoAI_white_peace_stalemate_war = yes
+						}
+					}
+				}
+			}
+			else = {
+				ARoAI_remove_war_from_stalemate_lists = yes
+			}
+			root = {
+				remove_variable = fronts_of_stalemate_war
+			}
+		}
+	}
+}
+
+ARoAI_white_peace_events.2 = {
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {
+		is_at_war = no
+		has_variable = has_stalemate_war
+	}
+	
+	immediate = {
+		remove_variable = has_stalemate_war
+		clear_variable_list = stalemate_for_1_check
+		clear_variable_list = stalemate_for_2_checks
+		clear_variable_list = stalemate_for_3_checks
+		clear_variable_list = stalemate_for_4_checks
+		clear_variable_list = stalemate_for_5_checks
+		clear_variable_list = stalemate_for_6_checks
+		clear_variable_list = stalemate_for_7_checks
+		clear_variable_list = stalemate_for_8_checks
+		clear_variable_list = stalemate_for_9_checks
+		clear_variable_list = stalemate_for_10_checks
+		clear_variable_list = stalemate_for_11_checks
+		clear_variable_list = stalemate_for_12_checks
+	}
+}

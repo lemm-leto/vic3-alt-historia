@@ -1,0 +1,268 @@
+﻿ct_reset_consumption_taxes = {
+	remove_taxed_goods = g:ammunition
+	remove_taxed_goods = g:small_arms
+	remove_taxed_goods = g:artillery
+	remove_taxed_goods = g:tanks
+	remove_taxed_goods = g:aeroplanes
+	remove_taxed_goods = g:manowars
+	remove_taxed_goods = g:ironclads
+	remove_taxed_goods = g:grain
+	remove_taxed_goods = g:fish
+	remove_taxed_goods = g:fabric
+	remove_taxed_goods = g:wood
+	remove_taxed_goods = g:groceries
+	remove_taxed_goods = g:clothes
+	remove_taxed_goods = g:furniture
+	remove_taxed_goods = g:services
+	remove_taxed_goods = g:transportation
+	remove_taxed_goods = g:paper
+	remove_taxed_goods = g:electricity
+	remove_taxed_goods = g:clippers
+	remove_taxed_goods = g:steamers
+	remove_taxed_goods = g:silk
+	remove_taxed_goods = g:dye
+	remove_taxed_goods = g:sulfur
+	remove_taxed_goods = g:coal
+	remove_taxed_goods = g:iron
+	remove_taxed_goods = g:lead
+	remove_taxed_goods = g:hardwood
+	remove_taxed_goods = g:rubber
+	remove_taxed_goods = g:oil
+	remove_taxed_goods = g:engines
+	remove_taxed_goods = g:steel
+	remove_taxed_goods = g:glass
+	remove_taxed_goods = g:fertilizer
+	remove_taxed_goods = g:tools
+	remove_taxed_goods = g:explosives
+	remove_taxed_goods = g:porcelain
+	remove_taxed_goods = g:meat
+	remove_taxed_goods = g:fruit
+	remove_taxed_goods = g:liquor
+	remove_taxed_goods = g:wine
+	remove_taxed_goods = g:tea
+	remove_taxed_goods = g:coffee
+	remove_taxed_goods = g:sugar
+	remove_taxed_goods = g:tobacco
+	remove_taxed_goods = g:opium
+	remove_taxed_goods = g:automobiles
+	remove_taxed_goods = g:telephones
+	remove_taxed_goods = g:radios
+	remove_taxed_goods = g:luxury_clothes
+	remove_taxed_goods = g:luxury_furniture
+	remove_taxed_goods = g:fine_art
+	set_variable = {
+		name = ct_current_num_luxury_taxes
+		value = 0
+	}
+	set_variable = {
+		name = ct_current_num_staple_taxes
+		value = 0
+	}	
+}
+
+ct_make_taxable_luxury_goods_list = {
+	market_capital.market = {
+		mg:tea = { add_to_list = ct_taxable_luxury_goods_list }
+		mg:coffee = { add_to_list = ct_taxable_luxury_goods_list }
+		mg:luxury_furniture = { add_to_list = ct_taxable_luxury_goods_list }
+		mg:luxury_clothes = { add_to_list = ct_taxable_luxury_goods_list }
+		#mg:glass = { add_to_list = ct_taxable_luxury_goods_list }
+		mg:porcelain = { add_to_list = ct_taxable_luxury_goods_list }
+		mg:meat = { add_to_list = ct_taxable_luxury_goods_list }
+		mg:fruit = { add_to_list = ct_taxable_luxury_goods_list }
+		mg:wine = { add_to_list = ct_taxable_luxury_goods_list }
+		mg:automobiles = { add_to_list = ct_taxable_luxury_goods_list }
+		mg:telephones = { add_to_list = ct_taxable_luxury_goods_list }
+		mg:radios = { add_to_list = ct_taxable_luxury_goods_list }
+		mg:services = { add_to_list = ct_taxable_luxury_goods_list }
+		mg:fine_art = { add_to_list = ct_taxable_luxury_goods_list }
+	}
+}
+
+ct_make_taxable_staple_goods_list = { #include luxuries in this incase they are still more valuable
+	market_capital.market = {
+		mg:tea = { add_to_list = ct_taxable_staple_goods_list }
+		mg:coffee = { add_to_list = ct_taxable_staple_goods_list }
+		mg:luxury_furniture = { add_to_list = ct_taxable_staple_goods_list }
+		mg:luxury_clothes = { add_to_list = ct_taxable_staple_goods_list }
+		#mg:glass = { add_to_list = ct_taxable_staple_goods_list }
+		mg:porcelain = { add_to_list = ct_taxable_staple_goods_list }
+		mg:meat = { add_to_list = ct_taxable_staple_goods_list }
+		mg:fruit = { add_to_list = ct_taxable_staple_goods_list }
+		mg:wine = { add_to_list = ct_taxable_staple_goods_list }
+		mg:automobiles = { add_to_list = ct_taxable_staple_goods_list }
+		mg:telephones = { add_to_list = ct_taxable_staple_goods_list }
+		mg:radios = { add_to_list = ct_taxable_staple_goods_list }
+		mg:services = { add_to_list = ct_taxable_staple_goods_list }
+		mg:fine_art = { add_to_list = ct_taxable_staple_goods_list }
+		mg:fish = { add_to_list = ct_taxable_staple_goods_list }
+		#mg:fabric = { add_to_list = ct_taxable_staple_goods_list }
+		mg:groceries = { add_to_list = ct_taxable_staple_goods_list }
+		mg:tobacco = { add_to_list = ct_taxable_staple_goods_list }
+		mg:opium = { add_to_list = ct_taxable_staple_goods_list }
+		mg:liquor = { add_to_list = ct_taxable_staple_goods_list }
+		mg:clothes = { add_to_list = ct_taxable_staple_goods_list }
+		mg:furniture = { add_to_list = ct_taxable_staple_goods_list }
+		#mg:coal = { add_to_list = ct_taxable_staple_goods_list }
+		#mg:wood = { add_to_list = ct_taxable_staple_goods_list }
+		#mg:grain = { add_to_list = ct_taxable_staple_goods_list }
+	}
+}
+
+
+ct_add_taxable_luxury_goods_from_list = {
+	while = { # needs a while loop so the limits update for each tax
+		limit = {
+			root.var:ct_desired_num_luxury_taxes > ct_current_num_luxury_taxes_value
+			root = { authority >= ct_min_authority }
+		}
+		ordered_in_list = { #iterate though list of taxable luxuries, scope is market_good
+			list = ct_taxable_luxury_goods_list
+			limit = {
+				market_goods_has_goods_shortage = no #not sure you can even get a shortage but w/e
+				root = {
+					NOT = {
+						has_consumption_tax = prev.goods
+					}
+				}
+			}
+			order_by = ct_total_mg_consumption_value #sort by estimated value of taxing the goods. imperfect, but close
+			max = 1 #one a time, so the while checks work
+			root = {
+				add_taxed_goods = prev.goods
+			}
+		}
+		change_variable = {
+			name = ct_current_num_luxury_taxes
+			add = 1
+		}
+	}
+}
+
+ct_add_taxable_staple_goods_from_list = {
+	while = {
+		limit = {
+			root.var:ct_desired_num_staple_taxes > ct_current_num_staple_taxes_value
+			root = { authority >= ct_min_authority }
+		}
+		ordered_in_list = { #iterate though list of taxable luxuries, scope is market_good
+			list = ct_taxable_staple_goods_list
+			limit = {
+				market_goods_has_goods_shortage = no #not sure you can even get a shortage but w/e
+				root = {
+					NOT = {
+						has_consumption_tax = prev.goods
+					}
+				}
+			}
+			order_by = ct_total_mg_consumption_value #sort staples from lowest to highest, to minimize radicalism effect
+			max = 1 #one a time, so the while checks work
+			root = {
+				add_taxed_goods = prev.goods
+			}
+		}
+		change_variable = {
+			name = ct_current_num_staple_taxes
+			add = 1
+		}
+	}
+}
+
+ct_add_grain_tax_if_set = {
+	if = {
+		limit = {
+			has_variable = ct_taxing_grain
+		}
+		add_taxed_goods = g:grain
+	}
+}
+
+ct_cut_wages = { #attempt a wage cut
+	if = { 
+		limit = {
+			ct_can_cut_government_wages = yes
+			var:ct_government_wage_level > -1
+		}
+		set_government_wage_level = low
+		set_variable = {
+			name = ct_government_wage_level
+			value = -1
+		}
+	}
+	else_if = { 
+		limit = {
+			ct_can_cut_military_wages = yes
+			var:ct_military_wage_level > -1
+		}
+		set_military_wage_level = low
+		set_variable = {
+			name = ct_military_wage_level
+			value = -1
+		}
+	}
+	else_if = { 
+		limit = {
+			ct_can_cut_government_wages = yes
+			var:ct_government_wage_level > -2
+		}
+		set_government_wage_level = very_low
+		set_variable = {
+			name = ct_government_wage_level
+			value = -2
+		}
+	}
+	else_if = { 
+		limit = {
+			ct_can_cut_military_wages = yes
+			var:ct_military_wage_level > -2
+		}
+		set_military_wage_level = very_low
+		set_variable = {
+			name = ct_military_wage_level
+			value = -2
+		}
+	}
+}
+
+ct_raise_wages = { #raise wages back up
+	if = {
+		limit = {
+			var:ct_military_wage_level < -1
+		}
+		set_military_wage_level = low
+		set_variable = {
+			name = ct_military_wage_level
+			value = -1
+		}
+	}
+	else_if = { 
+		limit = {
+			var:ct_government_wage_level < -1
+		}
+		set_government_wage_level = low
+		set_variable = {
+			name = ct_government_wage_level
+			value = -1
+		}
+	}
+	else_if = { 
+		limit = {
+			var:ct_military_wage_level < 0
+		}
+		set_military_wage_level = medium
+		set_variable = {
+			name = ct_military_wage_level
+			value = 0
+		}
+	}
+	else_if = { 
+		limit = {
+			var:ct_government_wage_level < 0
+		}
+		set_government_wage_level = medium
+		set_variable = {
+			name = ct_government_wage_level
+			value = 0
+		}
+	}
+}

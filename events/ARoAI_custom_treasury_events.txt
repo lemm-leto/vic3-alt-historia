@@ -1,0 +1,704 @@
+﻿namespace = ARoAI_custom_treasury_events
+
+ARoAI_custom_treasury_events.1 = {
+	type = country_event
+	hidden = yes
+	
+	trigger = {
+		exists = this
+		is_country_alive = yes
+		is_player = no
+		NOT = { is_country_type = decentralized }
+	}
+
+	immediate = {
+		
+		# Initialization
+		
+		if = {
+			limit = {
+				NOT = {
+					has_variable = ct_initialized
+				}
+			}
+			trigger_event = ARoAI_custom_treasury_events.2
+		}
+		
+		# Income variables somehow lost (damn this government corruption)
+		
+		else_if = {
+			limit = {
+				OR = {
+					NOT = {
+						has_variable = ct_historical_treasury
+					}
+					NOT = {
+						has_variable = ct_historical_debt
+					}
+				}
+			}
+			set_variable = {
+				name = ct_historical_treasury
+				value = treasury
+			}
+			set_variable = {
+				name = ct_historical_debt
+				value = has_scaled_debt
+			}
+		}
+		
+		# Everything is set and fine
+		
+		else = {
+			
+			# Calculate income
+			
+			trigger_event = ARoAI_custom_treasury_events.3
+			
+			# Save income variables
+			
+			set_variable = {
+				name = ct_historical_treasury
+				value = treasury
+			}
+			set_variable = {
+				name = ct_historical_debt
+				value = has_scaled_debt
+			}
+			
+			# Free authority if it's below 0
+			
+			if = {
+				limit = {
+					authority < 0
+					num_taxed_goods > 0
+					OR = {
+						var:ct_desired_num_staple_taxes > 0
+						var:ct_desired_num_luxury_taxes > 0
+					}
+				}
+				trigger_event = ARoAI_custom_treasury_events.4
+			}
+			
+			# Raise taxes
+			
+			if = {
+				limit = {
+					ct_is_budget_negative = yes
+				}
+				trigger_event = ARoAI_custom_treasury_events.5
+			}
+			
+			# Lower taxes
+			
+			else_if = {
+				limit = {
+					ct_is_budget_healthy = yes
+				}
+				trigger_event = ARoAI_custom_treasury_events.6
+			}
+		}
+	}
+}
+
+# Initialization event
+
+ARoAI_custom_treasury_events.2 = {
+	type = country_event
+	hidden = yes
+
+	trigger = {}
+	
+	immediate = {
+		set_variable = {
+			name = ct_initialized
+		}
+		set_tax_level = medium
+		set_variable = {
+			name = ct_tax_level
+			value = 0
+		}
+		set_tariff_level = medium
+		set_variable = {
+			name = ct_tariff_level
+			value = 0
+		}
+		set_variable = {
+			name = ct_desired_num_luxury_taxes
+			value = 4
+		}
+		set_variable = {
+			name = ct_desired_num_staple_taxes
+			value = 0
+		}
+		set_variable = {
+			name = ct_government_wage_level
+			value = 0
+		}
+		set_government_wage_level = medium
+		set_variable = {
+			name = ct_military_wage_level
+			value = 0
+		}
+		set_military_wage_level = medium
+		
+		ct_make_taxable_staple_goods_list = yes
+		ct_make_taxable_luxury_goods_list = yes
+		ct_reset_consumption_taxes = yes
+		ct_add_taxable_staple_goods_from_list = yes
+		ct_add_taxable_luxury_goods_from_list = yes
+		
+		set_variable = {
+			name = ct_historical_treasury
+			value = treasury
+		}
+		set_variable = {
+			name = ct_historical_debt
+			value = has_scaled_debt
+		}
+	}
+}
+
+# Calculating income
+
+ARoAI_custom_treasury_events.3 = {
+	type = country_event
+	hidden = yes
+
+	trigger = {}
+	
+	immediate = {
+		if = {
+			limit = {
+				treasury > 0
+				var:ct_historical_treasury > 0
+				has_scaled_debt <= 0
+				var:ct_historical_debt <= 0
+			}
+			set_variable = {
+				name = ct_weekly_income
+				value = treasury
+			}
+			change_variable = {
+				name = ct_weekly_income
+				subtract = var:ct_historical_treasury
+			}
+			change_variable = {
+				name = ct_weekly_income
+				divide = 30.4
+			}
+			change_variable = {
+				name = ct_weekly_income
+				multiply = 7
+			}
+		}
+		else_if = {
+			limit = {
+				treasury <= 0
+				var:ct_historical_treasury <= 0
+				has_scaled_debt > 0
+				var:ct_historical_debt > 0
+			}
+			set_variable = {
+				name = ct_weekly_income
+				value = var:ct_historical_debt
+			}
+			change_variable = {
+				name = ct_weekly_income
+				subtract = has_scaled_debt
+			}
+			change_variable = {
+				name = ct_weekly_income
+				multiply = credit
+			}
+			change_variable = {
+				name = ct_weekly_income
+				divide = 30.4
+			}
+			change_variable = {
+				name = ct_weekly_income
+				multiply = 7
+			}
+		}
+		else_if = {
+			limit = {
+				treasury > 0
+				var:ct_historical_treasury <= 0
+			}
+			set_variable = {
+				name = ct_weekly_income
+				value = 1
+			}
+		}
+		else = {
+			set_variable = {
+				name = ct_weekly_income
+				value = -1
+			}
+		}
+	}
+}
+
+# Removing taxes if authority is negative
+
+ARoAI_custom_treasury_events.4 = {
+	type = country_event
+	hidden = yes
+
+	trigger = {}
+	
+	immediate = {
+		ct_make_taxable_staple_goods_list = yes
+		ct_make_taxable_luxury_goods_list = yes
+		while = {
+			limit = {
+				authority < 0
+				OR = {
+					var:ct_desired_num_staple_taxes > 0
+					var:ct_desired_num_luxury_taxes > 0
+				}
+			}
+			if = {
+				limit = {
+					var:ct_desired_num_luxury_taxes > 0
+				}
+				change_variable = {
+					name = ct_desired_num_luxury_taxes
+					subtract = 1
+				}
+				ct_reset_consumption_taxes = yes
+				ct_add_grain_tax_if_set = yes
+				ct_add_taxable_staple_goods_from_list = yes
+				ct_add_taxable_luxury_goods_from_list = yes
+			}
+			else_if = {
+				limit = {
+					var:ct_desired_num_staple_taxes > 0
+				}
+				change_variable = {
+					name = ct_desired_num_staple_taxes
+					subtract = 1
+				}
+				ct_reset_consumption_taxes = yes
+				ct_add_grain_tax_if_set = yes
+				ct_add_taxable_staple_goods_from_list = yes
+				ct_add_taxable_luxury_goods_from_list = yes
+			}
+		}
+	}
+}
+
+# Adding taxes when budget is problematic
+
+ARoAI_custom_treasury_events.5 = {
+	type = country_event
+	hidden = yes
+
+	trigger = {}
+
+	immediate = {
+		ct_make_taxable_luxury_goods_list = yes
+		ct_make_taxable_staple_goods_list = yes
+		
+		# Fill existing desired taxes, if haven't yet
+		
+		if = {
+			limit = {
+				OR = {
+					var:ct_desired_num_staple_taxes > ct_current_num_staple_taxes_value #shouldn't be any staples at this point, fallback check just in case
+					var:ct_desired_num_luxury_taxes > ct_current_num_luxury_taxes_value #if we can apply more luxuries apply more luxuries
+				}
+				authority >= ct_min_authority
+			}
+			ct_reset_consumption_taxes = yes #remove all taxes and set current num variables to 0
+			ct_add_grain_tax_if_set = yes #flag set further down the priority list, re-add if we somehow end up back here without a reset
+			ct_add_taxable_staple_goods_from_list = yes #apply staples up to current target
+			ct_add_taxable_luxury_goods_from_list = yes #apply luxuries up to current target
+		}
+		
+		# Raise taxes
+		
+		else_if = {
+			limit = {
+				var:ct_tax_level = -2
+			}
+			change_variable = {
+				name = ct_tax_level
+				add = 1
+			}
+			set_tax_level = low
+		}
+		
+		# Raise taxes
+		
+		else_if = {
+			limit = {
+				var:ct_tax_level = -1
+			}
+			change_variable = {
+				name = ct_tax_level
+				add = 1
+			}
+			set_tax_level = medium
+		}
+		
+		# Raise tariffs to high
+		
+		else_if = {
+			limit = {
+				var:ct_tariff_level = 0
+			}
+			change_variable = {
+				name = ct_tariff_level
+				add = 1
+			}
+			set_tariff_level = high
+		}
+		
+		# Raise tariffs to very high
+		
+		else_if = {
+			limit = {
+				var:ct_tariff_level = 1
+			}
+			change_variable = {
+				name = ct_tariff_level
+				add = 1
+			}
+			set_tariff_level = very_high
+		}
+		
+		# Increase amount of luxury taxes
+		
+		else_if = {
+			limit = {
+				var:ct_desired_num_luxury_taxes < 10
+				authority >= ct_min_authority
+			}
+			change_variable = { # amount of desired luxuries
+				name = ct_desired_num_luxury_taxes
+				add = 1
+			}
+			ct_reset_consumption_taxes = yes #remove all taxes and set current num variables to 0
+			ct_add_grain_tax_if_set = yes #flag set further down the priority list, re-add if we somehow end up back here without a reset
+			ct_add_taxable_staple_goods_from_list = yes #apply staples up to current target
+			ct_add_taxable_luxury_goods_from_list = yes #apply luxuries up to current target
+		}
+		
+		# Free authority wasted on suppression
+		
+		else_if = {
+			limit = {
+				var:ct_desired_num_luxury_taxes < 10
+				authority < ct_min_authority
+				any_interest_group = { is_being_suppressed = yes }
+			}
+			random_interest_group = {
+				limit = {
+					is_being_suppressed = yes 
+				}
+				set_ig_suppression = no
+			}
+			change_variable = { # amount of desired luxuries
+				name = ct_desired_num_luxury_taxes
+				add = 1
+			}
+			ct_reset_consumption_taxes = yes #remove all taxes and set num variables to 0
+			ct_add_grain_tax_if_set	= yes #flag set further down the priority list, re-add if we somehow end up back here without a reset
+			ct_add_taxable_staple_goods_from_list = yes #apply staples up to current target
+			ct_add_taxable_luxury_goods_from_list = yes #apply luxuries up to current target
+		}
+		
+		# Swap to staples (only consumption-based taxation)
+		
+		else_if = {
+			limit = {
+				has_law = law_type:law_consumption_based_taxation
+				var:ct_desired_num_luxury_taxes > 0
+				var:ct_desired_num_staple_taxes < 3
+			}
+			change_variable = { #lower amount of desired luxuries
+				name = ct_desired_num_luxury_taxes
+				subtract = 1
+			}
+			change_variable = { #increase amount of desired staples
+				name = ct_desired_num_staple_taxes
+				add = 1
+			}
+			ct_reset_consumption_taxes = yes #remove all taxes and set num variables to 0
+			ct_add_grain_tax_if_set	= yes #flag set further down the priority list, re-add if we somehow end up back here without a reset
+			ct_add_taxable_staple_goods_from_list = yes #apply staples up to current target
+			ct_add_taxable_luxury_goods_from_list = yes #apply luxuries up to current target
+		}
+		
+		# Cut government wages
+		
+		else_if = {
+			limit = {
+				OR = {
+					ct_can_cut_government_wages = yes
+					ct_can_cut_military_wages = yes
+				}
+			}
+			ct_cut_wages = yes
+		}
+		
+		# If it's dangerous, swap luxuries with staples
+		
+		else_if = {
+			limit = {
+				ct_is_budget_dangerous = yes
+				var:ct_desired_num_luxury_taxes > 0
+			}
+			change_variable = { #lower amount of desired luxuries
+				name = ct_desired_num_luxury_taxes
+				subtract = 1
+			}
+			change_variable = { #increase amount of desired staples
+				name = ct_desired_num_staple_taxes
+				add = 1
+			}
+			ct_reset_consumption_taxes = yes #remove all taxes and set num variables to 0
+			ct_add_grain_tax_if_set	= yes #flag set further down the priority list, re-add if we somehow end up back here without a reset
+			ct_add_taxable_staple_goods_from_list = yes #apply staples up to current target
+			ct_add_taxable_luxury_goods_from_list = yes #apply luxuries up to current target
+		}
+		
+		# If it's catastrophic, raise taxes to high
+		
+		else_if = {
+			limit = {
+				ct_is_budget_dangerous = yes
+				var:ct_tax_level = 0
+			}
+			change_variable = {
+				name = ct_tax_level
+				add = 1
+			}
+			set_tax_level = high
+		}
+		
+		# If it's still catastrophic, allow to tax grain
+		
+		else_if = {
+			limit = {
+				ct_is_budget_dangerous = yes
+				NOT = { has_variable = ct_taxing_grain }
+			}
+			change_variable = { #replace a staple with grain
+				name = ct_desired_num_staple_taxes
+				subtract = 1
+			}
+			set_variable = ct_taxing_grain
+			ct_reset_consumption_taxes = yes #remove all taxes and set num variables to 0
+			ct_add_grain_tax_if_set	= yes
+			ct_add_taxable_staple_goods_from_list = yes #apply staples up to current target
+			ct_add_taxable_luxury_goods_from_list = yes #apply luxuries up to current target
+		}
+		
+		# If it's still catastrophic, raise taxes to very high
+		
+		else_if = {
+			limit = {
+				ct_is_budget_catastrophic = yes
+				var:ct_tax_level = 1
+			}
+			change_variable = {
+				name = ct_tax_level
+				add = 1
+			}
+			set_tax_level = very_high
+		}
+	}
+}
+
+# Removing taxes when budget is healthy
+
+ARoAI_custom_treasury_events.6 = {
+	type = country_event
+	hidden = yes
+
+	trigger = {}
+
+	immediate = {
+		ct_make_taxable_luxury_goods_list = yes
+		ct_make_taxable_staple_goods_list = yes
+		
+		# Lower taxes from very high
+		
+		if = {
+			limit = {
+				var:ct_tax_level = 2
+			}
+			change_variable = {
+				name = ct_tax_level
+				subtract = 1
+			}
+			set_tax_level = high
+		}
+		
+		# Remove grain tax
+		
+		else_if = {
+			limit = {
+				has_variable = ct_taxing_grain
+			}
+			remove_variable = ct_taxing_grain
+			change_variable = { #add a staple back
+				name = ct_desired_num_staple_taxes
+				add = 1
+			}
+			ct_reset_consumption_taxes = yes #remove all taxes and set num variables to 0
+			ct_add_taxable_staple_goods_from_list = yes #apply staples up to current target
+			ct_add_taxable_luxury_goods_from_list = yes #apply luxuries up to current target
+		}
+		
+		# Lower taxes from high
+		
+		else_if = {
+			limit = {
+				var:ct_tax_level = 1
+			}
+			change_variable = {
+				name = ct_tax_level
+				subtract = 1
+			}
+			set_tax_level = medium
+		}
+		
+		# Swap staples back to luxuries
+		
+		else_if = {
+			limit = {
+				OR = {
+					AND = {
+						NOT = {
+							has_law = law_type:law_consumption_based_taxation
+						}
+						var:ct_desired_num_staple_taxes > 0
+					}
+					AND = {
+						has_law = law_type:law_consumption_based_taxation
+						var:ct_desired_num_staple_taxes > 3
+					}
+				}
+			}
+			change_variable = { #increase amount of desired luxuries
+				name = ct_desired_num_luxury_taxes
+				add = 1
+			}
+			change_variable = { #lower amount of desired staples
+				name = ct_desired_num_staple_taxes
+				subtract = 1
+			}
+			ct_reset_consumption_taxes = yes #remove all taxes and set num variables to 0
+			ct_add_taxable_staple_goods_from_list = yes #apply staples up to current target
+			ct_add_taxable_luxury_goods_from_list = yes #apply luxuries up to current target
+		}
+		
+		# Raise government wages
+		
+		else_if = {
+			limit= {
+				OR = {
+					var:ct_government_wage_level < 0 
+					var:ct_military_wage_level < 0
+				}
+			}
+			ct_raise_wages = yes
+		}
+		
+		# Swap staples back to luxuries
+		
+		else_if = {
+			limit = {
+				has_law = law_type:law_consumption_based_taxation
+				var:ct_desired_num_staple_taxes > 0
+			}
+			change_variable = { #increase amount of desired luxuries
+				name = ct_desired_num_luxury_taxes
+				add = 1
+			}
+			change_variable = { #lower amount of desired staples
+				name = ct_desired_num_staple_taxes
+				subtract = 1
+			}
+			ct_reset_consumption_taxes = yes #remove all taxes and set num variables to 0
+			ct_add_taxable_staple_goods_from_list = yes #apply staples up to current target
+			ct_add_taxable_luxury_goods_from_list = yes #apply luxuries up to current target
+		}
+		
+		# Decrease amount of taxes
+		
+		else_if = {
+			limit = {
+				ct_is_budget_thriving = yes
+				var:ct_desired_num_luxury_taxes > 4
+			}
+			change_variable = {
+				name = ct_desired_num_luxury_taxes
+				subtract = 1
+			}
+			ct_reset_consumption_taxes = yes #remove all taxes and set current num variables to 0
+			ct_add_grain_tax_if_set = yes #flag set further down the priority list, re-add if we somehow end up back here without a reset
+			ct_add_taxable_staple_goods_from_list = yes #apply staples up to current target
+			ct_add_taxable_luxury_goods_from_list = yes #apply luxuries up to current target
+		}
+		
+		# Decrease tariffs to high
+		
+		else_if = {
+			limit = {
+				ct_is_budget_thriving = yes
+				var:ct_tariff_level = 2
+			}
+			change_variable = {
+				name = ct_tariff_level
+				subtract = 1
+			}
+			set_tariff_level = high
+		}
+		
+		# Decrease tariffs to medium
+		
+		else_if = {
+			limit = {
+				ct_is_budget_thriving = yes
+				var:ct_tariff_level = 1
+			}
+			change_variable = {
+				name = ct_tariff_level
+				subtract = 1
+			}
+			set_tariff_level = medium
+		}
+		
+		# Lower taxes
+		
+		else_if = {
+			limit = {
+				ct_is_budget_thriving = yes
+				var:ct_tax_level = 0
+			}
+			change_variable = {
+				name = ct_tax_level
+				subtract = 1
+			}
+			set_tax_level = low
+		}
+		
+		# Lower taxes
+		
+		else_if = {
+			limit = {
+				ct_is_budget_thriving = yes
+				var:ct_tax_level = -1
+			}
+			change_variable = {
+				name = ct_tax_level
+				subtract = 1
+			}
+			set_tax_level = very_low
+		}
+	}
+}

@@ -1,0 +1,93 @@
+﻿# Niche party for anarchists in specific circumstances
+
+anarchist_party = {
+	name = {
+		first_valid = {
+			triggered_desc = {
+				desc = party_anarchist
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+	icon = {
+		default = "/gfx/interface/icons/political_parties/anarchist.dds"
+	}
+	# THIS IS RUN ONLY ONCE AT GAME START
+	valid_for_country = {
+		always = yes
+	}
+	available_for_interest_group = {
+		owner = {
+			country_has_voting_franchise = yes
+			any_interest_group = {
+				is_marginal = no
+				exists = leader
+				leader = {
+					has_ideology = ideology_anarchist
+				}
+			}
+		}
+		exists = leader
+		leader = {
+			has_ideology = ideology_anarchist
+		}
+	}
+	join_weight = {
+		value = -5
+		if = { # anarchists like anarchism
+			limit = {
+				exists = leader
+				leader = { has_ideology = ideology_anarchist }
+			}
+			add = 8
+		}
+		if = { # strong anarchists like anarchism
+			limit = {
+				is_powerful = yes
+				exists = leader
+				leader = { has_ideology = ideology_anarchist }
+			}
+			add = 20
+		}
+		if = { # anarchists don't like the revolution being hijacked
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_anarchist
+				}
+				owner = {
+					has_law = law_type:law_council_republic
+					ruler = {
+						has_ideology = ideology_vanguardist
+					}
+				}
+			}
+			add = 10
+		}
+		if = { # anarchists will make their own party if there is no communist party to join
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_anarchist
+				}
+				owner = {
+					NOT = {
+						any_interest_group = {
+							is_marginal = no
+							exists = leader
+							leader = {
+								OR = {
+									haS_ideology = ideology_communist
+									haS_ideology = ideology_vanguardist
+								}
+							}
+						}
+					}
+				}
+			}
+			add = 10
+		}
+	}
+}

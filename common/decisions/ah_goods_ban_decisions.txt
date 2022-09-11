@@ -1,0 +1,47 @@
+﻿ban_opium = {
+	is_shown = {
+		exists = market
+		market.owner = root
+		NOT = { is_banning_goods = g:opium }
+	}
+
+	possible = {
+		NOT = { has_law = law_type:law_free_trade }
+		exists = market
+		market = {
+			any_trade_route = {
+				NOT = { actor_market.owner = root }
+				importer = root.market
+				goods = g:opium
+			}			
+		}			
+	}
+
+	when_taken = {
+		add_banned_goods = g:opium
+	}
+	
+    ai_chance = {
+         base = 0
+    }	
+}
+
+remove_opium_ban = {
+	is_shown = {
+		exists = market
+		market.owner = root
+		is_banning_goods = g:opium
+	}
+
+	possible = {
+		NOT = { has_law = law_type:law_free_trade }
+	}
+
+	when_taken = {
+		remove_banned_goods = g:opium
+	}
+	
+     ai_chance = {
+         base = 0
+     }	
+}

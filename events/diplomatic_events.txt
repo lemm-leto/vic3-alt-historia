@@ -1,0 +1,46 @@
+﻿namespace = diplomatic_events
+
+# Fired when scoped country refuses to have their sovereignty violated
+# Any interested parties is given choice to aid them or not
+diplomatic_events.1 = {
+	type = country_event
+	event_image = {
+		video = "gfx/event_pictures/middleeast_courtroom_upheaval.bk2"
+	}
+
+	on_created_soundeffect = "event:/SFX/UI/Alerts/event_appear"
+	on_opened_soundeffect = "event:/SFX/Events/middleeast/courtroom_upheaval"
+
+	icon = "gfx/interface/icons/event_icons/event_default.dds"
+
+	title = diplomatic_events.1.t
+	desc = diplomatic_events.1.d
+	flavor = diplomatic_events.1.f
+
+	duration = 3
+
+	option = {
+		name = diplomatic_events.1.a
+        default_option = yes
+
+		violate_sovereignty_join = {
+			violator = scope:initiator
+			target = scope:target
+			join_violator = no
+		}
+
+		save_scope_as = third_party_country
+
+		scope:initiator = {
+			post_notification = violate_sovereignty_third_party_joins
+		}
+
+		scope:target = {
+			post_notification = violate_sovereignty_third_party_joins
+		}
+	}
+
+    option = {
+		name = diplomatic_events.1.b
+	}
+}

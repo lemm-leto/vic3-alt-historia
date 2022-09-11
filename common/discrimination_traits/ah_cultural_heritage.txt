@@ -1,0 +1,11 @@
+﻿semitic_heritage = {
+    heritage = yes
+}
+
+slavic_heritage = {
+    heritage = yes
+}
+
+african_heritage = {
+    heritage = yes
+}

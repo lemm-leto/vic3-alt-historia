@@ -1,0 +1,150 @@
+﻿namespace = ARoAI_diplomacy
+
+ARoAI_diplomacy.1 = {
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {}
+	
+	immediate = {
+		every_country = {
+			limit = {
+				save_temporary_scope_as = war_participator
+				root = {
+					OR = {
+						initiator = scope:war_participator
+						target = scope:war_participator
+						any_scope_initiator_ally = {
+							this = scope:war_participator
+						}
+						any_scope_target_ally = {
+							this = scope:war_participator
+						}
+					}
+				}
+			}
+			trigger_event = {
+				id = ARoAI_conscription_events.3
+			}
+		}
+	}
+}
+
+ARoAI_diplomacy.2 = {
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {
+		NOT = {
+			is_country_type = decentralized
+		}
+		is_revolutionary = no
+		is_at_war = yes
+		is_player = no
+	}
+	
+	immediate = {
+		random_country = {
+			limit = {
+				NOR = {
+					is_country_type = decentralized
+					is_in_war_against = { country = root }
+					is_in_war_together = root
+				}
+				is_revolutionary = no
+				is_player = no
+				save_temporary_scope_as = target_country
+				root = {
+					any_scope_war = {
+						violate_sovereignty_war_check = yes
+					}
+				}
+				ARoAI_agreement_to_violation > 0
+				any_country = {
+					is_in_war_against = {
+						country = root
+					}
+					any_scope_theater = {
+						is_land_theater = yes
+						
+						save_temporary_scope_as = target_theater
+						
+						scope:target_country = {
+							any_scope_theater = {
+								is_land_theater = yes
+								
+								check_area = {
+									mode = adjacent
+									target = scope:target_theater
+								}
+							}
+						}
+					}
+					NOT = {
+						any_scope_theater = {
+							is_land_theater = yes
+							
+							save_temporary_scope_as = target_theater
+							
+							OR = {
+								root = {
+									any_scope_theater = {
+										is_land_theater = yes
+										
+										check_area = {
+											mode = adjacent
+											target = scope:target_theater
+										}
+									}
+								}
+								any_country = {
+									is_in_war_together = root
+									any_scope_theater = {
+										is_land_theater = yes
+										
+										check_area = {
+											mode = adjacent
+											target = scope:target_theater
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			root = {
+				save_scope_as = violator
+			}
+			trigger_event = {
+				id = ARoAI_diplomacy.3
+				days = 10
+			}
+		}
+	}
+}
+
+ARoAI_diplomacy.3 = {
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {}
+	
+	immediate = {
+		scope:violator = {
+			create_incident = {
+				value = 2
+				country = root
+			}
+			change_relations = { country = root value = -10 }
+		}
+		violate_sovereignty_join = {
+			violator = scope:violator
+			target = this
+			join_violator = yes
+		}
+	}
+}

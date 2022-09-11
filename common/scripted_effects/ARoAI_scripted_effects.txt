@@ -1,0 +1,787 @@
+﻿ARoAI_compare_state_populations = {
+	set_variable = {
+		name = state_population
+		value = state_population
+	}
+	if = {
+		limit = {
+			NOT = {
+				any_scope_culture = {
+					has_homeland = prev
+					NOT = {
+						culture_is_discriminated_in = root
+					}
+				}
+			}
+		}
+		change_variable = {
+			name = state_population
+			multiply = root.var:conscription_not_enough_accepted
+		}
+	}
+	set_variable = {
+		name = population_delta
+		value = var:state_population
+	}
+	change_variable = {
+		name = population_delta
+		subtract = root.var:state_population
+	}
+	if = {
+		limit = {
+			var:population_delta > 0
+		}
+		root = {
+			set_variable = {
+				name = state_population
+				value = prev.var:state_population
+			}
+		}
+		save_scope_as = state_to_conscript
+	}
+	remove_variable = state_population
+	remove_variable = population_delta
+}
+
+ARoAI_remove_conscription_state_variables = {
+	every_scope_state = {
+		limit = {
+			OR = {
+				has_variable = state_conscripts_short_term
+				has_variable = state_conscripts_per_month
+			}
+		}
+		remove_variable = state_conscripts_short_term
+		remove_variable = state_conscripts_per_month
+	}
+}
+
+ARoAI_state_is_connected_to_war_border = {
+	save_scope_as = initial_state
+	
+	add_to_variable_list = {
+		name = states_in_question
+		target = this
+	}
+	
+	set_variable = {
+		name = depth_counter
+		value = 0
+	}
+	set_variable = {
+		name = state_is_connected_to_war_border
+		value = 0
+	}
+	
+	while = {
+		limit = {
+			var:depth_counter < $depth$
+			var:state_is_connected_to_war_border = 0
+		}
+		
+		if = {
+			limit = {
+				any_in_list = {
+					variable = states_in_question
+					any_neighbouring_state = {
+						owner = {
+							root = {
+								is_target_in_variable_list = {
+									name = all_enemies
+									target = prev
+								}
+							}
+						}
+					}
+				}
+			}
+			set_variable = {
+				name = state_is_connected_to_war_border
+				value = 1
+			}
+		}
+		else = {
+			every_in_list = {
+				variable = states_in_question
+				scope:initial_state = {
+					add_to_variable_list = {
+						name = processed_states
+						target = prev
+					}
+				}
+			}
+			every_in_list = {
+				variable = states_in_question
+				every_neighbouring_state = {
+					limit = {
+						NOT = {
+							scope:initial_state = {
+								is_target_in_variable_list = {
+									name = processed_states
+									target = prev
+								}
+							}
+						}
+						owner = {
+							save_temporary_scope_as = state_owner
+							OR = {
+								scope:state_owner = root
+								root = {
+									any_in_list = {
+										variable = all_allies
+										scope:state_owner = this
+									}
+								}
+							}
+						}
+					}
+					scope:initial_state = {
+						add_to_variable_list = {
+							name = states_to_add
+							target = prev
+						}
+					}
+				}
+			}
+			every_in_list = {
+				variable = states_to_add
+				scope:initial_state = {
+					add_to_variable_list = {
+						name = states_in_question
+						target = prev
+					}
+				}
+			}
+			clear_variable_list = states_to_add
+			every_in_list = {
+				variable = processed_states
+				if = {
+					limit = {
+						scope:initial_state = {
+							is_target_in_variable_list = {
+								name = states_in_question
+								target = prev
+							}
+						}
+					}
+					scope:initial_state = {
+						remove_list_variable = {
+							name = states_in_question
+							target = prev
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						NOT = {
+							has_variable_list = states_in_question
+						}
+						variable_list_size = {
+							name = states_in_question
+							value = 0
+						}
+					}
+				}
+				change_variable = {
+					name = depth_counter
+					add = 666
+				}
+			}
+			else = {
+				change_variable = {
+					name = depth_counter
+					add = 1
+				}
+			}
+		}
+	}
+	clear_saved_scope = initial_state
+	remove_variable = depth_counter
+	clear_variable_list = states_in_question
+	clear_variable_list = processed_states
+}
+
+ARoAI_theater_is_connected_to_war_border = {
+	save_scope_as = initial_state
+	
+	root = {
+		every_scope_theater = {
+			limit = {
+				is_land_theater = yes
+				any_scope_state = {
+					scope:initial_state = this
+				}
+			}
+			scope:initial_state = {
+				add_to_variable_list = {
+					name = theaters_in_question
+					target = prev
+				}
+			}
+		}
+	}
+	
+	set_variable = {
+		name = depth_counter
+		value = 0
+	}
+	set_variable = {
+		name = theater_is_connected_to_war_border
+		value = 0
+	}
+	
+	while = {
+		limit = {
+			var:depth_counter < 10
+			var:theater_is_connected_to_war_border = 0
+		}
+		
+		if = {
+			limit = {
+				any_country = {
+					root = {
+						is_target_in_variable_list = {
+							name = all_enemies
+							target = prev
+						}
+					}
+					any_scope_theater = {
+						is_land_theater = yes
+						save_temporary_scope_as = potential_theater
+						scope:initial_state = {
+							any_in_list = {
+								variable = theaters_in_question
+								check_area = {
+									mode = adjacent
+									target = scope:potential_theater
+								}
+							}
+						}
+					}
+				}
+			}
+			set_variable = {
+				name = theater_is_connected_to_war_border
+				value = 1
+			}
+		}
+		else = {
+			every_in_list = {
+				variable = theaters_in_question
+				scope:initial_state = {
+					add_to_variable_list = {
+						name = processed_theaters
+						target = prev
+					}
+				}
+			}
+			every_country = {
+				limit = {
+					OR = {
+						this = root
+						root = {
+							is_target_in_variable_list = {
+								name = all_allies
+								target = prev
+							}
+						}
+					}
+				}
+				every_scope_theater = {
+					limit = {
+						is_land_theater = yes
+						NOR = {
+							scope:initial_state = {
+								is_target_in_variable_list = {
+									name = processed_theaters
+									target = prev
+								}
+							}
+						}
+					}
+					save_temporary_scope_as = potential_theater
+					if = {
+						limit = {
+							scope:initial_state = {
+								any_in_list = {
+									variable = theaters_in_question
+									check_area = {
+										mode = adjacent
+										target = scope:potential_theater
+									}
+								}
+							}
+						}
+						scope:initial_state = {
+							add_to_variable_list = {
+								name = theaters_to_add
+								target = prev
+							}
+						}
+					}
+				}
+			}
+			every_in_list = {
+				variable = theaters_to_add
+				scope:initial_state = {
+					add_to_variable_list = {
+						name = theaters_in_question
+						target = prev
+					}
+				}
+			}
+			clear_variable_list = theaters_to_add
+			every_in_list = {
+				variable = processed_theaters
+				if = {
+					limit = {
+						scope:initial_state = {
+							is_target_in_variable_list = {
+								name = theaters_in_question
+								target = prev
+							}
+						}
+					}
+					scope:initial_state = {
+						remove_list_variable = {
+							name = theaters_in_question
+							target = prev
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						NOT = {
+							has_variable_list = theaters_in_question
+						}
+						variable_list_size = {
+							name = theaters_in_question
+							value = 0
+						}
+					}
+				}
+				change_variable = {
+					name = depth_counter
+					add = 666
+				}
+			}
+			else = {
+				change_variable = {
+					name = depth_counter
+					add = 1
+				}
+			}
+		}
+	}
+	clear_saved_scope = initial_state
+	remove_variable = depth_counter
+	clear_variable_list = theaters_in_question
+	clear_variable_list = processed_theaters
+}
+
+ARoAI_add_connected_state_to_list = {
+	if = {
+		limit = {
+			var:state_is_connected_to_war_border = 1
+		}
+		root = {
+			add_to_variable_list = {
+				name = suitable_states
+				target = prev
+			}
+		}
+	}
+	remove_variable = state_is_connected_to_war_border
+}
+
+ARoAI_quality_square_root = {
+	if = {
+		limit = {
+			has_variable = QSR_input
+			var:QSR_input >= 1
+		}
+		set_variable = {
+			name = QSR_root
+			value = 1
+		}
+		set_variable = {
+			name = QSR_square
+			value = 1
+		}
+		set_variable = {
+			name = QSR_delta
+			value = var:QSR_square
+		}
+		change_variable = {
+			name = QSR_delta
+			subtract = var:QSR_input
+		}
+		while = {
+			limit = {
+				var:QSR_delta < 0
+				var:QSR_root < 15
+			}
+			change_variable = {
+				name = QSR_root
+				add = 0.05
+			}
+			set_variable = {
+				name = QSR_square
+				value = var:QSR_root
+			}
+			change_variable = {
+				name = QSR_square
+				multiply = var:QSR_root
+			}
+			set_variable = {
+				name = QSR_delta
+				value = var:QSR_square
+			}
+			change_variable = {
+				name = QSR_delta
+				subtract = var:QSR_input
+			}
+		}
+		set_variable = {
+			name = QSR_output
+			value = var:QSR_root
+		}
+	}
+	else = {
+		set_variable = {
+			name = QSR_output
+			value = 1
+		}
+	}
+	remove_variable = QSR_input
+	remove_variable = QSR_root
+	remove_variable = QSR_square
+	remove_variable = QSR_delta
+}
+
+ARoAI_white_peace_stalemate_war = {
+	ARoAI_remove_war_from_stalemate_lists = yes
+	save_scope_as = white_peace_war
+	every_country = {
+		limit = {
+			scope:white_peace_war = {
+				is_war_participant = prev
+			}
+		}
+		root = {
+			add_to_variable_list = {
+				name = war_participants
+				target = prev
+			}
+		}
+	}
+	every_diplomatic_play = {
+		limit = {
+			OR = {
+				AND = {
+					OR = {
+						initiator = root
+						any_scope_initiator_ally = {
+							this = root
+						}
+					}
+					OR = {
+						target = scope:enemy_warleader
+						any_scope_target_ally = {
+							this = scope:enemy_warleader
+						}
+					}
+				}
+				AND = {
+					OR = {
+						initiator = scope:enemy_warleader
+						any_scope_initiator_ally = {
+							this = scope:enemy_warleader
+						}
+					}
+					OR = {
+						target = root
+						any_scope_target_ally = {
+							this = root
+						}
+					}
+				}
+			}
+		}
+		save_scope_as = white_peace_diplomatic_play
+		root = {
+			set_variable = {
+				name = white_peace_allowed
+				value = 1
+			}
+			every_in_list = {
+				variable = war_participants
+				if = {
+					limit = {
+						save_temporary_scope_as = war_participant
+						NOT = {
+							scope:white_peace_diplomatic_play = {
+								ARoAI_is_committed_play_participant = {
+									country = scope:war_participant
+								}
+							}
+						}
+					}
+					root = {
+						set_variable = {
+							name = white_peace_allowed
+							value = 0
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					var:white_peace_allowed = 1
+				}
+				if = {
+					limit = {
+						is_revolutionary = yes
+					}
+					scope:enemy_warleader = {
+						annex = root
+					}
+				}
+				else_if = {
+					limit = {
+						scope:enemy_warleader = {
+							is_revolutionary = yes
+						}
+					}
+					root = {
+						annex = scope:enemy_warleader
+					}
+				}
+				else = {
+					scope:white_peace_diplomatic_play = {
+						end_play = yes
+					}
+				}
+				trigger_event = {
+					id = ARoAI_white_peace_events.2
+				}
+				scope:enemy_warleader = {
+					trigger_event = {
+						id = ARoAI_white_peace_events.2
+					}
+				}
+				every_in_list = {
+					variable = war_participants
+					trigger_event = {
+						id = ARoAI_conscription_events.3
+					}
+				}
+			}
+			remove_variable = white_peace_allowed
+		}
+	}
+	clear_saved_scope = white_peace_war
+	clear_saved_scope = white_peace_diplomatic_play
+	root = {
+		clear_variable_list = war_participants
+	}
+}
+
+ARoAI_remove_war_from_stalemate_lists = {
+	if = {
+		limit = {
+			root = {
+				is_target_in_variable_list = {
+					name = stalemate_for_1_check
+					target = prev
+				}
+			}
+		}
+		root = {
+			remove_list_variable = {
+				name = stalemate_for_1_check
+				target = prev
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			root = {
+				is_target_in_variable_list = {
+					name = stalemate_for_2_checks
+					target = prev
+				}
+			}
+		}
+		root = {
+			remove_list_variable = {
+				name = stalemate_for_2_checks
+				target = prev
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			root = {
+				is_target_in_variable_list = {
+					name = stalemate_for_3_checks
+					target = prev
+				}
+			}
+		}
+		root = {
+			remove_list_variable = {
+				name = stalemate_for_3_checks
+				target = prev
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			root = {
+				is_target_in_variable_list = {
+					name = stalemate_for_4_checks
+					target = prev
+				}
+			}
+		}
+		root = {
+			remove_list_variable = {
+				name = stalemate_for_4_checks
+				target = prev
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			root = {
+				is_target_in_variable_list = {
+					name = stalemate_for_5_checks
+					target = prev
+				}
+			}
+		}
+		root = {
+			remove_list_variable = {
+				name = stalemate_for_5_checks
+				target = prev
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			root = {
+				is_target_in_variable_list = {
+					name = stalemate_for_6_checks
+					target = prev
+				}
+			}
+		}
+		root = {
+			remove_list_variable = {
+				name = stalemate_for_6_checks
+				target = prev
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			root = {
+				is_target_in_variable_list = {
+					name = stalemate_for_7_checks
+					target = prev
+				}
+			}
+		}
+		root = {
+			remove_list_variable = {
+				name = stalemate_for_7_checks
+				target = prev
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			root = {
+				is_target_in_variable_list = {
+					name = stalemate_for_8_checks
+					target = prev
+				}
+			}
+		}
+		root = {
+			remove_list_variable = {
+				name = stalemate_for_8_checks
+				target = prev
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			root = {
+				is_target_in_variable_list = {
+					name = stalemate_for_9_checks
+					target = prev
+				}
+			}
+		}
+		root = {
+			remove_list_variable = {
+				name = stalemate_for_9_checks
+				target = prev
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			root = {
+				is_target_in_variable_list = {
+					name = stalemate_for_10_checks
+					target = prev
+				}
+			}
+		}
+		root = {
+			remove_list_variable = {
+				name = stalemate_for_10_checks
+				target = prev
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			root = {
+				is_target_in_variable_list = {
+					name = stalemate_for_11_checks
+					target = prev
+				}
+			}
+		}
+		root = {
+			remove_list_variable = {
+				name = stalemate_for_11_checks
+				target = prev
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			root = {
+				is_target_in_variable_list = {
+					name = stalemate_for_12_checks
+					target = prev
+				}
+			}
+		}
+		root = {
+			remove_list_variable = {
+				name = stalemate_for_12_checks
+				target = prev
+			}
+		}
+	}
+}

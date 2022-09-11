@@ -1,0 +1,131 @@
+﻿# Bastion of the Intelligenstia, also appeals to Industrialists
+# Can sometimes sway PB and Rural Folk when they have common interests
+
+liberal_party = {
+	name = {
+		first_valid = {
+			triggered_desc = {
+				desc = party_liberal
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+	icon = {
+		default = "/gfx/interface/icons/political_parties/liberal.dds"
+	}
+	unlocking_technologies = {
+		egalitarianism
+	}
+	# THIS IS RUN ONLY ONCE AT GAME START
+	valid_for_country = {
+		always = yes
+	}
+	available_for_interest_group = {
+		owner = {
+			country_has_voting_franchise = yes
+			ig:ig_intelligentsia = {
+				is_marginal = no
+			}
+		}
+		exists = leader
+		leader = { # far right and far left won't join liberal parties
+			NOR = {
+				has_ideology = ideology_fascist
+				has_ideology = ideology_ethno_nationalist
+				has_ideology = ideology_communist
+				has_ideology = ideology_vanguardist
+				has_ideology = ideology_anarchist
+			}
+		}
+	}
+	join_weight = {
+		value = -5
+		if = { # liberals love liberalism
+			limit = {
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_republican_leader
+						has_ideology = ideology_radical
+						has_ideology = ideology_reformer
+						has_ideology = ideology_market_liberal
+					}
+				}
+			}
+			add = 10
+		}
+		if = { # liberals love liberalism
+			limit = {
+				OR = {
+					has_ideology = ideology_liberal
+					has_ideology = ideology_laissez_faire
+				}
+			}
+			add = 6
+		}
+		if = { # various progressives are inclined towards liberalism
+			limit = {
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_feminist
+						has_ideology = ideology_abolitionist
+						has_ideology = ideology_pacifist
+						has_ideology = ideology_social_democrat
+						has_ideology = ideology_atheist
+					}
+				}
+			}
+			add = 3
+		}
+		if = { # various conservatives dislike liberalism
+			limit = {
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_traditionalist
+						has_ideology = ideology_royalist
+						has_ideology = ideology_theocrat
+						has_ideology = ideology_slaver
+					}
+				}
+			}
+			add = -5
+		}
+		if = {
+			limit = { # particularists will join in when their issues are relevant
+				has_ideology = ideology_particularist
+				owner = {
+					OR = {
+						has_law = law_type:law_serfdom
+						has_law = law_type:law_debt_slavery
+					}
+				}
+			}
+			add = 5
+		}
+		if = { # anti slavers will join in when their issues are relevant
+			limit = {
+				has_ideology = ideology_anti_slavery
+				owner = {
+					OR = {
+						NOT = { has_law =  law_type:law_slavery_banned }
+						has_law =  law_type:law_serfdom
+					}
+				}
+			}
+			add = 5
+		}
+		if = { # meritocratic will join in when their issues are relevant
+			limit = {
+				has_ideology = ideology_meritocratic
+				owner = {
+					has_law = law_type:law_hereditary_bureaucrats
+				}
+			}
+			add = 3
+		}
+	}
+}

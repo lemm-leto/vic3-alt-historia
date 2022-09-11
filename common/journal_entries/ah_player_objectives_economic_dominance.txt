@@ -1,0 +1,293 @@
+﻿je_objective_expand_goods_production = {
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	complete = {
+		scope:journal_entry = { is_goal_complete = yes }
+		scope:target = {
+			cash_reserves_ratio > 0.25
+			weekly_profit > 0
+			occupancy > 0.75
+		}
+	}		
+	
+	current_value = {
+		value = scope:target.level
+	}
+	
+	goal_add_value = {
+		value = 1
+	}
+	
+	is_progressing = {
+		exists = scope:target
+		scope:target = { is_under_construction = yes }
+	}
+	
+	invalid = {			
+	}
+	
+	on_complete = {
+		owner = {
+			start_tutorial_lesson = { 
+				tutorial_lesson = expand_goods_production_complete
+				journal_entry = je:je_objective_expand_goods_production
+			}
+		}
+	}
+		
+	weight = 1000
+	inheritable = yes
+}
+
+je_increase_gdp = {
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+	
+	complete = {
+		scope:journal_entry = { is_goal_complete = yes }
+	} 
+
+	current_value = {
+		value = gdp
+	}
+
+	goal_add_value = {
+		value = gdp
+		multiply = 0.5
+	}
+	
+	weight = 1001
+	inheritable = yes
+}
+
+je_refining_goods = {
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	immediate = {	
+	}
+	
+	complete = {
+		any_scope_state = {
+			has_building = building_steel_mills
+			count = 4
+		}
+		market_capital.market = {
+			mg:steel = { 
+				is_market_goods_expensive = no
+				market_goods_imports <= 0
+			}
+		}
+	}
+
+	is_progressing = {
+	}
+
+	goal_add_value = {
+	}
+	
+	weight = 1002
+	inheritable = yes
+}
+
+je_specialized_goods = {
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	immediate = {	
+	}
+	
+	complete = {
+		any_scope_state = {
+			has_building = building_motor_industry
+			count = 2
+		}
+		market_capital.market = {
+			mg:engines = {
+				is_market_goods_expensive = no
+				market_goods_imports <= 0
+			}
+		}
+	}
+
+	is_progressing = {
+		exists = scope:target
+		scope:target = { is_under_construction = yes }
+	}
+
+	current_value = {
+		value = scope:target.level
+	}
+
+	goal_add_value = {
+		value = 1
+	}
+	
+	weight = 1003
+	inheritable = yes
+}
+
+je_home_market = {
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	immediate = {
+	}
+
+	complete = {	
+		ROOT = {
+			leads_customs_union = yes
+		}
+	}
+
+	weight = 1004
+	inheritable = yes
+}
+
+je_expanding_the_market = {
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	immediate = {	
+	}
+	
+	complete = { #Needs to be able to count the number of members in the union
+		ROOT = {
+			leads_customs_union = yes
+		}
+#		members_in_customs_union >= 5
+	}
+
+
+	weight = 1005
+	inheritable = yes
+}
+
+je_strong_market = {
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	immediate = {	
+	}
+	
+	complete = { #Needs checks to see how powerful/valuable market is | temporary triggers to show completed
+#		market_capital.market = {
+#			global_gdp >= X
+#		}
+		OR = {
+			market_capital.market = {
+				mg:engines = {
+					is_market_goods_expensive = no
+					market_goods_imports >= 0
+				}
+			}
+			market_capital.market = {
+				mg:steel = {
+					is_market_goods_expensive = no
+					market_goods_imports >= 0
+				}
+			}
+			market_capital.market = {
+				mg:iron = {
+					is_market_goods_expensive = no
+					market_goods_imports >= 0
+				}
+			}
+			market_capital.market = {
+				mg:coffee = {
+					is_market_goods_expensive = no
+					market_goods_imports >= 0
+				}
+			}
+			market_capital.market = {
+				mg:fabric = {
+					is_market_goods_expensive = no
+					market_goods_imports >= 0
+				}
+			}
+		}
+	}
+
+	is_progressing = {
+	}
+
+	goal_add_value = {
+	}
+
+	fail = {
+	}
+
+	weight = 1012
+	inheritable = yes
+}
+
+#Second branch focus on exports
+je_export_focus = {
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+	
+	immediate = {	
+	}
+	
+	complete = {
+		exists = scope:target
+		scope:target = { market_goods_exports > 10 }	
+	}
+
+	weight = 1007
+	inheritable = yes
+}
+
+je_expand_trading_potential = {
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	immediate = {	
+	}
+	
+	complete = {
+		any_scope_building = {
+			is_building_type = building_trade_center
+			occupancy > 0.9
+			level >= 5
+		}
+		any_scope_building = {
+			is_building_type = building_port
+			has_active_production_method = pm_basic_port
+			occupancy > 0.9
+			level >= 3
+		}
+	}
+
+	weight = 1009
+	inheritable = yes
+}
+
+je_join_another_market = {
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	immediate = {	
+	}
+	
+	complete = {
+		ROOT = {
+			is_in_customs_union = yes
+		}
+	}
+
+	weight = 1010
+	inheritable = yes
+}
+
+je_break_the_isolationists = {
+	icon = "gfx/interface/icons/event_icons/tutorial_icon.dds"
+
+	immediate = {
+		
+	}
+	
+	complete = { 
+		always = no
+		exists = scope:target
+		scope:target = {
+			NOT = { 
+				has_law = law_type:law_isolationism 
+			}
+		}
+	}
+
+	weight = 1011
+	inheritable = yes
+}

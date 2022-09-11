@@ -1,0 +1,174 @@
+﻿# Social democrats extremely attracted to this ideology
+# Attracts weak leftists and liberals
+# Available for Trade Unions pre-Socialism
+
+social_democrat_party = {
+	name = {
+		first_valid = {
+			triggered_desc = {
+				desc = party_social_democrats
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+	
+	icon = {
+		default = "/gfx/interface/icons/political_parties/social_democrats.dds"
+	}
+	# THIS IS RUN ONLY ONCE AT GAME START
+	valid_for_country = {
+		always = yes
+	}
+	available_for_interest_group = {
+		owner = {
+			country_has_voting_franchise = yes
+			OR = {
+				any_interest_group = {
+					is_marginal = no
+					exists = leader
+					leader = {
+						has_ideology = ideology_social_democrat
+					}
+				}
+				ig:ig_trade_unions = {
+					is_marginal = no
+				}
+			}
+		}
+		NOT = { # these ig's are inherently anti-worker
+			is_interest_group_type = ig_landowners
+			is_interest_group_type = ig_industrialists
+		}
+		exists = leader
+		leader = { # fascists and conservatives hate social democracy
+			NOT = {
+				has_ideology = ideology_fascist
+				has_ideology = ideology_ethno_nationalist
+				has_ideology = ideology_traditionalist
+				has_ideology = ideology_royalist
+				has_ideology = ideology_theocrat
+			}
+		}
+	}
+	join_weight = {
+		value = -5
+		if = { # social democrats love social democracy
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_social_democrat
+				}
+			}
+			add = 10
+		}
+		if = { # social democrats love social democracy
+			limit = {
+				is_powerful = yes
+				exists = leader
+				leader = {
+					has_ideology = ideology_social_democrat
+				}
+			}
+			add = 10
+		}
+		if = { # social democrats will fall in line behind stronger leftists
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_social_democrat
+				}
+				is_powerful = no
+				owner = {
+					any_interest_group = {
+						is_powerful = yes
+						exists = leader
+						leader = {
+							OR = {
+								has_ideology = ideology_communist
+								has_ideology = ideology_vanguardist
+								has_ideology = ideology_anarchist
+							}
+						}
+					}
+				}
+			}
+			add = -5
+		}
+		if = { # weak leftists will fall in line behind social democrats pre-revolution
+			limit = {
+				is_powerful = no
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_communist
+						has_ideology = ideology_vanguardist
+						has_ideology = ideology_anarchist
+					}
+				}
+				owner = {
+					NOT = { has_law = law_type:law_council_republic }
+					any_interest_group = {
+						is_powerful = yes
+						exists = leader
+						leader = {
+							has_ideology = ideology_social_democrat
+						}
+					}
+				}
+			}
+			add = 5
+		}
+		# weak liberals might fall in line behind strong social democrats
+		if = {
+			limit = {
+				is_powerful = no
+				has_ideology = ideology_liberal
+				owner = {
+					any_interest_group = {
+						is_powerful = yes
+						exists = leader
+						leader = {
+							has_ideology = ideology_social_democrat
+						}
+					}
+				}
+			}
+			add = 3
+		}
+		if = { # various progressives are inclined towards social democracy
+			limit = {
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_feminist
+						has_ideology = ideology_abolitionist
+						has_ideology = ideology_pacifist
+						has_ideology = ideology_radical
+						has_ideology = ideology_reformer
+						has_ideology = ideology_republican_leader
+						has_ideology = ideology_atheist
+					}
+				}
+			}
+			add = 3
+		}
+		# market liberals not very inclined to join social democrats
+		if = {
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_market_liberal
+				}
+			}
+			add = -5
+		}
+		if = { # trade unions often enjoy social democracy
+			limit = {
+				is_interest_group_type = ig_trade_unions
+			}
+			add = 2
+		}
+	}
+}

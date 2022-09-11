@@ -1,0 +1,18 @@
+﻿#use this file to run scripts at game start
+
+COUNTRIES = {
+    every_country = {
+		add_modifier = {
+			name = radical_holiday #aleviates game start depression by eliminating radicalism from SoL drop
+			months = 12
+		}
+		trigger_event = {
+			id = community_patch_monthly.1
+			days = 1
+		}
+		trigger_event = {
+			id = pop_growth_factors.1
+			days = 1
+		}
+    }   
+}

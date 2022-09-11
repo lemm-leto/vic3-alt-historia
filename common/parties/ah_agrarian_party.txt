@@ -1,0 +1,55 @@
+﻿# Fallback party for Rural Folk
+# Occasionally used for an anti-serfdom alliance
+# More popular in Nordic countries
+
+agrarian_party = {
+	name = {
+		first_valid = {
+			triggered_desc = {
+				desc = party_agrarian
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+	icon = {
+		default = "/gfx/interface/icons/political_parties/agrarians.dds"
+	}
+
+	# THIS IS RUN ONLY ONCE AT GAME START
+	valid_for_country = {
+		always = yes
+	}
+	available_for_interest_group = {
+		owner = {
+			country_has_voting_franchise = yes
+			ig:ig_rural_folk = {
+				is_powerful = yes
+			}
+		}
+	}
+	join_weight = {
+		value = -5
+		if = { # a party for powerful farmers
+			limit = {
+				has_ideology = ideology_agrarian
+				is_powerful = yes
+			}
+			add = 10
+		}
+		if = { # weak anti-serfdom types might fall in line behind strong farmers
+			limit = {
+				is_powerful = no
+				owner = {
+					has_law = law_type:law_serfdom
+				}
+				law_stance = {
+					law = law_type:law_serfdom
+					value < neutral
+				}
+			}
+			add = 15
+		}
+	}
+}

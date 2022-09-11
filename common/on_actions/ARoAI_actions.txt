@@ -1,0 +1,91 @@
+﻿on_monthly_pulse_country = {
+	events = {
+		ARoAI_white_peace_events.1
+		ARoAI_white_peace_events.2
+		ARoAI_custom_treasury_events.1
+		ARoAI_custom_builder_events.1
+		ARoAI_research_simulation.1
+		ARoAI_diplomacy.2
+		ARoAI_conscription_events.1
+	}
+}
+
+on_yearly_pulse_country = {
+	events = {
+		ARoAI_conscription_events.3
+	}
+}
+
+# Root = Country
+#on_diplo_play_start = {
+#}
+
+# Root = Diplomatic Play
+# scope:actor = Initiator country
+# scope:target = Target country
+#on_diplo_play_start_third_party = {
+#}
+
+# Root = Diplomatic Play
+on_diplo_play_war_start = {
+	events = {
+		ARoAI_diplomacy.1
+	}
+}
+
+# Root = Country
+on_diplo_play_back_down = {
+	events = {
+		ARoAI_conscription_events.3
+	}
+}
+
+# Root = Country
+on_diplo_play_back_down_involved = {
+	events = {
+		ARoAI_conscription_events.3
+	}
+}
+
+# Root = Country
+on_diplo_play_abandon_side = {
+	events = {
+		ARoAI_conscription_events.3
+	}
+}
+
+# Root = Diplomatic Play
+# scope:actor = Initiator country
+# scope:target = Target country
+on_war_end = {
+	events = {
+		ARoAI_conscription_events.2
+	}
+}
+
+# Root = Country
+on_peace_agreement_signed_war_leader = {
+	events = {
+		ARoAI_conscription_events.3
+	}
+}
+
+# Root = Country
+on_peace_agreement_signed_war_participant = {
+	events = {
+		ARoAI_conscription_events.3
+	}
+}
+
+# Root = Country
+on_capitulation = {
+	events = {
+		ARoAI_conscription_events.3
+	}
+}
+
+on_civil_war_won = {
+	events = {
+		ARoAI_conscription_events.3
+	}
+}

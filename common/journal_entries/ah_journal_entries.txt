@@ -1,0 +1,425 @@
+﻿je_landowners_suffrage_roll_back = {
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	complete = {
+		NOT = { has_law = law_type:law_universal_suffrage }
+	}
+
+	on_complete = {
+		trigger_event = { id = ig_petitions.3 days = 1 }
+	}
+
+	fail = {
+
+	}
+
+	on_timeout = {
+		trigger_event = { id = ig_petitions.2 days = 1 }
+	}
+
+	timeout = 1825
+
+	current_value = {
+
+	}
+
+	goal_add_value = {
+
+	}
+
+	weight = 200
+
+	inheritable = no
+}
+
+je_devout_want_state_religion = {
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	complete = {
+		has_law = law_type:law_state_religion
+	}
+
+	on_complete = {
+		trigger_event = { id = ig_petitions.6 days = 1 }
+	}
+
+	fail = {
+
+	}
+
+	on_timeout = {
+		trigger_event = { id = ig_petitions.5 days = 1 }
+	}
+
+	timeout = 1825
+
+	current_value = {
+
+	}
+
+	goal_add_value = {
+
+	}
+
+	weight = 200
+
+	inheritable = no
+}
+
+je_intelligentsia_want_free_speech = {
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	complete = {
+		has_law = law_type:law_right_of_assembly
+	}
+
+	on_complete = {
+		trigger_event = { id = ig_petitions.9 days = 1 }
+	}
+
+	fail = {
+
+	}
+
+	on_timeout = {
+		trigger_event = { id = ig_petitions.8 days = 1 }
+	}
+
+	timeout = 1825
+
+	current_value = {
+
+	}
+
+	goal_add_value = {
+
+	}
+
+	weight = 200
+
+	inheritable = no
+}
+
+je_rural_folk_no_conscription = {
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	complete = {
+		OR = {
+			has_law = law_type:law_professional_army
+			has_law = law_type:law_national_militia
+		}	
+	}
+
+	on_complete = {
+		trigger_event = { id = ig_petitions.12 days = 1 }
+	}
+
+	fail = {
+
+	}
+
+	on_timeout = {
+		trigger_event = { id = ig_petitions.11 days = 1 }
+	}
+
+	timeout = 1825
+
+	current_value = {
+
+	}
+
+	goal_add_value = {
+
+	}
+
+	weight = 200
+
+	inheritable = no
+}
+
+je_trade_unions_want_compulsory_schooling = {
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	complete = {
+		has_law = law_type:law_compulsory_primary_school
+	}
+
+	on_complete = {
+		trigger_event = { id = ig_petitions.15 days = 1 }
+	}
+
+	fail = {
+
+	}
+
+	on_timeout = {
+		trigger_event = { id = ig_petitions.14 days = 1 }
+	}
+
+	timeout = 1825
+
+	current_value = {
+
+	}
+
+	goal_add_value = {
+
+	}
+
+	weight = 200
+
+	inheritable = no
+}
+
+je_industrialists_want_no_graduated_tax = {
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	complete = {
+		NOT = { has_law = law_type:law_graduated_taxation }
+	}
+
+	on_complete = {
+		trigger_event = { id = ig_petitions.18 days = 1 }
+	}
+
+	fail = {
+
+	}
+
+	on_timeout = {
+		trigger_event = { id = ig_petitions.17 days = 1 }
+	}
+
+	timeout = 1825
+
+	current_value = {
+
+	}
+
+	goal_add_value = {
+
+	}
+
+	weight = 200
+
+	inheritable = no
+}
+
+je_armed_forces_want_conscription = {
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	complete = {
+		has_law = law_type:law_mass_conscription
+	}
+
+	on_complete = {
+		trigger_event = { id = ig_petitions.21 days = 1 }
+	}
+
+	fail = {
+
+	}
+
+	on_timeout = {
+		trigger_event = { id = ig_petitions.20 days = 1 }
+	}
+
+	timeout = 1825
+
+	current_value = {
+
+	}
+
+	goal_add_value = {
+
+	}
+
+	weight = 200
+
+	inheritable = no
+}
+
+je_petite_bourgeoisie_want_restricted_citizenship = {
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	complete = {
+		has_law = law_type:law_national_supremacy
+	}
+
+	on_complete = {
+		trigger_event = { id = ig_petitions.24 days = 1 }
+	}
+
+	fail = {
+
+	}
+
+	on_timeout = {
+		trigger_event = { id = ig_petitions.23 days = 1 }
+	}
+
+	timeout = 1825
+
+	current_value = {
+
+	}
+
+	goal_add_value = {
+
+	}
+
+	weight = 200
+
+	inheritable = no
+}
+
+je_police_want_light = {
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	complete = {
+		any_scope_state = {
+			filter = { has_building = building_urban_center}
+			percent > 0.8
+
+
+			OR = {
+				is_production_method_active = {
+					building_type = building_urban_center
+					production_method = pm_gas_streetlights
+				}
+
+				is_production_method_active = {
+					building_type = building_urban_center
+					production_method = pm_electric_streetlights
+				}
+			}
+		}
+	}
+
+	on_complete = {
+		post_notification = je_police_want_light_complete
+		set_variable = {
+			name = police_lights_complete
+			months = normal_modifier_time
+		}
+		every_interest_group = {
+			limit = {
+				law_stance = {
+					law = law_type:law_local_police
+					value > neutral
+				}
+			}
+			add_modifier = {
+				name = modifier_police_given_light
+				months = normal_modifier_time
+			}
+		}
+	}
+
+	fail = {
+
+	}
+
+	on_timeout = {
+		post_notification = je_police_want_light_fail
+	}
+
+	timeout = 1825
+
+	current_value = {
+
+	}
+
+	goal_add_value = {
+
+	}
+
+	weight = 200
+
+	inheritable = no
+}
+
+je_secret_police_research_identification = {
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	complete = {
+		has_technology_researched = identification_documents
+	}
+
+	on_complete = {
+		post_notification = je_secret_police_research_identification_complete
+		add_modifier = {
+			name = modifier_secret_police_supported
+			months = short_modifier_time
+		}
+	}
+
+
+	on_timeout = {
+		post_notification = je_secret_police_research_identification_fail
+		add_modifier = {
+			name = modifier_secret_police_ignored
+			months = short_modifier_time
+		}
+	}
+
+	timeout = 600
+
+	current_value = {
+
+	}
+
+	goal_add_value = {
+
+	}
+
+	weight = 200
+
+	inheritable = no
+}
+
+je_make_schools_secular = {
+	icon = "gfx/interface/icons/event_icons/event_election.dds"
+
+	complete = {
+		OR = {
+			has_law = law_type:law_public_schools
+			has_law = law_type:law_private_schools
+		}
+	}
+
+	on_complete = {
+		post_notification = je_make_schools_secular_complete
+		ig:ig_intelligentsia = {
+			add_modifier = {
+				name = modifier_religious_schools_abolished_intelligentsia
+				months = short_modifier_time
+			}
+		}
+	}
+
+
+	on_timeout = {
+		post_notification = je_make_schools_secular_fail
+		ig:ig_intelligentsia = {
+			add_modifier = {
+				name = modifier_ignored_intelligentsia_request
+				months = short_modifier_time
+			}
+		}
+	}
+	
+	timeout = 1825
+
+	current_value = {
+
+	}
+
+	goal_add_value = {
+
+	}
+
+	weight = 200
+
+	inheritable = no
+}

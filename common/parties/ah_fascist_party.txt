@@ -1,0 +1,143 @@
+﻿fascist_party = {
+	name = {
+		first_valid = {
+			triggered_desc = {
+				desc = party_fascist
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+
+	icon = {
+		default = "/gfx/interface/icons/political_parties/fascists.dds"
+	}
+	available_for_interest_group = {
+		owner = {
+			has_technology_researched = mass_propaganda
+			country_has_voting_franchise = yes
+		}
+	}
+	
+	join_weight = {
+		value = -5
+		if = { # fascists love fascism
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_fascist
+				}
+			}
+			add = 10
+		}
+		if = { # strong fascists love fascism even more
+			limit = {
+				is_powerful = yes
+				exists = leader
+					leader = {
+					has_ideology = ideology_fascist
+				}
+			}
+			add = 10
+		}
+		if = { # associated fascist characters tend an IG toward fascism
+			limit = {
+				any_scope_character = {
+					has_ideology = ideology_fascist
+				}
+			}
+			add = 2
+		}
+		if = { # racists like fascism :shockedpikachu:
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_ethno_nationalist
+				}
+			}
+			add = 5
+		}
+		if = { # associated racists tend an IG towards fascism
+			limit = {
+				any_scope_character = {
+					has_ideology = ideology_ethno_nationalist
+				}
+			}
+			add = 1
+		}
+		if = { # fascism is a reactionary ideology
+			limit = {
+				has_ideology = ideology_reactionary
+			}
+			add = 3
+		}
+		if = { # conservative IG's will fall behind a stronger fascist party
+			limit = {
+				is_powerful = no
+				OR = {
+					is_interest_group_type = ig_landowners
+					is_interest_group_type = ig_devout
+					is_interest_group_type = ig_petty_bourgeoisie
+					is_interest_group_type = ig_industrialists
+					is_interest_group_type = ig_armed_forces
+				}
+				owner = {
+					any_interest_group = {
+						is_powerful = yes
+						exists = leader
+						leader = {
+							has_ideology = ideology_fascist
+						}
+					}
+				}
+			}
+			add = 5
+		}
+		if = { # various progressives dislike fascism
+			limit = {
+				exists = leader
+					leader = {
+					OR = {
+						has_ideology = ideology_atheist
+						has_ideology = ideology_feminist
+						has_ideology = ideology_reformer
+						has_ideology = ideology_abolitionist
+						has_ideology = ideology_pacifist
+					}	
+				}
+			}
+			add = -7 # just barely possible for this to happen
+		}
+		if = { # trade unions usually dislike fascism
+			limit = {
+				is_interest_group_type = ig_trade_unions
+			}
+			add = -2
+		}
+		if = { # free trade advocates don't love protectionism
+			limit = {
+				exists = leader
+					leader = {
+					has_ideology = ideology_market_liberal
+				}
+			}
+			add = -2
+		}
+		if = { # moderates are scared of radical politics
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_moderate
+				}
+			}
+			add = -3
+		}
+		if = { # patriots are inclined towards fascism
+			limit = {
+				has_ideology = ideology_patriotic
+			}
+			add = 4 # slightly more than conservatives
+		}
+	}
+}

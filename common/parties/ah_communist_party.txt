@@ -1,0 +1,165 @@
+﻿communist_party = {
+	name = {
+		first_valid = {
+			triggered_desc = {
+				desc = party_communist
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+	icon = {
+		default = "/gfx/interface/icons/political_parties/communists.dds"
+	}
+	unlocking_technologies = {
+		socialism
+	}
+	# THIS IS RUN ONLY ONCE AT GAME START
+	valid_for_country = {
+		always = yes
+	}
+	available_for_interest_group = {
+		owner = {
+			country_has_voting_franchise = yes
+			any_interest_group = {
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_communist
+						has_ideology = ideology_vanguardist
+						has_ideology = ideology_anarchist
+					}
+				}
+			}
+		}
+		NOR = {
+			is_interest_group_type = ig_industrialists
+			is_interest_group_type = ig_landowners
+		}
+		exists = leader
+		leader = { # fascists, conservatives, and capitalists hate communism
+			NOR = {
+				has_ideology = ideology_fascist
+				has_ideology = ideology_ethno_nationalist
+				has_ideology = ideology_market_liberal
+				has_ideology = ideology_traditionalist
+				has_ideology = ideology_royalist
+				has_ideology = ideology_theocrat
+			}
+		}
+	}
+	join_weight = {
+		value = -5
+		if = { # communists love communism
+			limit = {
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_communist
+						has_ideology = ideology_vanguardist
+						has_ideology = ideology_anarchist
+					}
+				}
+			}
+			add = 10
+		}
+		if = { # communists love communism
+			limit = {
+				is_powerful = yes
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_communist
+						has_ideology = ideology_vanguardist
+						has_ideology = ideology_anarchist
+					}
+				}
+			}
+			add = 10
+		}
+		if = { # associated communist characters tend an IG toward communism
+			limit = {
+				any_scope_character = {
+					OR = {
+						has_ideology = ideology_communist
+						has_ideology = ideology_vanguardist
+						has_ideology = ideology_anarchist
+					}
+				}
+			}
+			add = 2
+		}
+		if = { # social democrats will consider collaboration with communists
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_social_democrat
+				}
+			}
+			add = 2
+		}
+		if = { # weak social democrats and radicals may side with strong communists
+			limit = {
+				is_powerful = no
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_social_democrat
+						has_ideology = ideology_radical
+					}
+				}
+				owner = {
+					any_interest_group = {
+						is_powerful = yes
+						exists = leader
+						leader = {
+							OR = {
+								has_ideology = ideology_communist
+								has_ideology = ideology_vanguardist
+								has_ideology = ideology_anarchist
+							}
+						}
+					}
+				}
+			}
+			add = 3
+		}
+		if = { # post-revolution anarchists not excited about vanguard party
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_anarchist
+				}
+				owner = {
+					has_law = law_type:law_council_republic
+					ruler = {
+						has_ideology = ideology_vanguardist
+					}
+				}
+			}
+			add = -15
+		}
+		if = { # reactionary ig's don't like communism
+			limit = {
+				has_ideology = ideology_reactionary
+			}
+			add = -3
+		}
+		if = { # trade unions often enjoy communism
+			limit = {
+				is_interest_group_type = ig_trade_unions
+			}
+			add = 2
+		}
+		if = { # moderates are scared of radical politics
+			limit = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_moderate
+				}
+			}
+			add = -3
+		}
+	}
+}

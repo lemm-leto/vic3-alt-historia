@@ -1,0 +1,25 @@
+﻿congo_river_expedition = {
+	is_shown = {		
+		NOT = { has_variable = on_expedition }		
+		has_technology_researched = colonization
+		NOT = { has_global_variable = congo_river_explored }
+	}
+	
+	possible = {
+		is_at_war = no		
+		has_interest_marker_in_region = region_central_africa
+		any_scope_character = {
+			OR = {
+				has_role = general
+				has_role = admiral
+			}	
+			count >= 3
+		}
+		has_technology_researched = quinine
+	}
+	
+	when_taken = {
+		trigger_event = { id = expedition_events.601 popup = yes }
+		set_variable = on_expedition
+	}
+}

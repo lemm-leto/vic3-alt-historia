@@ -1,0 +1,30 @@
+﻿west_america_expedition = {
+	is_shown = {
+		NAND = { 
+			has_global_variable = buenaventura_river_disproven
+			has_global_variable = oregon_trail_mapped
+	    }	
+		has_technology_researched = colonization
+		NOT = {  has_variable = on_expedition }	   
+	}
+
+	possible = {
+		has_interest_marker_in_region = region_pacific_coast	
+		is_at_war = no
+		any_scope_character = {
+			OR = {
+				has_role = general
+				has_role = admiral
+			}
+			count >= 3
+		}
+	}
+
+	when_taken = {
+		trigger_event = { id = expedition_events.200 popup = yes }
+		set_variable = {
+			name = on_expedition
+			value = yes
+		}
+	}
+}

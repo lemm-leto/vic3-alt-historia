@@ -1,0 +1,47 @@
+﻿pmg_base_building_railway = {
+	ai_selection = most_productive
+
+	production_methods = {
+		pm_steam_trains
+		pm_electric_trains
+		pm_diesel_trains
+	}
+}
+
+pmg_passenger_trains = {
+	ai_selection = most_productive
+
+	production_methods = {
+		pm_no_passenger_trains
+		pm_wooden_passenger_carriages
+		pm_steel_passenger_carriages
+	}
+}
+
+pmg_armored_trains = {
+	ai_selection = most_productive
+
+	production_methods = {
+		pm_no_military_trains
+		pm_armored_trains
+		pm_railway_guns
+	}
+}
+
+pmg_base_building_trade_center = {
+	ai_selection = most_productive
+
+	production_methods = {
+		pm_trade_center
+	}
+}
+
+pmg_ownership_building_trade_center = {
+	ai_selection = most_productive
+
+	production_methods = {
+		pm_trade_center_merchant_guilds
+		pm_trade_center_privately_owned
+		pm_trade_center_government_run
+	}
+}

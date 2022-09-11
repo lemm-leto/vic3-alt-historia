@@ -1,0 +1,117 @@
+﻿je_central_africa_expedition = { #Nile River
+
+	on_monthly_pulse = {
+		effect = {
+			if = {
+				limit = {
+					NOT = {
+						exists = scope:expedition_leader
+					}
+				}
+				if = {
+					limit = {
+						NOT = {
+							any_scope_character = {
+								OR = {
+									has_role = general
+									has_role = admiral
+								}
+								is_busy = no
+							}
+						}
+					}
+					create_character = {
+						is_general = yes
+						ig_leader = no
+					}
+				}
+				random_scope_character = {
+					limit = {
+						OR = {
+							has_role = general
+							has_role = admiral
+						}
+						is_busy = no
+					}
+					save_scope_as = expedition_leader
+					set_character_busy = yes
+				}
+			}
+		}
+		random_events = {
+			100 = 0
+			10 = expedition_events.20 #posts a notification
+			10 = expedition_events.41 #malaria
+			7 = expedition_events.110 #new leader
+			10 = expedition_events.70 #dysentery
+			10 = expedition_events.30 #local guides
+			10 = expedition_events.540 #rhino hunt
+			7 = expedition_events.520 #pay more taxes
+			10 = expedition_events.530 #lost mules
+			5 = expedition_events.550 #beetle in ear
+			5 = expedition_events.560 #commander vice
+			8 = expedition_events.570 #study geography
+			7 = expedition_events.130 #kidnapped ambassador
+			5 = expedition_events.140 #leader's breakdown
+			7 = expedition_events.150 #expedition thief
+			10 = expedition_events.160 #cancelled expedition
+			10 = expedition_events.90 #previous explorers
+			10 = expedition_events.695 #lost foreign expedition
+		}
+	}
+	
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = expedition_leader_var
+			}
+			save_scope_as = expedition_leader
+			remove_variable = expedition_leader_var
+		}
+	}
+	
+    fail = {
+		custom_tooltip = {
+			text = je_expedition_fail
+			NOT = {
+                has_variable = on_expedition
+            }
+			var:expedition_peril >= 8
+		}
+    }
+	
+	on_fail = {
+		trigger_event = { id = expedition_events.512 }
+		remove_variable = on_expedition
+		remove_variable = central_africa_expedition_var
+		set_variable = failed_central_africa_expedition_var
+	}
+	
+	complete = {
+		custom_tooltip = {
+			text = je_expedition_success
+			scope:journal_entry = {
+				is_goal_complete = yes
+			}
+		}
+	}
+	
+	on_complete = {
+		trigger_event = { id = expedition_events.511 }
+		remove_variable = on_expedition
+		remove_variable = central_africa_expedition_var
+	}
+	
+	current_value = {
+		value = var:expedition_progress
+	}
+
+	goal_add_value = {
+		add = 8
+	}
+	
+	progressbar = yes
+	
+    weight = 200
+    inheritable = no
+}

@@ -1,0 +1,18 @@
+﻿POPS = {
+    s:STATE_TUNISIA = {
+		region_state:CAR = {
+			create_pop = {
+				culture = carthago
+				size = 2964404
+			}
+		}
+	}
+    s:STATE_TRIPOLI = {
+		region_state:CAR = {
+			create_pop = {
+				culture = carthago
+				size = 1900000
+			}
+		}
+	}
+}

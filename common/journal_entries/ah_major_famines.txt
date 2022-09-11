@@ -1,0 +1,135 @@
+﻿je_famine = {
+	icon = "gfx/interface/icons/event_icons/event_skull.dds"
+
+	is_shown_when_inactive = {
+		NOT = { has_variable = completed_major_famine_var }
+		NOT = { is_country_type = unrecognized }
+		NOT = { is_country_type = decentralized }
+	}
+
+	possible = {
+		NOT = {
+			institution_investment_level = {
+				institution = institution_social_security
+				value >= 4
+			}
+		}
+		OR = {
+			AND = {
+				root.average_sol < 6.5
+				any_scope_building = {
+					is_farm_building = yes
+					cash_reserves_ratio < 0.25
+					weekly_profit <= 0.25
+					level >= 5
+				}
+			}
+			AND = {
+				root.average_sol < 10
+				any_scope_state = {
+					is_incorporated = yes
+					has_variable = natural_disaster_variable
+				}
+			}
+		}
+	}
+
+	immediate = {
+		random_scope_state = {
+			limit = {
+				is_incorporated = yes
+				OR = {
+					any_scope_building = {
+						is_farm_building = yes
+						cash_reserves_ratio < 0.25
+						weekly_profit <= 0.25
+						level >= 5
+					}
+					has_variable = natural_disaster_variable
+				}
+			}
+			save_scope_as = famine_state
+			set_variable = famine_var
+		}
+		if = {
+			limit = {
+				NOT = {
+					exists = scope:famine_state
+				}
+			}
+			random_scope_state = {
+				limit = {
+					is_incorporated = yes
+					any_scope_building = {
+						is_farm_building = yes
+						level >= 1
+					}
+				}
+				save_scope_as = famine_state
+				set_variable = famine_var
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					exists = scope:famine_state
+				}
+			}
+			random_scope_state = {
+				save_scope_as = famine_state
+				set_variable = famine_var
+			}
+		}
+		trigger_event = { id = famine_events.1 }
+	}
+
+	current_value = {
+		value =	root.average_sol
+	}
+
+	goal_add_value = {
+		add = 3
+	}
+
+	complete = {
+		scope:journal_entry = {
+			custom_tooltip = {
+				text = je_major_famines_success
+				is_goal_complete = yes
+			}
+		}
+	}
+
+	on_complete = {
+		set_variable = {
+			name = completed_major_famine_var
+			months = normal_modifier_time
+		}
+		remove_variable = neighbor_country_1_var
+		remove_variable = famine_donations_var
+	}
+
+	on_monthly_pulse = {
+		random_events = {
+			100 = 0
+			10 = famine_events.2
+			10 = famine_events.3
+			10 = famine_events.4
+			10 = famine_political.1
+			10 = famine_political.2
+			10 = famine_political.3
+			10 = famine_political.4
+			10 = famine_political.5
+		}
+	}
+
+	timeout = 1825
+
+	weight = 200
+
+	should_be_pinned_by_default = yes
+
+	inheritable = no
+
+	progressbar = yes
+}

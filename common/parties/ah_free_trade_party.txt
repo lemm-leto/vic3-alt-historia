@@ -1,0 +1,76 @@
+﻿# Party for IG's that want free trade when it is not passed yet
+# Should usually only appear when the Landowners want Free Trade
+
+free_trade_party = {
+	name = {
+		first_valid = {
+			triggered_desc = {
+				desc = party_free_trade
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+	icon = {
+		default = "/gfx/interface/icons/political_parties/free_trade.dds"
+	}
+	# THIS IS RUN ONLY ONCE AT GAME START
+	valid_for_country = {
+		always = yes
+	}
+	available_for_interest_group = {
+		owner = {
+			country_has_voting_franchise = yes
+		}
+		OR = {
+			AND = {
+				exists = leader
+				leader = {
+					has_ideology = ideology_market_liberal
+				}
+			}
+			has_ideology = ideology_laissez_faire
+		}
+	}
+	join_weight = {
+		value = -5
+		if = { # capitalists like capitalism. This party functions as a fallback for lonely industrialists
+			limit = {
+				OR = {
+					AND = {
+						exists = leader
+						leader = {
+							has_ideology = ideology_market_liberal
+						}
+					}
+					has_ideology = ideology_laissez_faire
+				}
+			}
+			add = 15
+		}
+		if = { # this party will usually only appear when there's a push for free trade from the conservatives
+			limit = {
+				is_interest_group_type = ig_landowners
+				exists = leader
+				leader = {
+					has_ideology = ideology_market_liberal
+				}
+			}
+			add = 15
+		}
+		if = { # # this party will usually only appear when there's a push for free trade from the conservatives
+			limit = {
+				owner = {
+					ig:ig_landowners = {
+						exists = leader
+						leader = {
+							NOT = { has_ideology = ideology_market_liberal }
+						}
+					}
+				}
+			}
+			add = -10
+		}
+	}
+}

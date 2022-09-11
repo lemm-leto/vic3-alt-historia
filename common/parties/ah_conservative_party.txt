@@ -1,0 +1,192 @@
+﻿# Bastion of the Landowners
+# Can also appeal to the Devout, PB, and Industrialists
+
+conservative_party = {
+	name = {
+		first_valid = {
+			triggered_desc = {
+				desc = party_conservative
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+	icon = {
+		default = "/gfx/interface/icons/political_parties/conservatism.dds"
+		# Variant Example
+		# variant = {
+		#	trigger = {
+		#		always = yes
+		#	}
+		#	path = "Some/Path/Icon.dds"
+		#}
+	}
+	# THIS IS RUN ONLY ONCE AT GAME START
+	valid_for_country = {
+		always = yes
+	}
+	available_for_interest_group = {
+		owner = {
+			country_has_voting_franchise = yes
+			ig:ig_landowners = {
+				is_marginal = no
+			}
+		}
+		exists = leader
+		leader = { # socialists and radicals won't join conservative parties
+			NOR = {
+				has_ideology = ideology_communist
+				has_ideology = ideology_vanguardist
+				has_ideology = ideology_anarchist
+				has_ideology = ideology_social_democrat
+				has_ideology = ideology_radical
+				has_ideology = ideology_atheist
+			}
+		}
+		# unions can never be conservative
+		NOT = { is_interest_group_type = ig_trade_unions }
+	}
+	join_weight = {
+		value = -5
+		if = { # conservatives love conservativism
+			limit = {
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_traditionalist
+						has_ideology = ideology_royalist
+						has_ideology = ideology_theocrat
+						has_ideology = ideology_slaver
+					}
+				}
+			}
+			add = 5
+		}
+		if = { # conservatives love conservativism
+			limit = {
+				OR = {
+					has_ideology = ideology_paternalistic
+					has_ideology = ideology_stratocratic
+					has_ideology = ideology_patriarchal
+					has_ideology = ideology_moralist
+				}
+			}
+			add = 5
+		}
+		if = { # various progressives dislike conservativism
+			limit = {
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_feminist
+						has_ideology = ideology_abolitionist
+						has_ideology = ideology_pacifist
+						has_ideology = ideology_reformer
+					}
+				}
+			}
+			add = -3
+		}
+		if = { # patriots are inclined towards conservativism
+			limit = {
+				has_ideology = ideology_patriotic
+			}
+			add = 3
+		}
+		if = { # capitalists more likely to join conservatives when the poor can vote
+			limit = {
+				has_ideology = ideology_plutocratic
+				owner = {
+					has_law = law_type:law_universal_suffrage
+				}
+			}
+			add = 2
+		}
+		if = { # capitalists more likely to join conservatives with progressive taxation
+			limit = {
+				has_ideology = ideology_plutocratic
+				owner = {
+					has_law = law_type:law_graduated_taxation
+				}
+			}
+			add = 2
+		}
+		if = { # capitalists more likely to join conservatives with public health
+			limit = {
+				has_ideology = ideology_individualist
+				owner = {
+					has_law = law_type:law_public_health_insurance
+				}
+			}
+			add = 2
+		}
+		if = { # capitalists more likely to join conservatives with public schools
+			limit = {
+				has_ideology = ideology_individualist
+				owner = {
+					has_law = law_type:law_public_schools
+				}
+			}
+			add = 2
+		}
+		if = { # devout more likely to join conservatives with total separation
+			limit = {
+				has_ideology = ideology_moralist
+				owner = {
+					has_law = law_type:law_total_separation
+				}
+			}
+			add = 2
+		}
+		if = { # patriarchs more likely to join conservatives with women's suffrage
+			limit = {
+				has_ideology = ideology_patriarchal
+				owner = {
+					has_law = law_type:law_womens_suffrage
+				}
+			}
+			add = 3
+		}
+		if = { # patriarchs more likely to join conservatives with working women
+			limit = {
+				has_ideology = ideology_patriarchal
+				owner = {
+					has_law = law_type:law_women_in_the_workplace
+				}
+			}
+			add = 2
+		}
+		if = { # reactionaries like regressing from multiculturalism
+			limit = {
+				has_ideology = ideology_reactionary
+				owner = {
+					has_law = law_type:law_multicultural
+				}
+			}
+			add = 2
+		}
+		if = { # patriots don't like freedom
+			limit = {
+				has_ideology = ideology_patriotic
+				owner = {
+					has_law = law_type:law_guaranteed_liberties
+				}
+			}
+			add = 2
+		}
+		if = { # fascists might join conservatives if they lack their own party
+			limit = {
+				exists = leader
+				leader = {
+					OR = {
+						has_ideology = ideology_fascist
+						has_ideology = ideology_ethno_nationalist
+					}
+				}
+			}
+			add = 2
+		}	
+		
+	}
+}

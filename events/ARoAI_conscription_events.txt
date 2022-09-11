@@ -1,0 +1,1811 @@
+﻿namespace = ARoAI_conscription_events
+
+ARoAI_conscription_events.1 = { # Monthly
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {
+		is_player = no
+	}
+	
+	immediate = {
+		trigger_event = {
+			id = ARoAI_conscription_events.4
+		}
+		trigger_event = {
+			id = ARoAI_conscription_events.4
+			days = 14
+		}
+	}
+}
+
+ARoAI_conscription_events.2 = { # On war end
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {}
+	
+	immediate = {
+		every_country = {
+			limit = {
+				save_temporary_scope_as = war_participator
+				root = {
+					OR = {
+						initiator = scope:war_participator
+						target = scope:war_participator
+						any_scope_initiator_ally = {
+							this = scope:war_participator
+						}
+						any_scope_target_ally = {
+							this = scope:war_participator
+						}
+					}
+				}
+			}
+			trigger_event = {
+				id = ARoAI_conscription_events.3
+			}
+		}
+	}
+}
+
+ARoAI_conscription_events.3 = { # On war end
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {}
+	
+	immediate = {
+		trigger_event = {
+			id = ARoAI_conscription_events.5
+		}
+		trigger_event = {
+			id = ARoAI_conscription_events.6
+		}
+		trigger_event = {
+			id = ARoAI_conscription_events.6
+			days = 2
+		}
+		trigger_event = {
+			id = ARoAI_conscription_events.6
+			days = 4
+		}
+	}
+}
+
+ARoAI_conscription_events.4 = {
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {
+		is_player = no
+	}
+	
+	immediate = {
+		if = {
+			limit = {
+				ARoAI_is_or_will_be_at_war = yes
+			}
+			if = {
+				limit = {
+					any_scope_state = {
+						ARoAI_state_can_perform_conscription = yes
+					}
+					OR = {
+						AND = {
+							has_variable = ct_weekly_income
+							ct_is_budget_catastrophic = no
+							ct_weekly_income > ct_50pct_income_deficit
+						}
+						OR = {
+							has_revolution = yes
+							is_revolutionary = yes
+						}
+					}
+				}
+				
+				# Set up conscription calculations variables
+				
+				# Part of the population that may be conscripted
+				set_variable = {
+					name = conscription_potential
+					value = 0.25
+				}
+				if = {
+					limit = {
+						root = {
+							has_law = law_type:law_women_own_property
+						}
+					}
+					change_variable = {
+						name = conscription_potential
+						add = 0.05
+					}
+				}
+				else_if = {
+					limit = {
+						root = {
+							has_law = law_type:law_women_in_the_workplace
+						}
+					}
+					change_variable = {
+						name = conscription_potential
+						add = 0.1
+					}
+				}
+				else_if = {
+					limit = {
+						root = {
+							has_law = law_type:law_womens_suffrage
+						}
+					}
+					change_variable = {
+						name = conscription_potential
+						add = 0.15
+					}
+				}
+				
+				# Professional Army law
+				if = {
+					limit = {
+						has_law = law_type:law_professional_army
+					}
+					set_variable = {
+						name = conscription_rate_add
+						value = 0.10
+					}
+				}
+				# National Militia law
+				else_if = {
+					limit = {
+						has_law = law_type:law_national_militia
+					}
+					set_variable = {
+						name = conscription_rate_add
+						value = 0.20
+					}
+				}
+				# Mass Conscription law
+				else_if = {
+					limit = {
+						has_law = law_type:law_mass_conscription
+					}
+					set_variable = {
+						name = conscription_rate_add
+						value = 0.25
+					}
+				}
+				# Base conscription rate aka Peasant Levies law
+				else = {
+					set_variable = {
+						name = conscription_rate_add
+						value = 0.15
+					}
+				}
+				
+				set_variable = {
+					name = conscription_rate_mult
+					value = 1
+				}
+				
+				if = {
+					limit = {
+						has_modifier = cizye_tax
+					}
+					change_variable = {
+						name = conscription_rate_mult
+						subtract = 0.4
+					}
+				}
+				
+				if = {
+					limit = {
+						has_modifier = draft_excemption_tax
+					}
+					change_variable = {
+						name = conscription_rate_mult
+						subtract = 0.3
+					}
+				}
+				
+				if = {
+					limit = {
+						has_modifier = weakened_by_mutiny
+					}
+					change_variable = {
+						name = conscription_rate_mult
+						subtract = 0.25
+					}
+				}
+				
+				if = {
+					limit = {
+						has_modifier = war_for_independence
+					}
+					change_variable = {
+						name = conscription_rate_mult
+						add = 0.25
+					}
+				}
+				
+				set_variable = {
+					name = conscription_rate
+					value = var:conscription_rate_add
+				}
+				
+				change_variable = {
+					name = conscription_rate
+					multiply = var:conscription_rate_mult
+				}
+				
+				# Debuff for states with low amount of culturally accepted pops
+				
+				set_variable = {
+					name = conscription_not_enough_accepted
+					value = 0.14
+				}
+				
+				# Expected % gain of conscripts per HALF !!!!!!!!month
+				
+				set_variable = {
+					name = conscription_per_month
+					value = 0.035
+				}
+				
+				# Short term conscription in HALF months
+				
+				set_variable = {
+					name = short_term_conscription_months
+					value = 6
+				}
+				
+				##################################################
+				
+				# CREATING LISTS OF ALLIES AND ENEMIES AND COUNTING THEIR ARMIES
+				
+				# Setting up variables
+				
+				set_variable = {
+					name = own_army
+					value = army_size
+				}
+				set_variable = {
+					name = war_allies_army
+					value = 0
+				}
+				set_variable = {
+					name = play_allies_army
+					value = 0
+				}
+				set_variable = {
+					name = war_enemies_army
+					value = 0
+				}
+				set_variable = {
+					name = play_enemies_army
+					value = 0
+				}
+				
+				# War allies and enemies
+				
+				if = {
+					limit = {
+						is_at_war = yes
+					}
+					every_country = {
+						limit = {
+							NOT = {
+								this = root
+							}
+							NOT = {
+								root = {
+									is_target_in_variable_list = {
+										name = all_allies
+										target = prev
+									}
+								}
+							}
+							is_in_war_together = root
+						}
+						root = {
+							add_to_variable_list = {
+								name = all_allies
+								target = prev
+							}
+							add_to_variable_list = {
+								name = war_allies
+								target = prev
+							}
+							change_variable = {
+								name = war_allies_army
+								add = prev.army_size
+							}
+						}
+					}
+					
+					every_country = {
+						limit = {
+							NOT = {
+								this = root
+							}
+							NOT = {
+								root = {
+									is_target_in_variable_list = {
+										name = all_enemies
+										target = prev
+									}
+								}
+							}
+							any_scope_war = {
+								is_war_participant = root
+							}
+							NOT = {
+								is_in_war_together = root
+							}
+						}
+						root = {
+							add_to_variable_list = {
+								name = all_enemies
+								target = prev
+							}
+							add_to_variable_list = {
+								name = war_enemies
+								target = prev
+							}
+							change_variable = {
+								name = war_enemies_army
+								add = prev.army_size
+							}
+						}
+					}
+					
+				}
+				
+				# Play allies
+				
+				every_country = {
+					limit = {
+						NOT = {
+							this = root
+						}
+						NOT = {
+							root = {
+								is_target_in_variable_list = {
+									name = all_allies
+									target = prev
+								}
+							}
+						}
+						save_temporary_scope_as = conflict_participator
+						any_diplomatic_play = {
+							OR = {
+								AND = {
+									initiator = root
+									any_scope_initiator_ally = {
+										this = scope:conflict_participator
+									}
+								}
+								AND = {
+									any_scope_initiator_ally = {
+										this = root
+									}
+									OR = {
+										initiator = scope:conflict_participator
+										any_scope_initiator_ally = {
+											this = scope:conflict_participator
+										}
+									}
+								}
+								AND = {
+									target = root
+									any_scope_target_ally = {
+										this = scope:conflict_participator
+									}
+								}
+								AND = {
+									any_scope_target_ally = {
+										this = root
+									}
+									OR = {
+										target = scope:conflict_participator
+										any_scope_target_ally = {
+											this = scope:conflict_participator
+										}
+									}
+								}
+							}
+						}
+					}
+					root = {
+						add_to_variable_list = {
+							name = all_allies
+							target = prev
+						}
+						add_to_variable_list = {
+							name = play_allies
+							target = prev
+						}
+						change_variable = {
+							name = play_allies_army
+							add = prev.army_size
+						}
+					}
+				}
+				
+				# Play enemies
+				
+				every_country = {
+					limit = {
+						NOT = {
+							this = root
+						}
+						NOT = {
+							root = {
+								is_target_in_variable_list = {
+									name = all_enemies
+									target = prev
+								}
+							}
+						}
+						save_temporary_scope_as = conflict_participator
+						any_diplomatic_play = {
+							OR = {
+								AND = {
+									OR = {
+										initiator = root
+										any_scope_initiator_ally = {
+											this = root
+										}
+									}
+									OR = {
+										target = scope:conflict_participator
+										any_scope_target_ally = {
+											this = scope:conflict_participator
+										}
+									}
+								}
+								AND = {
+									OR = {
+										initiator = scope:conflict_participator
+										any_scope_initiator_ally = {
+											this = scope:conflict_participator
+										}
+									}
+									OR = {
+										target = root
+										any_scope_target_ally = {
+											this = root
+										}
+									}
+								}
+							}
+						}
+					}
+					root = {
+						add_to_variable_list = {
+							name = all_enemies
+							target = prev
+						}
+						add_to_variable_list = {
+							name = play_enemies
+							target = prev
+						}
+						change_variable = {
+							name = play_enemies_army
+							add = prev.army_size
+						}
+					}
+				}
+				
+				##################################################
+				
+				# GETTING AVERAGE ARMY QUALITY FOR OUR SIDE AND ENEMY SIDE
+				
+				# War fronts
+				
+				every_scope_war = {
+					every_scope_front = {
+						limit = {
+							NOT = {
+								root = {
+									is_target_in_variable_list = {
+										name = relevant_fronts
+										target = prev
+									}
+								}
+							}
+						}
+						root = {
+							add_to_variable_list = {
+								name = relevant_fronts
+								target = prev
+							}
+						}
+					}
+					save_temporary_scope_as = current_war
+					random_country = {
+						limit = {
+							root = {
+								is_target_in_variable_list = {
+									name = war_enemies
+									target = prev
+								}
+							}
+							any_scope_war = {
+								this = scope:current_war
+							}
+						}
+						root = {
+							add_to_variable_list = {
+								name = enemies_on_fronts
+								target = prev
+							}
+						}
+					}
+				}
+				
+				# Diplo play fronts by our generals
+				
+				every_scope_general = {
+					limit = {
+						exists = front
+					}
+					front = {
+						if = {
+							limit = {
+								NOT = {
+									root = {
+										is_target_in_variable_list = {
+											name = relevant_fronts
+											target = prev
+										}
+									}
+								}
+							}
+							root = {
+								add_to_variable_list = {
+									name = relevant_fronts
+									target = prev
+								}
+							}
+						}
+					}
+				}
+				
+				# Diplo play fronts by generals of all the commited participants in our plays
+				
+				every_diplomatic_play = {
+					limit = {
+						ARoAI_is_committed_play_participant = {
+							country = root
+						}
+					}
+					every_country = {
+						limit = {
+							save_temporary_scope_as = play_participant
+							prev = {
+								ARoAI_is_committed_play_participant = {
+									country = scope:play_participant
+								}
+							}
+						}
+						every_scope_general = {
+							limit = {
+								exists = front
+							}
+							front = {
+								if = {
+									limit = {
+										NOT = {
+											root = {
+												is_target_in_variable_list = {
+													name = relevant_fronts
+													target = prev
+												}
+											}
+										}
+									}
+									root = {
+										add_to_variable_list = {
+											name = relevant_fronts
+											target = prev
+										}
+									}
+								}
+							}
+						}
+					}
+					if = {
+						limit = {
+							OR = {
+								initiator = root
+								any_scope_initiator_ally = {
+									this = root
+								}
+							}
+						}
+						target = {
+							root = {
+								add_to_variable_list = {
+									name = enemies_on_fronts
+									target = prev
+								}
+							}
+						}
+					}
+					else_if = {
+						limit = {
+							OR = {
+								target = root
+								any_scope_target_ally = {
+									this = root
+								}
+							}
+						}
+						initiator = {
+							root = {
+								add_to_variable_list = {
+									name = enemies_on_fronts
+									target = prev
+								}
+							}
+						}
+					}
+				}
+				
+				# Saving relevant fronts (will be needed later)
+				
+				set_variable = {
+					name = have_relevant_fronts
+					value = 0
+				}
+				
+				every_in_list = {
+					variable = relevant_fronts
+					root = {
+						change_variable = {
+							name = have_relevant_fronts
+							add = 1
+						}
+					}
+				}
+				
+				# Total amount of battalions on fronts variables
+				
+				set_variable = {
+					name = our_side_total_battalions
+					value = 0
+				}
+				set_variable = {
+					name = enemy_side_total_battalions
+					value = 0
+				}
+				
+				# Count total amount of our side battalions on fronts with quality value
+				
+				every_in_list = {
+					variable = relevant_fronts
+					limit = {
+						"this.num_total_battalions(root)" > 0
+						"this.average_offense(root)" > 0
+						"this.average_defense(root)" > 0
+					}
+					root = {
+						change_variable = {
+							name = our_side_total_battalions
+							add = "prev.num_total_battalions(root)"
+						}
+						add_to_variable_list = {
+							name = our_side_fronts
+							target = prev
+						}
+					}
+				}
+				
+				# Count total amount of enemy side battalions on fronts with quality value
+				
+				every_in_list = {
+					variable = enemies_on_fronts
+					save_scope_as = current_enemy
+					root = {
+						every_in_list = {
+							variable = relevant_fronts
+							limit = {
+								"this.num_total_battalions(scope:current_enemy)" > 0
+								"this.average_offense(scope:current_enemy)" > 0
+								"this.average_defense(scope:current_enemy)" > 0
+							}
+							root = {
+								change_variable = {
+									name = enemy_side_total_battalions
+									add = "prev.num_total_battalions(scope:current_enemy)"
+								}
+								add_to_variable_list = {
+									name = enemy_side_fronts
+									target = prev
+								}
+							}
+						}
+					}
+					clear_saved_scope = current_enemy
+				}
+				
+				# Variables for comparing army battalions vs fronts battalions
+				
+				set_variable = {
+					name = our_side_army_vs_fronts_battalions
+					value = 0
+				}
+				set_variable = {
+					name = enemy_side_army_vs_fronts_battalions
+					value = 0
+				}
+				
+				# If there are some our side battalions on fronts with quality value, compare amount of battalions in army versus amount of battalions on fronts with quality value
+				
+				if = {
+					limit = {
+						var:our_side_total_battalions > 0
+					}
+					change_variable = {
+						name = our_side_army_vs_fronts_battalions
+						add = var:own_army
+					}
+					change_variable = {
+						name = our_side_army_vs_fronts_battalions
+						add = var:war_allies_army
+					}
+					change_variable = {
+						name = our_side_army_vs_fronts_battalions
+						add = var:play_allies_army
+					}
+					change_variable = {
+						name = our_side_army_vs_fronts_battalions
+						divide = var:our_side_total_battalions
+					}
+				}
+				
+				# Otherwise add all the 0 quality fronts, will apply saved quality to them later
+				
+				if = {
+					limit = {
+						has_variable = our_side_saved_quality
+						var:our_side_saved_quality > 0
+						OR = {
+							var:our_side_total_battalions <= 0
+							var:our_side_army_vs_fronts_battalions > 4
+						}
+					}
+					every_in_list = {
+						variable = relevant_fronts
+						limit = {
+							"this.num_total_battalions(root)" > 0
+							"this.average_offense(root)" <= 0
+							"this.average_defense(root)" <= 0
+						}
+						root = {
+							change_variable = {
+								name = our_side_total_battalions
+								add = "prev.num_total_battalions(root)"
+							}
+							add_to_variable_list = {
+								name = our_side_fronts
+								target = prev
+							}
+						}
+					}
+					if = {
+						limit = {
+							var:our_side_army_vs_fronts_battalions = 0
+						}
+						set_variable = {
+							name = our_side_army_vs_fronts_battalions
+							value = 666
+						}
+					}
+				}
+				
+				# Same for enemy army vs front
+				
+				if = {
+					limit = {
+						var:enemy_side_total_battalions > 0
+					}
+					change_variable = {
+						name = enemy_side_army_vs_fronts_battalions
+						add = var:war_enemies_army
+					}
+					change_variable = {
+						name = enemy_side_army_vs_fronts_battalions
+						add = var:play_enemies_army
+					}
+					change_variable = {
+						name = enemy_side_army_vs_fronts_battalions
+						divide = var:enemy_side_total_battalions
+					}
+				}
+				
+				# Same for enemy 0 quality fronts
+				
+				if = {
+					limit = {
+						has_variable = enemy_side_saved_quality
+						var:enemy_side_saved_quality > 0
+						OR = {
+							var:enemy_side_total_battalions <= 0
+							var:enemy_side_army_vs_fronts_battalions > 4
+						}
+					}
+					every_in_list = {
+						variable = enemies_on_fronts
+						save_scope_as = current_enemy
+						root = {
+							every_in_list = {
+								variable = relevant_fronts
+								limit = {
+									"this.num_total_battalions(scope:current_enemy)" > 0
+									"this.average_offense(scope:current_enemy)" <= 0
+									"this.average_defense(scope:current_enemy)" <= 0
+								}
+								root = {
+									change_variable = {
+										name = enemy_side_total_battalions
+										add = "prev.num_total_battalions(scope:current_enemy)"
+									}
+									add_to_variable_list = {
+										name = enemy_side_fronts
+										target = prev
+									}
+								}
+							}
+						}
+						clear_saved_scope = current_enemy
+					}
+					if = {
+						limit = {
+							var:enemy_side_army_vs_fronts_battalions = 0
+						}
+						set_variable = {
+							name = enemy_side_army_vs_fronts_battalions
+							value = 666
+						}
+					}
+				}
+				
+				# Quality variables
+				
+				set_variable = {
+					name = our_side_average_quality
+					value = 0
+				}
+				set_variable = {
+					name = enemy_side_average_quality
+					value = 0
+				}
+				set_variable = {
+					name = average_quality_on_front
+					value = 0
+				}
+				
+				# Calculating average quality for our side and enemy side weighted by amount of battalions
+				
+				# If at least 25% of army is present on fronts with quality value, we judge average quality only by current fronts
+				# If less than 25% of army is present on fronts with quality value, but there's a saved quality (value from the last time we saw at least 25% of army on fronts), judge quality by fronts, but get 0 quality ones too and fill them with saved quality
+				# If less than 25% of army is present on fronts with quality value and there's NO saved quality, then we don't use quality at all
+				
+				if = {
+					limit = {
+						var:our_side_total_battalions > 0
+						var:enemy_side_total_battalions > 0
+						OR = {
+							var:our_side_army_vs_fronts_battalions <= 4
+							AND = {
+								var:our_side_army_vs_fronts_battalions > 4
+								has_variable = our_side_saved_quality
+								var:our_side_saved_quality > 0
+							}
+						}
+						OR = {
+							var:enemy_side_army_vs_fronts_battalions <= 4
+							AND = {
+								var:enemy_side_army_vs_fronts_battalions > 4
+								has_variable = enemy_side_saved_quality
+								var:enemy_side_saved_quality > 0
+							}
+						}
+					}
+					every_in_list = {
+						variable = our_side_fronts
+						limit = {
+							"this.num_total_battalions(root)" > 0
+						}
+						root = {
+							if = {
+								limit = {
+									"prev.average_offense(root)" > 0
+									"prev.average_defense(root)" > 0
+								}
+								set_variable = {
+									name = average_quality_on_front
+									value = "prev.average_offense(root)"
+								}
+								change_variable = {
+									name = average_quality_on_front
+									add = "prev.average_defense(root)"
+								}
+								change_variable = {
+									name = average_quality_on_front
+									divide = 2
+								}
+							}
+							else = {
+								set_variable = {
+									name = average_quality_on_front
+									value = var:our_side_saved_quality
+								}
+							}
+							change_variable = {
+								name = average_quality_on_front
+								multiply = "prev.num_total_battalions(root)"
+							}
+							change_variable = {
+								name = average_quality_on_front
+								divide = var:our_side_total_battalions
+							}
+							change_variable = {
+								name = our_side_average_quality
+								add = var:average_quality_on_front
+							}
+						}
+					}
+					
+					every_in_list = {
+						variable = enemies_on_fronts
+						save_scope_as = current_enemy
+						root = {
+							every_in_list = {
+								variable = enemy_side_fronts
+								limit = {
+									"this.num_total_battalions(scope:current_enemy)" > 0
+								}
+								root = {
+									if = {
+										limit = {
+											"prev.average_offense(scope:current_enemy)" > 0
+											"prev.average_defense(scope:current_enemy)" > 0
+										}
+										set_variable = {
+											name = average_quality_on_front
+											value = "prev.average_offense(scope:current_enemy)"
+										}
+										change_variable = {
+											name = average_quality_on_front
+											add = "prev.average_defense(scope:current_enemy)"
+										}
+										change_variable = {
+											name = average_quality_on_front
+											divide = 2
+										}
+									}
+									else = {
+										set_variable = {
+											name = average_quality_on_front
+											value = var:enemy_side_saved_quality
+										}
+									}
+									change_variable = {
+										name = average_quality_on_front
+										multiply = "prev.num_total_battalions(scope:current_enemy)"
+									}
+									change_variable = {
+										name = average_quality_on_front
+										divide = var:enemy_side_total_battalions
+									}
+									change_variable = {
+										name = enemy_side_average_quality
+										add = var:average_quality_on_front
+									}
+								}
+							}
+						}
+						clear_saved_scope = current_enemy
+					}
+					
+					# Save quality for next conscription check
+					
+					if = {
+						limit = {
+							var:our_side_average_quality > 0
+							var:our_side_army_vs_fronts_battalions <= 4
+						}
+						set_variable = {
+							name = our_side_saved_quality
+							value = var:our_side_average_quality
+						}
+					}
+					if = {
+						limit = {
+							var:enemy_side_average_quality > 0
+							var:enemy_side_army_vs_fronts_battalions <= 4
+						}
+						set_variable = {
+							name = enemy_side_saved_quality
+							value = var:enemy_side_average_quality
+						}
+					}
+				}
+				
+				# Clear lists
+				
+				clear_variable_list = relevant_fronts
+				clear_variable_list = enemies_on_fronts
+				clear_variable_list = our_side_fronts
+				clear_variable_list = enemy_side_fronts
+				
+				# Checking if quality is correctly set up to determine if we should apply it
+				
+				set_variable = {
+					name = average_quality_is_set_up
+					value = 0
+				}
+				
+				if = {
+					limit = {
+						var:our_side_average_quality > 0
+						var:enemy_side_average_quality > 0
+					}
+					change_variable = {
+						name = average_quality_is_set_up
+						add = 1
+					}
+				}
+				
+				##################################################
+				
+				# CALCULATE QUALITY MULTIPLIERS
+				
+				set_variable = {
+					name = our_side_quality_multiplier
+					value = 1
+				}
+				set_variable = {
+					name = enemy_side_quality_multiplier
+					value = 1
+				}
+				
+				if = {
+					limit = {
+						var:average_quality_is_set_up > 0
+					}
+					set_variable = {
+						name = QSR_input
+						value = var:our_side_average_quality
+					}
+					ARoAI_quality_square_root = yes # Square root of our side quality
+					if = {
+						limit = {
+							has_variable = QSR_output
+							var:QSR_output > 0
+						}
+						set_variable = {
+							name = our_side_average_quality
+							value = var:QSR_output
+						}
+						remove_variable = QSR_output
+						
+						set_variable = {
+							name = QSR_input
+							value = var:enemy_side_average_quality
+						}
+						ARoAI_quality_square_root = yes # Square root of enemy side quality
+						if = {
+							limit = {
+								has_variable = QSR_output
+								var:QSR_output > 0
+							}
+							set_variable = {
+								name = enemy_side_average_quality
+								value = var:QSR_output
+							}
+							remove_variable = QSR_output
+							
+							# Check who has better quality
+							
+							set_variable = {
+								name = sides_average_quality_delta
+								value = var:our_side_average_quality
+							}
+							change_variable = {
+								name = sides_average_quality_delta
+								subtract = var:enemy_side_average_quality
+							}
+							
+							# Calculate higher quality multiplier; set lower quality to 1
+							
+							if = {
+								limit = {
+									var:sides_average_quality_delta > 0
+								}
+								set_variable = {
+									name = our_side_quality_multiplier
+									value = var:our_side_average_quality
+								}
+								change_variable = {
+									name = our_side_quality_multiplier
+									divide = var:enemy_side_average_quality
+								}
+								change_variable = {
+									name = our_side_quality_multiplier
+									subtract = 1
+								}
+								change_variable = {
+									name = our_side_quality_multiplier
+									multiply = 1.7
+								}
+								change_variable = {
+									name = our_side_quality_multiplier
+									add = 1
+								}
+							}
+							else_if = {
+								limit = {
+									var:sides_average_quality_delta < 0
+								}
+								set_variable = {
+									name = enemy_side_quality_multiplier
+									value = var:enemy_side_average_quality
+								}
+								change_variable = {
+									name = enemy_side_quality_multiplier
+									divide = var:our_side_average_quality
+								}
+								change_variable = {
+									name = enemy_side_quality_multiplier
+									subtract = 1
+								}
+								change_variable = {
+									name = enemy_side_quality_multiplier
+									multiply = 1.7
+								}
+								change_variable = {
+									name = enemy_side_quality_multiplier
+									add = 1
+								}
+							}
+							
+							# Apply multipliers
+							
+							change_variable = {
+								name = own_army
+								multiply = var:our_side_quality_multiplier
+							}
+							change_variable = {
+								name = war_allies_army
+								multiply = var:our_side_quality_multiplier
+							}
+							change_variable = {
+								name = play_allies_army
+								multiply = var:our_side_quality_multiplier
+							}
+							change_variable = {
+								name = war_enemies_army
+								multiply = var:enemy_side_quality_multiplier
+							}
+							change_variable = {
+								name = play_enemies_army
+								multiply = var:enemy_side_quality_multiplier
+							}
+						}
+						else = {
+							set_variable = {
+								name = average_quality_is_set_up
+								value = 0
+							}
+						}
+					}
+					else = {
+						set_variable = {
+							name = average_quality_is_set_up
+							value = 0
+						}
+					}
+				}
+				
+				##################################################
+				
+				# APPLYING SHORT TERM CONSCRIPTION PLAN
+				
+				every_scope_state = {
+					limit = {
+						has_variable = state_conscripts_short_term
+						has_variable = state_conscripts_per_month
+					}
+					change_variable = {
+						name = state_conscripts_short_term
+						subtract = var:state_conscripts_per_month
+					}
+					if = {
+						limit = {
+							var:state_conscripts_short_term = 0
+						}
+						remove_variable = state_conscripts_short_term
+						remove_variable = state_conscripts_per_month
+					}
+					else = {
+						set_variable = {
+							name = state_conscripts_expected
+							value = var:state_conscripts_short_term
+						}
+						if = {
+							limit = {
+								root = {
+									var:average_quality_is_set_up > 0
+								}
+							}
+							change_variable = {
+								name = state_conscripts_expected
+								multiply = root.var:our_side_quality_multiplier
+							}
+						}
+						root = {
+							change_variable = {
+								name = own_army
+								add = prev.var:state_conscripts_expected
+							}
+						}
+						remove_variable = state_conscripts_expected
+					}
+				}
+				
+				##################################################
+				
+				# CALCULATE SIDE ARMIES
+				
+				# Our side army
+				
+				set_variable = {
+					name = our_side_army
+					value = var:own_army
+				}
+				change_variable = {
+					name = our_side_army
+					add = var:war_allies_army
+				}
+				change_variable = {
+					name = our_side_army
+					add = var:play_allies_army
+				}
+				
+				# Enemy side army
+				
+				set_variable = {
+					name = enemy_side_army
+					value = var:war_enemies_army
+				}
+				change_variable = {
+					name = enemy_side_army
+					add = var:play_enemies_army
+				}
+				
+				##################################################
+				
+				# CALCULATE WAR BALANCE
+				
+				# Target army size is enemy army * X%
+				
+				set_variable = {
+					name = target_army
+					value = var:enemy_side_army
+				}
+				
+				every_scope_state = {
+					ARoAI_theater_is_connected_to_war_border = yes
+					if = {
+						limit = {
+							var:theater_is_connected_to_war_border = 1
+						}
+						root = {
+							add_to_variable_list = {
+								name = connected_states
+								target = prev
+							}
+						}
+					}
+					else = {
+						ARoAI_state_is_connected_to_war_border = {
+							depth = 6
+						}
+						if = {
+							limit = {
+								var:state_is_connected_to_war_border = 1
+							}
+							root = {
+								add_to_variable_list = {
+									name = connected_states
+									target = prev
+								}
+							}
+						}
+						remove_variable = state_is_connected_to_war_border
+					}
+					remove_variable = theater_is_connected_to_war_border
+				}
+				
+				set_variable = {
+					name = connected_states_percent
+					value = 0
+				}
+				
+				if = {
+					limit = {
+						var:have_relevant_fronts > 0
+						has_variable_list = connected_states
+						variable_list_size = {
+							name = connected_states
+							value > 0
+						}
+					}
+					set_variable = {
+						name = total_number_of_states
+						value = 0
+					}
+					every_scope_state = {
+						root = {
+							change_variable = {
+								name = total_number_of_states
+								add = 1
+							}
+						}
+					}
+					set_variable = {
+						name = number_of_connected_states
+						value = 0
+					}
+					every_in_list = {
+						variable = connected_states
+						root = {
+							change_variable = {
+								name = number_of_connected_states
+								add = 1
+							}
+						}
+					}
+					change_variable = {
+						name = connected_states_percent
+						add = var:number_of_connected_states
+					}
+					change_variable = {
+						name = connected_states_percent
+						divide = var:total_number_of_states
+					}
+					remove_variable = total_number_of_states
+					remove_variable = number_of_connected_states
+				}
+				
+				if = {
+					limit = {
+						var:connected_states_percent >= 0.15
+					}
+					change_variable = {
+						name = target_army
+						multiply = 1.20
+					}
+				}
+				else = {
+					change_variable = {
+						name = target_army
+						multiply = 0.80
+					}
+				}
+				
+				# Army balance, is our side army bigger or smaller than target
+				
+				set_variable = {
+					name = army_balance
+					value = var:our_side_army
+				}
+				change_variable = {
+					name = army_balance
+					subtract = var:target_army
+				}
+				
+				# Idk how to use max LMFAO
+				
+				set_variable = {
+					name = while_counter
+					value = 0
+				}
+				
+				while = {
+					# I should consider conscription only if I have any states capable of it and
+					# A) army balance is negative for our side, meaning that me and my allies combined have less battalions than all the enemies combined
+					# B) I don't have any battalions personally
+					limit = {
+						var:while_counter < 10
+						OR = {
+							AND = {
+								var:connected_states_percent >= 0.15
+								any_scope_state = {
+									ARoAI_state_can_perform_conscription = yes
+								}
+							}
+							AND = {
+								var:connected_states_percent < 0.15
+								has_variable_list = connected_states
+								variable_list_size = {
+									name = connected_states
+									value > 0
+								}
+								any_in_list = {
+									variable = connected_states
+									ARoAI_state_can_perform_conscription = yes
+								}
+							}
+						}
+						OR = {
+							var:army_balance < 0
+							var:own_army = 0
+						}
+					}
+					set_variable = {
+						name = state_population
+						value = 0
+					}
+					
+					every_scope_state = {
+						limit = {
+							ARoAI_state_can_perform_conscription = yes
+						}
+						ARoAI_theater_is_connected_to_war_border = yes
+						if = {
+							limit = {
+								var:theater_is_connected_to_war_border = 1
+							}
+							root = {
+								add_to_variable_list = {
+									name = suitable_states
+									target = prev
+								}
+							}
+						}
+						remove_variable = theater_is_connected_to_war_border
+					}
+					if = {
+						limit = {
+							has_variable_list = suitable_states
+							variable_list_size = {
+								name = suitable_states
+								value > 0
+							}
+						}
+						clear_variable_list = suitable_states
+						every_scope_state = {
+							limit = {
+								ARoAI_state_can_perform_conscription = yes
+							}
+							ARoAI_state_is_connected_to_war_border = {
+								depth = 1
+							}
+							ARoAI_add_connected_state_to_list = yes
+						}
+						if = {
+							limit = {
+								has_variable_list = suitable_states
+								variable_list_size = {
+									name = suitable_states
+									value > 0
+								}
+							}
+							every_in_list = {
+								variable = suitable_states
+								ARoAI_compare_state_populations = yes
+							}
+						}
+						else = {
+							every_scope_state = {
+								limit = {
+									ARoAI_state_can_perform_conscription = yes
+								}
+								ARoAI_state_is_connected_to_war_border = {
+									depth = 2
+								}
+								ARoAI_add_connected_state_to_list = yes
+							}
+							if = {
+								limit = {
+									has_variable_list = suitable_states
+									variable_list_size = {
+										name = suitable_states
+										value > 0
+									}
+								}
+								every_in_list = {
+									variable = suitable_states
+									ARoAI_compare_state_populations = yes
+								}
+							}
+							else = {
+								every_scope_state = {
+									limit = {
+										ARoAI_state_can_perform_conscription = yes
+									}
+									ARoAI_state_is_connected_to_war_border = {
+										depth = 4
+									}
+									ARoAI_add_connected_state_to_list = yes
+								}
+								if = {
+									limit = {
+										has_variable_list = suitable_states
+										variable_list_size = {
+											name = suitable_states
+											value > 0
+										}
+									}
+									every_in_list = {
+										variable = suitable_states
+										ARoAI_compare_state_populations = yes
+									}
+								}
+								else = {
+									every_scope_state = {
+										limit = {
+											ARoAI_state_can_perform_conscription = yes
+										}
+										ARoAI_state_is_connected_to_war_border = {
+											depth = 6
+										}
+										ARoAI_add_connected_state_to_list = yes
+									}
+									if = {
+										limit = {
+											has_variable_list = suitable_states
+											variable_list_size = {
+												name = suitable_states
+												value > 0
+											}
+										}
+										every_in_list = {
+											variable = suitable_states
+											ARoAI_compare_state_populations = yes
+										}
+									}
+									else = {
+										every_scope_state = {
+											limit = {
+												ARoAI_state_can_perform_conscription = yes
+											}
+											ARoAI_theater_is_connected_to_war_border = yes
+											if = {
+												limit = {
+													var:theater_is_connected_to_war_border = 1
+												}
+												root = {
+													add_to_variable_list = {
+														name = suitable_states
+														target = prev
+													}
+												}
+											}
+											remove_variable = theater_is_connected_to_war_border
+										}
+										if = {
+											limit = {
+												has_variable_list = suitable_states
+												variable_list_size = {
+													name = suitable_states
+													value > 0
+												}
+											}
+											every_in_list = {
+												variable = suitable_states
+												ARoAI_compare_state_populations = yes
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					else = {
+						every_scope_state = {
+							limit = {
+								ARoAI_state_can_perform_conscription = yes
+							}
+							ARoAI_compare_state_populations = yes
+						}
+					}
+					
+					clear_variable_list = suitable_states
+					
+					if = {
+						limit = {
+							var:state_population > 0
+							exists = scope:state_to_conscript
+						}
+						
+						#peasant_unrest = {
+						#	state_conscription_rate_mult = -0.50
+						#}
+						
+						# Calculate the amount of conscript battalions the state will give short term
+						
+						set_variable = {
+							name = state_conscripts_per_month
+							value = var:state_population
+						}
+						
+						# 1000 pops = 1 battalion
+						
+						change_variable = {
+							name = state_conscripts_per_month
+							divide = 1000
+						}
+						
+						# Get state potential
+						
+						change_variable = {
+							name = state_conscripts_per_month
+							multiply = var:conscription_potential
+						}
+						
+						# Apply rate to potential
+						
+						change_variable = {
+							name = state_conscripts_per_month
+							multiply = var:conscription_rate
+						}
+						
+						# Per month value
+						
+						change_variable = {
+							name = state_conscripts_per_month
+							multiply = var:conscription_per_month
+						}
+						
+						# Round
+						
+						round_variable = {
+							name = state_conscripts_per_month
+							nearest = 0.01
+						}
+						
+						# Short term value
+						
+						set_variable = {
+							name = state_conscripts_short_term
+							value = var:state_conscripts_per_month
+						}
+						change_variable = {
+							name = state_conscripts_short_term
+							multiply = var:short_term_conscription_months
+						}
+						
+						# Set up short term conscription tracking
+						
+						scope:state_to_conscript = {
+							set_variable = {
+								name = state_conscripts_short_term
+								value = root.var:state_conscripts_short_term
+							}
+							set_variable = {
+								name = state_conscripts_per_month
+								value = root.var:state_conscripts_per_month
+							}
+							activate_building = {
+								building = building_conscription_center
+							}
+						}
+						clear_saved_scope = state_to_conscript
+						
+						# Quality multiplier
+						
+						if = {
+							limit = {
+								var:average_quality_is_set_up > 0
+							}
+							change_variable = {
+								name = state_conscripts_short_term
+								multiply = var:our_side_quality_multiplier
+							}
+						}
+						
+						# Add short term conscription to the army balance
+						
+						change_variable = {
+							name = army_balance
+							add = var:state_conscripts_short_term
+						}
+						
+					}
+					
+					# While counter
+					
+					change_variable = {
+						name = while_counter
+						add = 1
+					}
+					
+				}
+				
+				# Clear lists
+				
+				clear_variable_list = all_allies
+				clear_variable_list = war_allies
+				clear_variable_list = play_allies
+				clear_variable_list = all_enemies
+				clear_variable_list = war_enemies
+				clear_variable_list = play_enemies
+				clear_variable_list = connected_states
+				remove_variable = conscription_potential remove_variable = conscription_rate_add remove_variable = conscription_rate_mult remove_variable = conscription_rate remove_variable = conscription_not_enough_accepted remove_variable = conscription_per_month remove_variable = short_term_conscription_months remove_variable = own_army remove_variable = war_allies_army remove_variable = play_allies_army remove_variable = war_enemies_army remove_variable = play_enemies_army remove_variable = have_relevant_fronts remove_variable = our_side_total_battalions remove_variable = enemy_side_total_battalions remove_variable = our_side_army_vs_fronts_battalions remove_variable = enemy_side_army_vs_fronts_battalions remove_variable = our_side_average_quality remove_variable = enemy_side_average_quality remove_variable = average_quality_on_front remove_variable = average_quality_is_set_up remove_variable = our_side_quality_multiplier remove_variable = enemy_side_quality_multiplier remove_variable = sides_average_quality_delta remove_variable = our_side_army remove_variable = enemy_side_army remove_variable = target_army remove_variable = connected_states_percent remove_variable = total_number_of_states remove_variable = number_of_connected_states remove_variable = army_balance remove_variable = state_population remove_variable = state_conscripts_per_month remove_variable = state_conscripts_short_term remove_variable = while_counter
+			}
+		}
+		else = {
+			trigger_event = {
+				id = ARoAI_conscription_events.5
+			}
+			every_scope_state = {
+				limit = {
+					has_active_building = building_conscription_center
+				}
+				remove_building = building_conscription_center
+			}
+			ARoAI_remove_conscription_state_variables = yes
+		}
+	}
+}
+
+ARoAI_conscription_events.5 = {
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {}
+	
+	immediate = {
+		if = {
+			limit = {
+				ARoAI_is_or_will_be_at_war = no
+			}
+			if = {
+				limit = {
+					has_variable = our_side_saved_quality
+				}
+				remove_variable = our_side_saved_quality
+			}
+			if = {
+				limit = {
+					has_variable = enemy_side_saved_quality
+				}
+				remove_variable = enemy_side_saved_quality
+			}
+		}
+	}
+}
+
+ARoAI_conscription_events.6 = {
+	type = country_event
+	placement = root
+	hidden = yes
+
+	trigger = {}
+	
+	immediate = {
+		if = {
+			limit = {
+				ARoAI_is_or_will_be_at_war = no
+			}
+			every_scope_state = {
+				limit = {
+					has_building = building_conscription_center
+				}
+				remove_building = building_conscription_center
+			}
+			ARoAI_remove_conscription_state_variables = yes
+		}
+	}
+}

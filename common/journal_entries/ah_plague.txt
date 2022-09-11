@@ -1,0 +1,38 @@
+﻿# triggered by on_law_enactment_started
+je_spanish_flu = {
+	icon = "gfx/interface/icons/event_icons/event_skull.dds"
+
+	on_monthly_pulse = {
+		random_events = {
+			3 = 0
+			1 = plague.2
+		}
+		random_events = {
+			10 = 0
+			1 = plague.7
+			1 = plague.8
+			1 = plague.9
+		}
+	}
+
+	complete = {
+		NOT = {
+			any_scope_state = {
+				has_modifier = plague_modifier
+			}
+		}
+	}
+
+	on_complete = {
+		# This is just here to generate a list of plague states
+		# For obvious reasons this doesn't do anything in practice
+		every_scope_state = {
+			limit = {
+				has_modifier = plague_modifier
+			}
+			remove_modifier = plague_modifier
+		}
+	}
+
+	weight = 100
+}

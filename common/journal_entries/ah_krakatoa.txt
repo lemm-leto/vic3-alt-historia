@@ -1,0 +1,30 @@
+﻿je_krakatoa = {
+	icon = "gfx/interface/icons/event_icons/event_skull.dds"
+
+	is_shown_when_inactive = {
+		NOT = { has_global_variable = krakatoa_var }
+		has_interest_marker_in_region = region_indonesia
+	}
+
+	possible = {
+		custom_tooltip = {
+			text = krakatoa_je_tt
+			has_global_variable = krakatoa_var
+		}
+	}
+
+	on_monthly_pulse = {
+		random_events = {
+			10 = 0
+			2 = krakatoa.4
+		}
+	}
+	
+	timeout = 730
+	
+	weight = 100
+
+	should_be_pinned_by_default = yes
+	
+	inheritable = yes
+}

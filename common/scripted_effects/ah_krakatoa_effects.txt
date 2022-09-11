@@ -1,0 +1,172 @@
+﻿krakatoa_tsunami_effect = {
+	every_scope_state = {
+		limit = {
+			OR = {
+				region = sr:region_indochina
+				region = sr:region_indonesia
+				region = sr:region_south_china
+				AND = {
+					region = sr:region_oceania
+					OR = {
+						state_region = s:STATE_WESTERN_AUSTRALIA
+						state_region = s:STATE_NORTHERN_TERRITORY
+						state_region = s:STATE_QUEENSLAND
+					}
+				}
+			}
+			has_coast = yes
+			NOT = {
+				state_region = {
+					any_scope_state = {
+						has_modifier = krakatoa_tsunami
+					}
+				}
+			}
+		}
+		state_region = {
+			add_devastation = 30
+			every_scope_state = {
+				add_modifier = {
+					name = krakatoa_tsunami
+					days = 7
+				}
+			}
+		}
+	}
+	
+	every_scope_state = {
+		limit = {
+			OR = {
+				region = sr:region_japan
+				region = sr:region_manchuria
+				region = sr:region_north_china
+				region = sr:region_north_india
+				region = sr:region_south_india
+				AND = {
+					region = sr:region_oceania
+					NOR = {
+						state_region = s:STATE_WESTERN_AUSTRALIA
+						state_region = s:STATE_NORTHERN_TERRITORY
+						state_region = s:STATE_QUEENSLAND
+					}
+				}
+			}
+			has_coast = yes
+			NOT = {
+				state_region = {
+					any_scope_state = {
+						has_modifier = krakatoa_tsunami
+					}
+				}
+			}
+		}
+		state_region = {
+			add_devastation = 15
+			every_scope_state = {
+				add_modifier = {
+					name = krakatoa_tsunami
+					days = 7
+				}
+			}
+		}
+	}
+	
+	every_scope_state = {
+		limit = {
+			OR = {
+				region = sr:region_east_africa
+				region = sr:region_southern_africa
+				region = sr:region_persia
+				region = sr:region_andes
+				region = sr:region_gran_colombia
+				region = sr:region_arabic
+				region = sr:region_nile_basin
+				region = sr:region_east_siberia
+			}
+			has_coast = yes
+			NOT = {
+				state_region = {
+					any_scope_state = {
+						has_modifier = krakatoa_tsunami
+					}
+				}
+			}
+		}
+		state_region = {
+			add_devastation = 5
+			every_scope_state = {
+				add_modifier = {
+					name = krakatoa_tsunami
+					days = 7
+				}
+			}
+		}
+	}
+}
+
+krakatoa_tsunami_cosmetic_effect = {
+	every_scope_state = {
+		limit = {
+			OR = {
+				region = sr:region_indochina
+				region = sr:region_indonesia
+				region = sr:region_south_china
+				AND = {
+					region = sr:region_oceania
+					OR = {
+						state_region = s:STATE_WESTERN_AUSTRALIA
+						state_region = s:STATE_NORTHERN_TERRITORY
+						state_region = s:STATE_QUEENSLAND
+					}
+				}
+			}
+			has_coast = yes
+		}
+		state_region = {
+			add_devastation = 30
+		}
+	}
+	
+	every_scope_state = {
+		limit = {
+			OR = {
+				region = sr:region_japan
+				region = sr:region_manchuria
+				region = sr:region_north_china
+				region = sr:region_north_india
+				region = sr:region_south_india
+				AND = {
+					region = sr:region_oceania
+					NOR = {
+						state_region = s:STATE_WESTERN_AUSTRALIA
+						state_region = s:STATE_NORTHERN_TERRITORY
+						state_region = s:STATE_QUEENSLAND
+					}
+				}
+			}
+			has_coast = yes
+		}
+		state_region = {
+			add_devastation = 15
+		}
+	}
+	
+	every_scope_state = {
+		limit = {
+			OR = {
+				region = sr:region_east_africa
+				region = sr:region_southern_africa
+				region = sr:region_persia
+				region = sr:region_andes
+				region = sr:region_gran_colombia
+				region = sr:region_arabic
+				region = sr:region_nile_basin
+				region = sr:region_east_siberia
+			}
+			has_coast = yes
+		}
+		state_region = {
+			add_devastation = 5
+		}
+	}
+}

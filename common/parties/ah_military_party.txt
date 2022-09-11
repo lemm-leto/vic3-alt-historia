@@ -1,0 +1,46 @@
+﻿# Fallback party for Armed Forces
+
+military_party = {
+	name = {
+		first_valid = {
+			triggered_desc = {
+				desc = party_military
+				trigger = {
+					always = yes
+				}
+			}
+		}
+	}
+	icon = {
+		default = "/gfx/interface/icons/political_parties/military.dds"
+	}
+	# THIS IS RUN ONLY ONCE AT GAME START
+	valid_for_country = {
+		always = yes
+	}
+	available_for_interest_group = {
+		owner = {
+			country_has_voting_franchise = yes
+			ig:ig_armed_forces = {
+				is_powerful = yes
+			}
+		}
+	}
+	join_weight = {
+		value = -5
+		if = { # a party for powerful soldiers
+			limit = {
+				is_interest_group_type = ig_armed_forces
+				is_powerful = yes
+			}
+			add = 15
+		}
+		if = { # jingoists like the military party
+			limit = {
+				exists = leader
+				leader = { has_ideology = ideology_jingoist_leader }
+			}
+			add = 10
+		}
+	}
+}

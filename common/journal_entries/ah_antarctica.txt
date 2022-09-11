@@ -1,0 +1,100 @@
+﻿je_antarctica = {
+
+	on_monthly_pulse = {
+		effect = {
+			if = {
+				limit = {
+					NOT = {
+						exists = scope:expedition_leader
+					}
+				}
+				if = {
+					limit = {
+						NOT = {
+							any_scope_character = {
+								has_role = admiral
+								is_busy = no
+							}
+						}
+					}
+					create_character = {
+						is_admiral = yes
+						ig_leader = no
+					}
+				}
+				random_scope_character = {
+					limit = {
+						has_role = admiral
+						is_busy = no
+					}
+					save_scope_as = expedition_leader
+					set_character_busy = yes
+				}
+			}
+		}
+		random_events = {
+			100 = 0
+			10 = expedition_events.20 #posts a notification
+			20 = cold.6
+			50 = cold.2
+			20 = cold.1
+			10 = cold.3
+			10 = cold.6
+			20 = cold.11
+			20 = cold.12
+			5 = cold.13
+		}
+	}
+	
+	immediate = {
+		random_scope_character = {
+			limit = {
+				has_variable = expedition_leader_var
+			}
+			save_scope_as = expedition_leader
+			remove_variable = expedition_leader_var
+		}
+	}
+	
+    fail = {
+		custom_tooltip = {
+			text = je_expedition_fail
+			NOT = {
+                has_variable = on_expedition
+            }
+			var:expedition_peril >= 8
+		}
+    }
+	
+	on_fail = {
+		trigger_event = { id = cold.4 }
+		remove_variable = on_expedition
+	}
+	
+	current_value = {
+		value = var:expedition_progress
+	}
+
+	goal_add_value = {
+		add = 8
+	}
+	
+	complete = {
+		custom_tooltip = {
+			text = je_expedition_success
+			scope:journal_entry = {
+				is_goal_complete = yes
+			}
+		}
+	}
+	
+	on_complete = {
+		trigger_event = { id = cold.7 }
+		remove_variable = on_expedition
+	}
+	
+	progressbar = yes
+	
+    weight = 200
+    inheritable = no
+}

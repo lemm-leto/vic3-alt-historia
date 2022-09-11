@@ -1,0 +1,3 @@
+﻿semitic_group = {}
+
+vandal_group = {}
